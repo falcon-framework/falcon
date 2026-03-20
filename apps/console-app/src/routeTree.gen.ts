@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthedDocsRouteImport } from './routes/_authed/docs'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
 import { Route as AuthedConnectionsIndexRouteImport } from './routes/_authed/connections/index'
 import { Route as AuthedAppsIndexRouteImport } from './routes/_authed/apps/index'
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedDocsRoute = AuthedDocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
   id: '/dashboard',
@@ -80,6 +86,7 @@ const AuthedAppsAppIdRoute = AuthedAppsAppIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/docs': typeof AuthedDocsRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/apps/$appId': typeof AuthedAppsAppIdRoute
   '/connections/$connectionId': typeof AuthedConnectionsConnectionIdRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/docs': typeof AuthedDocsRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/apps/$appId': typeof AuthedAppsAppIdRoute
   '/connections/$connectionId': typeof AuthedConnectionsConnectionIdRoute
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_authed/docs': typeof AuthedDocsRoute
   '/_authed/dashboard': typeof AuthedDashboardRoute
   '/_authed/apps/$appId': typeof AuthedAppsAppIdRoute
   '/_authed/connections/$connectionId': typeof AuthedConnectionsConnectionIdRoute
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/docs'
     | '/dashboard'
     | '/apps/$appId'
     | '/connections/$connectionId'
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/docs'
     | '/dashboard'
     | '/apps/$appId'
     | '/connections/$connectionId'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authed'
     | '/login'
+    | '/_authed/docs'
     | '/_authed/dashboard'
     | '/_authed/apps/$appId'
     | '/_authed/connections/$connectionId'
@@ -183,6 +195,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authed/docs': {
+      id: '/_authed/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof AuthedDocsRouteImport
+      parentRoute: typeof AuthedRoute
     }
     '/_authed/dashboard': {
       id: '/_authed/dashboard'
@@ -244,6 +263,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthedRouteChildren {
+  AuthedDocsRoute: typeof AuthedDocsRoute
   AuthedDashboardRoute: typeof AuthedDashboardRoute
   AuthedAppsAppIdRoute: typeof AuthedAppsAppIdRoute
   AuthedConnectionsConnectionIdRoute: typeof AuthedConnectionsConnectionIdRoute
@@ -255,6 +275,7 @@ interface AuthedRouteChildren {
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
+  AuthedDocsRoute: AuthedDocsRoute,
   AuthedDashboardRoute: AuthedDashboardRoute,
   AuthedAppsAppIdRoute: AuthedAppsAppIdRoute,
   AuthedConnectionsConnectionIdRoute: AuthedConnectionsConnectionIdRoute,

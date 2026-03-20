@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from "@falcon-framework/ui/components/sidebar";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Plug, Store, Settings, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Plug, Store, Settings, ChevronRight, BookOpen } from "lucide-react";
 
 import UserNav from "./user-nav";
 
@@ -30,6 +30,10 @@ const navItems = [
   {
     label: "Organization",
     items: [{ title: "Settings", url: "/org/settings", icon: Settings }],
+  },
+  {
+    label: "Developer",
+    items: [{ title: "Docs", url: "/docs", icon: BookOpen }],
   },
 ];
 

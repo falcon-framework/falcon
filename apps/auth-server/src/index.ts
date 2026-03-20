@@ -1,6 +1,6 @@
 import { createContext } from "@falcon-framework/api/context";
 import { appRouter } from "@falcon-framework/api/routers/index";
-import { auth } from "@falcon-framework/auth";
+import { auth, resolveAuthApp } from "@falcon-framework/auth";
 import { env } from "@falcon-framework/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
@@ -14,17 +14,67 @@ import { logger } from "hono/logger";
 const app = new Hono();
 
 app.use(logger());
+
+/**
+ * Dynamic CORS middleware.
+ *
+ * 1. If the request Origin matches env.CORS_ORIGIN (the console app), allow immediately.
+ * 2. Otherwise, read the X-Falcon-App-Id header (the publishable key).
+ * 3. Look up the falcon_auth_app by publishable key and check its allowed origins.
+ */
 app.use(
   "/*",
   cors({
-    origin: env.CORS_ORIGIN,
+    origin: async (origin, c) => {
+      // Console app is always allowed
+      if (origin === env.CORS_ORIGIN) {
+        return origin;
+      }
+
+      // Check for an external app's publishable key
+      const appId = c.req.header("X-Falcon-App-Id");
+      if (appId && origin) {
+        try {
+          const authApp = await resolveAuthApp(appId);
+          if (authApp && authApp.allowedOrigins.includes(origin)) {
+            return origin;
+          }
+        } catch (e) {
+          console.error("Failed to resolve auth app for CORS:", e);
+        }
+      }
+
+      return env.CORS_ORIGIN;
+    },
     allowMethods: ["GET", "POST", "OPTIONS"],
-    allowHeaders: ["Content-Type", "Authorization"],
+    allowHeaders: ["Content-Type", "Authorization", "X-Falcon-App-Id"],
     credentials: true,
   }),
 );
 
-app.on(["POST", "GET"], "/api/auth/*", (c) => auth().handler(c.req.raw));
+/**
+ * Auth routes — app-aware.
+ *
+ * When X-Falcon-App-Id is present, the Better-Auth instance is configured
+ * with that app's trusted origins and database hooks for linking users to apps.
+ */
+app.on(["POST", "GET"], "/api/auth/*", async (c) => {
+  const appId = c.req.header("X-Falcon-App-Id");
+  let extraTrustedOrigins: string[] | undefined;
+
+  if (appId) {
+    try {
+      const authApp = await resolveAuthApp(appId);
+      if (authApp) {
+        extraTrustedOrigins = authApp.allowedOrigins;
+      }
+    } catch (e) {
+      console.error("Failed to resolve auth app:", e);
+    }
+  }
+
+  return auth({ appId, extraTrustedOrigins }).handler(c.req.raw);
+});
 
 export const apiHandler = new OpenAPIHandler(appRouter, {
   plugins: [

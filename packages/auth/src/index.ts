@@ -1,10 +1,12 @@
 import { makeDb } from "@falcon-framework/db";
 import * as schema from "@falcon-framework/db/schema/auth";
+import { appUser, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { verifyPassword as verifyLegacyPassword } from "better-auth/crypto";
 import { organization } from "better-auth/plugins";
+import { eq } from "drizzle-orm";
 
 type BetterAuthInstance = ReturnType<typeof betterAuth>;
 type PasswordVerifyInput = {
@@ -122,13 +124,26 @@ export interface AuthSession {
   close: () => Promise<void>;
 }
 
-export const auth = () => {
+export interface AuthOptions {
+  /** The publishable key of the external app making the request. */
+  appId?: string;
+  /** Additional trusted origins (e.g. from the app's allowedOrigins). */
+  extraTrustedOrigins?: string[];
+}
+
+export const auth = (options?: AuthOptions) => {
+  const db = makeDb();
+  const trustedOrigins = [env.CORS_ORIGIN];
+  if (options?.extraTrustedOrigins) {
+    trustedOrigins.push(...options.extraTrustedOrigins);
+  }
+
   return betterAuth({
-    database: drizzleAdapter(makeDb(), {
+    database: drizzleAdapter(db, {
       provider: "pg",
       schema: schema,
     }),
-    trustedOrigins: [env.CORS_ORIGIN],
+    trustedOrigins,
     emailAndPassword: {
       enabled: true,
       password: {
@@ -159,10 +174,83 @@ export const auth = () => {
       // },
     },
     plugins: [organization()],
+    databaseHooks: {
+      user: {
+        create: {
+          after: async (user) => {
+            if (!options?.appId) return;
+            try {
+              const app = await db
+                .select({ id: falconAuthApp.id })
+                .from(falconAuthApp)
+                .where(eq(falconAuthApp.publishableKey, options.appId))
+                .limit(1);
+              if (app[0]) {
+                await db
+                  .insert(appUser)
+                  .values({
+                    id: crypto.randomUUID(),
+                    appId: app[0].id,
+                    userId: user.id,
+                  })
+                  .onConflictDoNothing();
+              }
+            } catch (e) {
+              console.error("Failed to link user to app:", e);
+            }
+          },
+        },
+      },
+      session: {
+        create: {
+          after: async (session) => {
+            if (!options?.appId) return;
+            try {
+              const app = await db
+                .select({ id: falconAuthApp.id })
+                .from(falconAuthApp)
+                .where(eq(falconAuthApp.publishableKey, options.appId))
+                .limit(1);
+              if (app[0]) {
+                await db
+                  .insert(appUser)
+                  .values({
+                    id: crypto.randomUUID(),
+                    appId: app[0].id,
+                    userId: session.userId,
+                  })
+                  .onConflictDoNothing();
+              }
+            } catch (e) {
+              console.error("Failed to link session user to app:", e);
+            }
+          },
+        },
+      },
+    },
     logger: {
       level: "debug",
     },
   });
 };
+
+/**
+ * Look up a registered auth app by its publishable key and return its allowed origins.
+ * Returns null if no app is found.
+ */
+export async function resolveAuthApp(publishableKey: string) {
+  const db = makeDb();
+  const rows = await db
+    .select({
+      id: falconAuthApp.id,
+      name: falconAuthApp.name,
+      allowedOrigins: falconAuthApp.allowedOrigins,
+      redirectUrls: falconAuthApp.redirectUrls,
+    })
+    .from(falconAuthApp)
+    .where(eq(falconAuthApp.publishableKey, publishableKey))
+    .limit(1);
+  return rows[0] ?? null;
+}
 
 export * from "./permissions.js";

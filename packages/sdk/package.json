@@ -1,15 +1,18 @@
 {
   "name": "@falcon-framework/sdk",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": false,
-  "description": "FALCON SDK to let third-party app integrate with the FALCON platform. It provides all primitives to implement FALCON Connect ('install apps') and FALCON Auth, the unified authentication system for having a single sign-on experience across all apps.",
+  "description": "FALCON SDK — use Falcon Auth as your identity provider. Drop-in React components for sign-in, sign-up, and user management. Like Clerk, but self-hosted.",
   "keywords": [
     "auth",
+    "authentication",
     "connect",
     "falcon",
+    "identity",
+    "react",
     "sdk",
+    "sign-in",
     "single sign-on",
-    "single sign-on across all apps",
     "sso",
     "unified authentication"
   ],
@@ -28,18 +31,33 @@
     ".": {
       "default": "./src/index.ts"
     },
-    "./*": {
-      "default": "./src/*.ts"
+    "./react": {
+      "default": "./src/react.ts"
+    },
+    "./server": {
+      "default": "./src/server.ts"
     }
   },
   "scripts": {},
   "dependencies": {
-    "@falcon-framework/env": "workspace:*",
-    "dotenv": "catalog:",
-    "zod": "catalog:"
+    "better-auth": "catalog:"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@falcon-framework/config": "workspace:*",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "typescript": "catalog:"
   }
 }

@@ -1,1 +1,8 @@
-export {};
+export { createFalconAuthClient as createFalconAuth } from "./core/client";
+export type { FalconAuthClient } from "./core/client";
+export type {
+  FalconAuthConfig,
+  FalconAuthState,
+  FalconSession,
+  FalconUser,
+} from "./core/types";
