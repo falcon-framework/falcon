@@ -28,6 +28,7 @@
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "slugify": "^1.6.8",
     "sonner": "catalog:",
     "tailwindcss": "catalog:",
     "vite-tsconfig-paths": "^5.1.4",

@@ -27,16 +27,18 @@ import {
   ArrowLeft,
   CheckCircle2,
   PauseCircle,
+  PlayCircle,
   AlertCircle,
   XCircle,
   Key,
   RefreshCw,
 } from "lucide-react";
-import { useMemo } from "react";
 import { toast } from "sonner";
+import { useMemo } from "react";
 
-import { authClient } from "@/lib/auth-client";
-import { makeConnectClient } from "@/lib/connect-client";
+import { useConnectClient } from "@/hooks/use-connect-client";
+import type { AppItem } from "@/lib/connect-client";
+import { useActiveOrg } from "@/providers/active-org";
 
 export const Route = createFileRoute("/_authed/connections/$connectionId")({
   component: ConnectionDetailPage,
@@ -44,19 +46,26 @@ export const Route = createFileRoute("/_authed/connections/$connectionId")({
 
 function ConnectionDetailPage() {
   const { connectionId } = useParams({ from: "/_authed/connections/$connectionId" });
-  const { data: activeOrg } = authClient.useActiveOrganization();
+  const { activeOrg } = useActiveOrg();
   const qc = useQueryClient();
-
-  const client = useMemo(
-    () => (activeOrg?.id ? makeConnectClient(activeOrg.id) : null),
-    [activeOrg?.id],
-  );
+  const client = useConnectClient();
 
   const connQuery = useQuery({
     queryKey: ["connection", connectionId, activeOrg?.id],
     queryFn: () => client!.connections.get(connectionId),
     enabled: !!client,
   });
+
+  const appsQuery = useQuery({
+    queryKey: ["apps"],
+    queryFn: () => client!.apps.list(),
+    enabled: !!client,
+  });
+
+  const appById = useMemo(
+    () => new Map((appsQuery.data ?? []).map((a: AppItem) => [a.id, a])),
+    [appsQuery.data],
+  );
 
   const revokeMutation = useMutation({
     mutationFn: () => client!.connections.revoke(connectionId),
@@ -78,6 +87,16 @@ function ConnectionDetailPage() {
     onError: (e) => toast.error(e.message),
   });
 
+  const resumeMutation = useMutation({
+    mutationFn: () => client!.connections.resume(connectionId),
+    onSuccess: () => {
+      toast.success("Connection resumed");
+      qc.invalidateQueries({ queryKey: ["connections"] });
+      qc.invalidateQueries({ queryKey: ["connection", connectionId] });
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
   const syncMutation = useMutation({
     mutationFn: () => client!.connections.sync(connectionId),
     onSuccess: () => toast.success("Sync job triggered"),
@@ -85,6 +104,8 @@ function ConnectionDetailPage() {
   });
 
   const conn = connQuery.data;
+  const sourceName = conn ? appById.get(conn.sourceAppId)?.name ?? conn.sourceAppId : "";
+  const targetName = conn ? appById.get(conn.targetAppId)?.name ?? conn.targetAppId : "";
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -109,15 +130,18 @@ function ConnectionDetailPage() {
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl font-bold font-mono">
-                  {conn.sourceAppId}
-                  <span className="text-muted-foreground mx-2">→</span>
-                  {conn.targetAppId}
+                <h1 className="text-xl font-bold tracking-tight flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                  <span>{sourceName}</span>
+                  <span className="text-muted-foreground">→</span>
+                  <span>{targetName}</span>
                 </h1>
                 <StatusBadge status={conn.status} />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                ID: <span className="font-mono">{conn.id}</span>
+              <p className="text-xs text-muted-foreground font-mono mt-1.5 break-all">
+                Apps: {conn.sourceAppId} → {conn.targetAppId}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Connection ID: <span className="font-mono">{conn.id}</span>
               </p>
             </div>
 
@@ -146,6 +170,16 @@ function ConnectionDetailPage() {
                   </Button>
                 </>
               )}
+              {conn.status === "paused" && (
+                <Button
+                  size="sm"
+                  onClick={() => resumeMutation.mutate()}
+                  disabled={resumeMutation.isPending}
+                >
+                  <PlayCircle className="h-3.5 w-3.5 mr-1.5" />
+                  Resume
+                </Button>
+              )}
               {conn.status !== "revoked" && (
                 <AlertDialog>
                   <AlertDialogTrigger
@@ -161,8 +195,10 @@ function ConnectionDetailPage() {
                       <AlertDialogTitle>Revoke connection?</AlertDialogTitle>
                       <AlertDialogDescription>
                         This will permanently revoke the connection between{" "}
-                        <strong>{conn.sourceAppId}</strong> and <strong>{conn.targetAppId}</strong>.
-                        This action cannot be undone.
+                        <strong>{sourceName}</strong> and <strong>{targetName}</strong> (
+                        <span className="font-mono text-xs">{conn.sourceAppId}</span> →{" "}
+                        <span className="font-mono text-xs">{conn.targetAppId}</span>). This action
+                        cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

@@ -14,8 +14,9 @@ import { motion } from "motion/react";
 import { ArrowRight, Plug, Store, AlertCircle, CheckCircle2, PauseCircle } from "lucide-react";
 import { useMemo } from "react";
 
+import { useConnectClient } from "@/hooks/use-connect-client";
 import { authClient } from "@/lib/auth-client";
-import { makeConnectClient } from "@/lib/connect-client";
+import { useActiveOrg } from "@/providers/active-org";
 
 export const Route = createFileRoute("/_authed/dashboard")({
   component: DashboardPage,
@@ -23,12 +24,8 @@ export const Route = createFileRoute("/_authed/dashboard")({
 
 function DashboardPage() {
   const { data: session } = authClient.useSession();
-  const { data: activeOrg } = authClient.useActiveOrganization();
-
-  const client = useMemo(
-    () => (activeOrg?.id ? makeConnectClient(activeOrg.id) : null),
-    [activeOrg?.id],
-  );
+  const { activeOrg } = useActiveOrg();
+  const client = useConnectClient();
 
   const connectionsQuery = useQuery({
     queryKey: ["connections", activeOrg?.id],
@@ -44,6 +41,16 @@ function DashboardPage() {
 
   const connections = connectionsQuery.data ?? [];
   const apps = appsQuery.data ?? [];
+
+  const appById = useMemo(() => new Map(apps.map((a) => [a.id, a])), [apps]);
+  const connAppLabel = (appId: string) => appById.get(appId)?.name ?? appId.slice(0, 8) + "…";
+
+  const recentActiveConnections = useMemo(() => {
+    const active = connections.filter((c) => c.status === "active");
+    return [...active].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  }, [connections]);
 
   const stats = useMemo(() => {
     const active = connections.filter((c) => c.status === "active").length;
@@ -131,8 +138,8 @@ function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-base">Recent Connections</CardTitle>
-              <CardDescription>Your latest app integrations</CardDescription>
+              <CardTitle className="text-base">Active connections</CardTitle>
+              <CardDescription>Newest first</CardDescription>
             </div>
             <Link to="/connections" className={buttonVariants({ variant: "ghost", size: "sm" })}>
               View all <ArrowRight className="ml-1 h-3.5 w-3.5" />
@@ -141,14 +148,14 @@ function DashboardPage() {
           <CardContent className="space-y-2">
             {connectionsQuery.isLoading ? (
               Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)
-            ) : connections.length === 0 ? (
+            ) : recentActiveConnections.length === 0 ? (
               <EmptyState
                 icon={Plug}
-                message="No connections yet"
+                message="No active connections yet"
                 action={{ label: "Connect an app", to: "/connections/new" }}
               />
             ) : (
-              connections.slice(0, 5).map((conn) => (
+              recentActiveConnections.slice(0, 5).map((conn) => (
                 <Link
                   key={conn.id}
                   to="/connections/$connectionId"
@@ -158,7 +165,7 @@ function DashboardPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="truncate font-medium">
-                        {conn.sourceAppId} → {conn.targetAppId}
+                        {connAppLabel(conn.sourceAppId)} → {connAppLabel(conn.targetAppId)}
                       </span>
                     </div>
                     <span className="text-xs text-muted-foreground">

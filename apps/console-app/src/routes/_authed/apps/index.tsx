@@ -13,23 +13,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { Store, Search, ArrowRight } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-import { authClient } from "@/lib/auth-client";
-import { makeConnectClient } from "@/lib/connect-client";
+import { useConnectClient } from "@/hooks/use-connect-client";
 
 export const Route = createFileRoute("/_authed/apps/")({
   component: AppsPage,
 });
 
 function AppsPage() {
-  const { data: activeOrg } = authClient.useActiveOrganization();
   const [search, setSearch] = useState("");
-
-  const client = useMemo(
-    () => (activeOrg?.id ? makeConnectClient(activeOrg.id) : null),
-    [activeOrg?.id],
-  );
+  const client = useConnectClient();
 
   const appsQuery = useQuery({
     queryKey: ["apps"],

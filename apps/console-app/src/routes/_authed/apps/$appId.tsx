@@ -13,10 +13,7 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { ArrowLeft, Zap, Link2 } from "lucide-react";
-import { useMemo } from "react";
-
-import { authClient } from "@/lib/auth-client";
-import { makeConnectClient } from "@/lib/connect-client";
+import { useConnectClient } from "@/hooks/use-connect-client";
 
 export const Route = createFileRoute("/_authed/apps/$appId")({
   component: AppDetailPage,
@@ -24,12 +21,7 @@ export const Route = createFileRoute("/_authed/apps/$appId")({
 
 function AppDetailPage() {
   const { appId } = useParams({ from: "/_authed/apps/$appId" });
-  const { data: activeOrg } = authClient.useActiveOrganization();
-
-  const client = useMemo(
-    () => (activeOrg?.id ? makeConnectClient(activeOrg.id) : null),
-    [activeOrg?.id],
-  );
+  const client = useConnectClient();
 
   const appsQuery = useQuery({
     queryKey: ["apps"],
@@ -40,11 +32,14 @@ function AppDetailPage() {
   const capabilitiesQuery = useQuery({
     queryKey: ["capabilities", appId],
     queryFn: () => client!.apps.capabilities(appId),
-    enabled: !!client,
+    // Run after apps list succeeds so we don't race two parallel credentialed connect calls (first often 401’d).
+    enabled: !!client && !!appId && appsQuery.isSuccess,
   });
 
   const app = appsQuery.data?.find((a) => a.id === appId);
   const capabilities = capabilitiesQuery.data ?? [];
+  const capabilitiesLoading =
+    appsQuery.isPending || (appsQuery.isSuccess && capabilitiesQuery.isPending);
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -100,7 +95,11 @@ function AppDetailPage() {
           <CardDescription>Scopes this app can grant or request</CardDescription>
         </CardHeader>
         <CardContent>
-          {capabilitiesQuery.isLoading ? (
+          {appsQuery.isError ? (
+            <p className="text-sm text-muted-foreground py-4 text-center">
+              Could not load apps. Try refreshing the page.
+            </p>
+          ) : capabilitiesLoading ? (
             <div className="space-y-2">
               {Array.from({ length: 3 }).map((_, i) => (
                 <Skeleton key={i} className="h-12" />

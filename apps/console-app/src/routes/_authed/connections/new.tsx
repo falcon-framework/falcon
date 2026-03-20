@@ -14,12 +14,12 @@ import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-r
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { authClient } from "@/lib/auth-client";
-import { makeConnectClient, type AppItem } from "@/lib/connect-client";
+import { useConnectClient } from "@/hooks/use-connect-client";
+import type { AppItem } from "@/lib/connect-client";
 
 export const Route = createFileRoute("/_authed/connections/new")({
   validateSearch: z.object({ sourceAppId: z.string().optional() }),
@@ -33,14 +33,9 @@ function NewConnectionPage() {
   const { sourceAppId: preselectedSourceId } = useSearch({
     from: "/_authed/connections/new",
   });
-  const { data: activeOrg } = authClient.useActiveOrganization();
   const navigate = useNavigate();
   const qc = useQueryClient();
-
-  const client = useMemo(
-    () => (activeOrg?.id ? makeConnectClient(activeOrg.id) : null),
-    [activeOrg?.id],
-  );
+  const client = useConnectClient();
 
   const appsQuery = useQuery({
     queryKey: ["apps"],
@@ -68,9 +63,11 @@ function NewConnectionPage() {
         targetAppId: targetApp!.id,
         requestedScopes: Array.from(selectedScopes),
       }),
+    retry: 1,
     onSuccess: () => {
-      toast.success("Installation request created");
+      toast.success("Request submitted. Approve it on Connections to create the connection.");
       qc.invalidateQueries({ queryKey: ["connections"] });
+      qc.invalidateQueries({ queryKey: ["installation-requests"] });
       navigate({ to: "/connections" });
     },
     onError: (e) => toast.error(e.message),

@@ -37,6 +37,7 @@ import { z } from "zod";
 
 import { authClient } from "@/lib/auth-client";
 import { getUser } from "@/functions/get-user";
+import { useActiveOrg } from "@/providers/active-org";
 
 export const Route = createFileRoute("/_authed/org/settings")({
   beforeLoad: async () => {
@@ -47,7 +48,7 @@ export const Route = createFileRoute("/_authed/org/settings")({
 });
 
 function OrgSettingsPage() {
-  const { data: activeOrg } = authClient.useActiveOrganization();
+  const { activeOrg } = useActiveOrg();
 
   if (!activeOrg) {
     return (
@@ -166,7 +167,7 @@ const ROLE_COLORS = {
 } as const;
 
 function MembersSection(_: { org: { id: string } }) {
-  const { data: fullOrg } = authClient.useActiveOrganization();
+  const { activeOrg: fullOrg } = useActiveOrg();
 
   const members = (fullOrg as any)?.members ?? [];
 

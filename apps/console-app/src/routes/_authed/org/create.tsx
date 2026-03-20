@@ -10,19 +10,31 @@ import { Input } from "@falcon-framework/ui/components/input";
 import { Label } from "@falcon-framework/ui/components/label";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
+import { useRef } from "react";
+import slugify from "slugify";
 import { motion } from "motion/react";
 import { Building2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { authClient } from "@/lib/auth-client";
+import { useActiveOrg } from "@/providers/active-org";
 
 export const Route = createFileRoute("/_authed/org/create")({
   component: CreateOrgPage,
 });
 
+const SLUGIFY_OPTS = { lower: true, strict: true } as const;
+
+function toOrgSlug(input: string): string {
+  return slugify(input.trim(), SLUGIFY_OPTS);
+}
+
 function CreateOrgPage() {
   const navigate = useNavigate();
+  const { switchOrg } = useActiveOrg();
+  /** When false, slug stays in sync with name; set true when the user edits the slug field. */
+  const slugManuallyEdited = useRef(false);
 
   const form = useForm({
     defaultValues: { name: "", slug: "" },
@@ -38,6 +50,7 @@ function CreateOrgPage() {
       await authClient.organization.setActive({
         organizationId: result.data!.id,
       });
+      await switchOrg(result.data!.id);
       toast.success(`Organization "${value.name}" created!`);
       navigate({ to: "/dashboard" });
     },
@@ -93,18 +106,10 @@ function CreateOrgPage() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => {
-                        field.handleChange(e.target.value);
-                        // Auto-slug
-                        const slugField = form.getFieldValue("slug");
-                        if (!slugField) {
-                          form.setFieldValue(
-                            "slug",
-                            e.target.value
-                              .toLowerCase()
-                              .replace(/[^a-z0-9]/g, "-")
-                              .replace(/-+/g, "-")
-                              .replace(/^-|-$/g, ""),
-                          );
+                        const name = e.target.value;
+                        field.handleChange(name);
+                        if (!slugManuallyEdited.current) {
+                          form.setFieldValue("slug", toOrgSlug(name));
                         }
                       }}
                     />
@@ -125,10 +130,17 @@ function CreateOrgPage() {
                       id={field.name}
                       placeholder="acme-corp"
                       value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) =>
-                        field.handleChange(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))
-                      }
+                      onBlur={(e) => {
+                        field.handleBlur();
+                        if (!e.currentTarget.value.trim()) {
+                          slugManuallyEdited.current = false;
+                          form.setFieldValue("slug", toOrgSlug(form.getFieldValue("name")));
+                        }
+                      }}
+                      onChange={(e) => {
+                        slugManuallyEdited.current = true;
+                        field.handleChange(toOrgSlug(e.target.value));
+                      }}
                     />
                     <p className="text-xs text-muted-foreground">
                       Used in URLs · Only lowercase letters, numbers, and hyphens

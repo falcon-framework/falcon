@@ -69,13 +69,16 @@ async function request<T>(
   organizationId: string,
   init: RequestInit = {},
 ): Promise<T> {
+  if (!organizationId?.trim()) {
+    throw new ConnectApiError(0, "Missing X-Organization-Id");
+  }
   const url = `${env.VITE_CONNECT_URL}/v1${path}`;
   const res = await fetch(url, {
     ...init,
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      "X-Organization-Id": organizationId,
+      "X-Organization-Id": organizationId.trim(),
       ...(init.headers as Record<string, string>),
     },
   });
@@ -91,10 +94,13 @@ export function makeConnectClient(organizationId: string) {
 
   return {
     apps: {
-      list: () => r<AppItem[]>("/apps"),
+      list: () => {
+        return r<AppItem[]>("/apps");
+      },
       capabilities: (appId: string) => r<CapabilityItem[]>(`/apps/${appId}/capabilities`),
     },
     installationRequests: {
+      list: () => r<InstallationRequestItem[]>("/installation-requests"),
       create: (body: {
         sourceAppId: string;
         targetAppId: string;
@@ -117,6 +123,8 @@ export function makeConnectClient(organizationId: string) {
         r<ConnectionItem>(`/connections/${connectionId}/revoke`, { method: "POST" }),
       pause: (connectionId: string) =>
         r<ConnectionItem>(`/connections/${connectionId}/pause`, { method: "POST" }),
+      resume: (connectionId: string) =>
+        r<ConnectionItem>(`/connections/${connectionId}/resume`, { method: "POST" }),
       sync: (connectionId: string) =>
         r<SyncJobItem>(`/connections/${connectionId}/sync`, { method: "POST" }),
     },
