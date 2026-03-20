@@ -84,7 +84,7 @@ export default function UserNav() {
                 }
               >
                 <LogOut />
-                Sign out
+                Abmelden
               </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>

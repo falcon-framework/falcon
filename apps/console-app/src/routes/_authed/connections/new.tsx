@@ -65,7 +65,7 @@ function NewConnectionPage() {
       }),
     retry: 1,
     onSuccess: () => {
-      toast.success("Request submitted. Approve it on Connections to create the connection.");
+      toast.success("Anfrage übermittelt. Genehmigen Sie diese unter Verbindungen, um die Verbindung herzustellen.");
       qc.invalidateQueries({ queryKey: ["connections"] });
       qc.invalidateQueries({ queryKey: ["installation-requests"] });
       navigate({ to: "/connections" });
@@ -100,13 +100,13 @@ function NewConnectionPage() {
         className={buttonVariants({ variant: "ghost", size: "sm" }) + " -ml-2"}
       >
         <ArrowLeft className="h-4 w-4" />
-        Connections
+        Verbindungen
       </Link>
 
       <div>
-        <h1 className="text-2xl font-bold">New Connection</h1>
+        <h1 className="text-2xl font-bold">Neue Verbindung</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Connect two apps to enable data sharing
+          Verbinden Sie zwei Apps, um den Datenaustausch zu ermöglichen
         </p>
       </div>
 
@@ -144,8 +144,8 @@ function NewConnectionPage() {
         >
           {step === "source" && (
             <AppSelector
-              title="Source App"
-              description="The app requesting access"
+              title="Quell-App"
+              description="Die App, die Zugriff anfordert"
               apps={activeApps}
               selected={sourceApp}
               onSelect={setSourceApp}
@@ -155,8 +155,8 @@ function NewConnectionPage() {
           )}
           {step === "target" && (
             <AppSelector
-              title="Target App"
-              description="The app granting access"
+              title="Ziel-App"
+              description="Die App, die Zugriff gewährt"
               apps={activeApps}
               selected={targetApp}
               onSelect={setTargetApp}
@@ -185,22 +185,22 @@ function NewConnectionPage() {
 
       <div className="flex justify-between">
         <Button variant="outline" onClick={goBack} disabled={stepIndex === 0}>
-          Back
+          Zurück
         </Button>
         {step === "review" ? (
           <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
             {createMutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating…
+                Wird erstellt…
               </>
             ) : (
-              "Create connection request"
+              "Verbindungsanfrage erstellen"
             )}
           </Button>
         ) : (
           <Button onClick={goNext} disabled={!canProceed}>
-            Next <ArrowRight className="ml-1.5 h-4 w-4" />
+            Weiter <ArrowRight className="ml-1.5 h-4 w-4" />
           </Button>
         )}
       </div>
@@ -237,7 +237,7 @@ function AppSelector({
         {isLoading ? (
           Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14" />)
         ) : available.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-4 text-center">No apps available</p>
+          <p className="text-sm text-muted-foreground py-4 text-center">Keine Apps verfügbar</p>
         ) : (
           available.map((app) => (
             <button
@@ -291,9 +291,9 @@ function ScopesSelector({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Request Scopes</CardTitle>
+        <CardTitle className="text-base">Berechtigungen anfordern</CardTitle>
         <CardDescription>
-          Select what permissions to request from{" "}
+          Wählen Sie die anzufordernden Berechtigungen von{" "}
           <span className="text-foreground font-medium">{targetApp.name}</span>
         </CardDescription>
       </CardHeader>
@@ -302,7 +302,7 @@ function ScopesSelector({
           Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-12" />)
         ) : capabilities.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
-            No capabilities defined for this app
+            Für diese App sind keine Fähigkeiten definiert
           </p>
         ) : (
           capabilities.map((cap) => (
@@ -347,18 +347,18 @@ function ReviewStep({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Review Connection</CardTitle>
-        <CardDescription>Confirm the connection details before creating</CardDescription>
+        <CardTitle className="text-base">Verbindung überprüfen</CardTitle>
+        <CardDescription>Bestätigen Sie die Verbindungsdetails vor der Erstellung</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center gap-3">
           <div className="flex-1 rounded-lg bg-muted p-3 text-center">
-            <div className="text-xs text-muted-foreground mb-1">Source</div>
+            <div className="text-xs text-muted-foreground mb-1">Quelle</div>
             <div className="font-semibold">{sourceApp.name}</div>
           </div>
           <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground" />
           <div className="flex-1 rounded-lg bg-muted p-3 text-center">
-            <div className="text-xs text-muted-foreground mb-1">Target</div>
+            <div className="text-xs text-muted-foreground mb-1">Ziel</div>
             <div className="font-semibold">{targetApp.name}</div>
           </div>
         </div>
@@ -366,9 +366,9 @@ function ReviewStep({
         <Separator />
 
         <div>
-          <p className="text-xs font-medium text-muted-foreground mb-2">Requested scopes</p>
+          <p className="text-xs font-medium text-muted-foreground mb-2">Angeforderte Berechtigungen</p>
           {scopes.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No scopes selected</p>
+            <p className="text-sm text-muted-foreground">Keine Berechtigungen ausgewählt</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {scopes.map((s) => (

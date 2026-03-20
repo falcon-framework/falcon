@@ -65,15 +65,15 @@ function DashboardPage() {
       {/* Greeting */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight">
-          Good {getTimeOfDay()}, {firstName}
+          Guten {getTimeOfDay()}, {firstName}
         </h1>
         <p className="text-muted-foreground text-sm mt-1">
           {activeOrg ? (
             <>
-              Viewing <span className="font-medium text-foreground">{activeOrg.name}</span>
+              Anzeige von <span className="font-medium text-foreground">{activeOrg.name}</span>
             </>
           ) : (
-            "Select an organization to get started"
+            "Wählen Sie eine Organisation aus, um zu beginnen"
           )}
         </p>
       </div>
@@ -82,28 +82,28 @@ function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
           {
-            label: "Total Connections",
+            label: "Verbindungen gesamt",
             value: stats.total,
             icon: Plug,
             iconClass: "",
             loading: connectionsQuery.isLoading,
           },
           {
-            label: "Active",
+            label: "Aktiv",
             value: stats.active,
             icon: CheckCircle2,
             iconClass: "text-green-500",
             loading: connectionsQuery.isLoading,
           },
           {
-            label: "Paused",
+            label: "Pausiert",
             value: stats.paused,
             icon: PauseCircle,
             iconClass: "text-yellow-500",
             loading: connectionsQuery.isLoading,
           },
           {
-            label: "Available Apps",
+            label: "Verfügbare Apps",
             value: apps.length,
             icon: Store,
             iconClass: "",
@@ -138,11 +138,11 @@ function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-base">Active connections</CardTitle>
-              <CardDescription>Newest first</CardDescription>
+              <CardTitle className="text-base">Aktive Verbindungen</CardTitle>
+              <CardDescription>Neueste zuerst</CardDescription>
             </div>
             <Link to="/connections" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-              View all <ArrowRight className="ml-1 h-3.5 w-3.5" />
+              Alle anzeigen <ArrowRight className="ml-1 h-3.5 w-3.5" />
             </Link>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -151,8 +151,8 @@ function DashboardPage() {
             ) : recentActiveConnections.length === 0 ? (
               <EmptyState
                 icon={Plug}
-                message="No active connections yet"
-                action={{ label: "Connect an app", to: "/connections/new" }}
+                message="Noch keine aktiven Verbindungen"
+                action={{ label: "App verbinden", to: "/connections/new" }}
               />
             ) : (
               recentActiveConnections.slice(0, 5).map((conn) => (
@@ -169,7 +169,7 @@ function DashboardPage() {
                       </span>
                     </div>
                     <span className="text-xs text-muted-foreground">
-                      Created {new Date(conn.createdAt).toLocaleDateString()}
+                      Erstellt {new Date(conn.createdAt).toLocaleDateString("de-DE")}
                     </span>
                   </div>
                   <ConnectionStatusBadge status={conn.status} />
@@ -183,18 +183,18 @@ function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-base">App Marketplace</CardTitle>
-              <CardDescription>Available integrations</CardDescription>
+              <CardTitle className="text-base">App-Marktplatz</CardTitle>
+              <CardDescription>Verfügbare Integrationen</CardDescription>
             </div>
             <Link to="/apps" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-              Browse <ArrowRight className="ml-1 h-3.5 w-3.5" />
+              Durchsuchen <ArrowRight className="ml-1 h-3.5 w-3.5" />
             </Link>
           </CardHeader>
           <CardContent className="space-y-2">
             {appsQuery.isLoading ? (
               Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)
             ) : apps.length === 0 ? (
-              <EmptyState icon={Store} message="No apps in marketplace" />
+              <EmptyState icon={Store} message="Keine Apps im Marktplatz" />
             ) : (
               apps.slice(0, 5).map((app) => (
                 <Link
@@ -230,15 +230,15 @@ function DashboardPage() {
 
 function ConnectionStatusBadge({ status }: { status: "active" | "paused" | "revoked" }) {
   const variants = {
-    active: { variant: "default" as const, icon: CheckCircle2 },
-    paused: { variant: "secondary" as const, icon: PauseCircle },
-    revoked: { variant: "destructive" as const, icon: AlertCircle },
+    active: { variant: "default" as const, icon: CheckCircle2, label: "Aktiv" },
+    paused: { variant: "secondary" as const, icon: PauseCircle, label: "Pausiert" },
+    revoked: { variant: "destructive" as const, icon: AlertCircle, label: "Widerrufen" },
   };
-  const { variant, icon: Icon } = variants[status];
+  const { variant, icon: Icon, label } = variants[status];
   return (
     <Badge variant={variant} className="gap-1 text-[10px]">
       <Icon className="h-2.5 w-2.5" />
-      {status}
+      {label}
     </Badge>
   );
 }
@@ -267,7 +267,7 @@ function EmptyState({
 
 function getTimeOfDay() {
   const h = new Date().getHours();
-  if (h < 12) return "morning";
-  if (h < 18) return "afternoon";
-  return "evening";
+  if (h < 12) return "Morgen";
+  if (h < 18) return "Tag";
+  return "Abend";
 }

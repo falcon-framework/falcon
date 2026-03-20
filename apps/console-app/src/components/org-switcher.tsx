@@ -25,20 +25,20 @@ export default function OrgSwitcher() {
         render={<Button variant="ghost" size="sm" className="h-8 gap-1.5 text-sm" />}
       >
         <Building2 className="h-4 w-4 text-muted-foreground" />
-        <span className="max-w-40 truncate">{activeOrg?.name ?? "Select organization"}</span>
+        <span className="max-w-40 truncate">{activeOrg?.name ?? "Organisation auswählen"}</span>
         <ChevronDown className="h-3 w-3 text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-60">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="text-xs text-muted-foreground">
-            Organizations
+            Organisationen
           </DropdownMenuLabel>
           {orgs.map((org) => (
             <DropdownMenuItem
               key={org.id}
               onClick={async () => {
                 await switchOrg(org.id);
-                toast.success(`Switched to ${org.name}`);
+                toast.success(`Gewechselt zu ${org.name}`);
               }}
             >
               <div className="flex flex-1 items-center gap-2">
@@ -49,20 +49,20 @@ export default function OrgSwitcher() {
               </div>
               {activeOrg?.id === org.id && (
                 <Badge variant="secondary" className="ml-auto text-[10px]">
-                  active
+                  aktiv
                 </Badge>
               )}
             </DropdownMenuItem>
           ))}
           {orgs.length === 0 && (
             <DropdownMenuItem disabled className="text-muted-foreground text-sm">
-              No organizations yet
+              Noch keine Organisationen
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => navigate({ to: "/org/create" })}>
             <PlusCircle className="mr-2 h-4 w-4" />
-            Create organization
+            Organisation erstellen
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

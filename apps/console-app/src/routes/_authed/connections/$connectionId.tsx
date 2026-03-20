@@ -70,7 +70,7 @@ function ConnectionDetailPage() {
   const revokeMutation = useMutation({
     mutationFn: () => client!.connections.revoke(connectionId),
     onSuccess: () => {
-      toast.success("Connection revoked");
+      toast.success("Verbindung widerrufen");
       qc.invalidateQueries({ queryKey: ["connections"] });
       qc.invalidateQueries({ queryKey: ["connection", connectionId] });
     },
@@ -80,7 +80,7 @@ function ConnectionDetailPage() {
   const pauseMutation = useMutation({
     mutationFn: () => client!.connections.pause(connectionId),
     onSuccess: () => {
-      toast.success("Connection paused");
+      toast.success("Verbindung pausiert");
       qc.invalidateQueries({ queryKey: ["connections"] });
       qc.invalidateQueries({ queryKey: ["connection", connectionId] });
     },
@@ -90,7 +90,7 @@ function ConnectionDetailPage() {
   const resumeMutation = useMutation({
     mutationFn: () => client!.connections.resume(connectionId),
     onSuccess: () => {
-      toast.success("Connection resumed");
+      toast.success("Verbindung fortgesetzt");
       qc.invalidateQueries({ queryKey: ["connections"] });
       qc.invalidateQueries({ queryKey: ["connection", connectionId] });
     },
@@ -99,7 +99,7 @@ function ConnectionDetailPage() {
 
   const syncMutation = useMutation({
     mutationFn: () => client!.connections.sync(connectionId),
-    onSuccess: () => toast.success("Sync job triggered"),
+    onSuccess: () => toast.success("Synchronisierungsauftrag gestartet"),
     onError: (e) => toast.error(e.message),
   });
 
@@ -114,7 +114,7 @@ function ConnectionDetailPage() {
         className={buttonVariants({ variant: "ghost", size: "sm" }) + " -ml-2"}
       >
         <ArrowLeft className="h-4 w-4" />
-        Connections
+        Verbindungen
       </Link>
 
       {connQuery.isLoading ? (
@@ -123,7 +123,7 @@ function ConnectionDetailPage() {
           <Skeleton className="h-40" />
         </div>
       ) : !conn ? (
-        <p className="text-muted-foreground">Connection not found.</p>
+        <p className="text-muted-foreground">Verbindung nicht gefunden.</p>
       ) : (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
           {/* Header */}
@@ -157,7 +157,7 @@ function ConnectionDetailPage() {
                     <RefreshCw
                       className={`h-3.5 w-3.5 mr-1.5 ${syncMutation.isPending ? "animate-spin" : ""}`}
                     />
-                    Sync
+                    Synchronisieren
                   </Button>
                   <Button
                     variant="outline"
@@ -166,7 +166,7 @@ function ConnectionDetailPage() {
                     disabled={pauseMutation.isPending}
                   >
                     <PauseCircle className="h-3.5 w-3.5 mr-1.5" />
-                    Pause
+                    Pausieren
                   </Button>
                 </>
               )}
@@ -177,7 +177,7 @@ function ConnectionDetailPage() {
                   disabled={resumeMutation.isPending}
                 >
                   <PlayCircle className="h-3.5 w-3.5 mr-1.5" />
-                  Resume
+                  Fortsetzen
                 </Button>
               )}
               {conn.status !== "revoked" && (
@@ -186,28 +186,27 @@ function ConnectionDetailPage() {
                     render={
                       <Button variant="destructive" size="sm">
                         <XCircle className="h-3.5 w-3.5 mr-1.5" />
-                        Revoke
+                        Widerrufen
                       </Button>
                     }
                   />
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Revoke connection?</AlertDialogTitle>
+                      <AlertDialogTitle>Verbindung widerrufen?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This will permanently revoke the connection between{" "}
-                        <strong>{sourceName}</strong> and <strong>{targetName}</strong> (
+                        Dadurch wird die Verbindung zwischen{" "}
+                        <strong>{sourceName}</strong> und <strong>{targetName}</strong> (
                         <span className="font-mono text-xs">{conn.sourceAppId}</span> →{" "}
-                        <span className="font-mono text-xs">{conn.targetAppId}</span>). This action
-                        cannot be undone.
+                        <span className="font-mono text-xs">{conn.targetAppId}</span>) dauerhaft widerrufen. Diese Aktion kann nicht rückgängig gemacht werden.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogCancel>Abbrechen</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => revokeMutation.mutate()}
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                       >
-                        Revoke
+                        Widerrufen
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
@@ -220,10 +219,10 @@ function ConnectionDetailPage() {
 
           {/* Details grid */}
           <div className="grid gap-4 sm:grid-cols-2">
-            <InfoCard label="Organization" value={conn.organizationId} mono />
-            <InfoCard label="Created by" value={conn.createdByUserId} mono />
-            <InfoCard label="Created" value={new Date(conn.createdAt).toLocaleString()} />
-            <InfoCard label="Last updated" value={new Date(conn.updatedAt).toLocaleString()} />
+            <InfoCard label="Organisation" value={conn.organizationId} mono />
+            <InfoCard label="Erstellt von" value={conn.createdByUserId} mono />
+            <InfoCard label="Erstellt" value={new Date(conn.createdAt).toLocaleString("de-DE")} />
+            <InfoCard label="Zuletzt aktualisiert" value={new Date(conn.updatedAt).toLocaleString("de-DE")} />
           </div>
 
           {/* Scopes */}
@@ -231,13 +230,13 @@ function ConnectionDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <Key className="h-4 w-4" />
-                Granted Scopes
+                Gewährte Berechtigungen
               </CardTitle>
-              <CardDescription>Permissions active on this connection</CardDescription>
+              <CardDescription>Aktive Berechtigungen für diese Verbindung</CardDescription>
             </CardHeader>
             <CardContent>
               {conn.scopes.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No scopes granted.</p>
+                <p className="text-sm text-muted-foreground">Keine Berechtigungen gewährt.</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {conn.scopes.map((s) => (
@@ -269,15 +268,15 @@ function InfoCard({ label, value, mono }: { label: string; value: string; mono?:
 
 function StatusBadge({ status }: { status: "active" | "paused" | "revoked" }) {
   const map = {
-    active: { variant: "default" as const, icon: CheckCircle2 },
-    paused: { variant: "secondary" as const, icon: PauseCircle },
-    revoked: { variant: "destructive" as const, icon: AlertCircle },
+    active: { variant: "default" as const, icon: CheckCircle2, label: "Aktiv" },
+    paused: { variant: "secondary" as const, icon: PauseCircle, label: "Pausiert" },
+    revoked: { variant: "destructive" as const, icon: AlertCircle, label: "Widerrufen" },
   };
-  const { variant, icon: Icon } = map[status];
+  const { variant, icon: Icon, label } = map[status];
   return (
     <Badge variant={variant} className="gap-1">
       <Icon className="h-3 w-3" />
-      {status}
+      {label}
     </Badge>
   );
 }

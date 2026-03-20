@@ -74,13 +74,13 @@ function AppDetailPage() {
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground mt-1">
-              {app.description ?? "No description provided."}
+              {app.description ?? "Keine Beschreibung vorhanden."}
             </p>
             <p className="text-xs text-muted-foreground mt-1 font-mono">{app.slug}</p>
           </div>
         </motion.div>
       ) : !appsQuery.isLoading ? (
-        <p className="text-muted-foreground">App not found.</p>
+        <p className="text-muted-foreground">App nicht gefunden.</p>
       ) : null}
 
       <Separator />
@@ -90,14 +90,14 @@ function AppDetailPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Zap className="h-4 w-4" />
-            Capabilities
+            Fähigkeiten
           </CardTitle>
-          <CardDescription>Scopes this app can grant or request</CardDescription>
+          <CardDescription>Berechtigungen, die diese App gewähren oder anfordern kann</CardDescription>
         </CardHeader>
         <CardContent>
           {appsQuery.isError ? (
             <p className="text-sm text-muted-foreground py-4 text-center">
-              Could not load apps. Try refreshing the page.
+              Apps konnten nicht geladen werden. Versuchen Sie, die Seite zu aktualisieren.
             </p>
           ) : capabilitiesLoading ? (
             <div className="space-y-2">
@@ -107,7 +107,7 @@ function AppDetailPage() {
             </div>
           ) : capabilities.length === 0 ? (
             <p className="text-sm text-muted-foreground py-4 text-center">
-              No capabilities defined.
+              Keine Fähigkeiten definiert.
             </p>
           ) : (
             <div className="space-y-2">
@@ -123,7 +123,7 @@ function AppDetailPage() {
                     {cap.scopeKey}
                   </code>
                   <p className="text-sm text-muted-foreground flex-1">
-                    {cap.description ?? "No description."}
+                    {cap.description ?? "Keine Beschreibung."}
                   </p>
                 </motion.div>
               ))}
@@ -137,7 +137,7 @@ function AppDetailPage() {
         <div className="flex justify-end">
           <Link to="/connections/new" search={{ sourceAppId: app.id }} className={buttonVariants()}>
             <Link2 className="mr-2 h-4 w-4" />
-            Create connection
+            Verbindung erstellen
           </Link>
         </div>
       )}

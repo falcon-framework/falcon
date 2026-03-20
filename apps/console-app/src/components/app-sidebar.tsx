@@ -17,19 +17,19 @@ import UserNav from "./user-nav";
 
 const navItems = [
   {
-    label: "Overview",
+    label: "Übersicht",
     items: [
       { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-      { title: "Connections", url: "/connections", icon: Plug },
+      { title: "Verbindungen", url: "/connections", icon: Plug },
     ],
   },
   {
-    label: "Marketplace",
+    label: "Marktplatz",
     items: [{ title: "Apps", url: "/apps", icon: Store }],
   },
   {
-    label: "Organization",
-    items: [{ title: "Settings", url: "/org/settings", icon: Settings }],
+    label: "Organisation",
+    items: [{ title: "Einstellungen", url: "/org/settings", icon: Settings }],
   },
 ];
 

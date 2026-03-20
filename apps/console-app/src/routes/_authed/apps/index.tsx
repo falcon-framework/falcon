@@ -42,16 +42,16 @@ function AppsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">App Marketplace</h1>
+        <h1 className="text-2xl font-bold tracking-tight">App-Marktplatz</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Browse and connect available applications
+          Verfügbare Anwendungen durchsuchen und verbinden
         </p>
       </div>
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search apps…"
+          placeholder="Apps suchen…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-9"
@@ -68,10 +68,10 @@ function AppsPage() {
         <div className="flex flex-col items-center gap-2 py-16 text-center">
           <Store className="h-12 w-12 text-muted-foreground/40" />
           <h3 className="font-semibold">
-            {search ? "No apps match your search" : "No apps available"}
+            {search ? "Keine Apps entsprechen Ihrer Suche" : "Keine Apps verfügbar"}
           </h3>
           <p className="text-sm text-muted-foreground">
-            {search ? "Try a different search term" : "Apps will appear here when registered"}
+            {search ? "Versuchen Sie einen anderen Suchbegriff" : "Apps erscheinen hier nach der Registrierung"}
           </p>
         </div>
       ) : (
@@ -103,14 +103,14 @@ function AppsPage() {
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col justify-between gap-4">
                   <p className="text-sm text-muted-foreground line-clamp-2">
-                    {app.description ?? "No description provided."}
+                    {app.description ?? "Keine Beschreibung vorhanden."}
                   </p>
                   <Link
                     to="/apps/$appId"
                     params={{ appId: app.id }}
                     className={buttonVariants({ variant: "outline", size: "sm" })}
                   >
-                    View capabilities
+                    Fähigkeiten anzeigen
                     <ArrowRight className="ml-1.5 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </CardContent>

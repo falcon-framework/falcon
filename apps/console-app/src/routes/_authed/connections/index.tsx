@@ -54,7 +54,7 @@ function ConnectionsPage() {
   const approveMutation = useMutation({
     mutationFn: (requestId: string) => client!.installationRequests.approve(requestId),
     onSuccess: () => {
-      toast.success("Connection created");
+      toast.success("Verbindung erstellt");
       void qc.invalidateQueries({ queryKey: ["connections"] });
       void qc.invalidateQueries({ queryKey: ["installation-requests"] });
     },
@@ -102,12 +102,12 @@ function ConnectionsPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage your app integrations</p>
+          <h1 className="text-2xl font-bold tracking-tight">Verbindungen</h1>
+          <p className="text-sm text-muted-foreground mt-1">Verwalten Sie Ihre App-Integrationen</p>
         </div>
         <Link to="/connections/new" className={buttonVariants()}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          New connection
+          Neue Verbindung
         </Link>
       </div>
 
@@ -116,14 +116,14 @@ function ConnectionsPage() {
           {hasPending && (
             <TabsTrigger value="pending">
               <Clock className="mr-1.5 h-3.5 w-3.5" />
-              Pending
+              Ausstehend
               <Badge variant="secondary" className="ml-1.5 text-[10px]">
                 {pending.length}
               </Badge>
             </TabsTrigger>
           )}
           <TabsTrigger value="active">
-            Active
+            Aktiv
             {active.length > 0 && (
               <Badge variant="secondary" className="ml-1.5 text-[10px]">
                 {active.length}
@@ -131,7 +131,7 @@ function ConnectionsPage() {
             )}
           </TabsTrigger>
           <TabsTrigger value="paused">
-            Paused
+            Pausiert
             {paused.length > 0 && (
               <Badge variant="secondary" className="ml-1.5 text-[10px]">
                 {paused.length}
@@ -139,14 +139,14 @@ function ConnectionsPage() {
             )}
           </TabsTrigger>
           <TabsTrigger value="revoked">
-            Revoked
+            Widerrufen
             {revoked.length > 0 && (
               <Badge variant="secondary" className="ml-1.5 text-[10px]">
                 {revoked.length}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="all">Alle</TabsTrigger>
         </TabsList>
 
         {hasPending && (
@@ -210,8 +210,7 @@ function PendingInstallationList({
   return (
     <div className="mt-4 space-y-3">
       <p className="text-sm text-muted-foreground">
-        Approve a request to create the connection. Until then, only the audit log records the
-        submission.
+        Genehmigen Sie eine Anfrage zur Erstellung der Verbindung. Bis dahin wird nur die Übermittlung im Prüfprotokoll erfasst.
       </p>
       <AnimatePresence>
         {pending.map((req) => {
@@ -246,7 +245,7 @@ function PendingInstallationList({
                       {approveMutation.isPending && approveMutation.variables === req.id ? (
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       ) : null}
-                      Approve
+                      Genehmigen
                     </Button>
                   </div>
                 </CardHeader>
@@ -284,13 +283,13 @@ function ConnectionList({
     return (
       <div className="flex flex-col items-center gap-3 py-16 text-center">
         <Plug className="h-12 w-12 text-muted-foreground/40" />
-        <h3 className="font-semibold">No connections</h3>
+        <h3 className="font-semibold">Keine Verbindungen</h3>
         <p className="text-sm text-muted-foreground">
-          Create a new connection to integrate your apps
+          Erstellen Sie eine neue Verbindung, um Ihre Apps zu integrieren
         </p>
         <Link to="/connections/new" className={buttonVariants({ variant: "outline" })}>
           <PlusCircle className="mr-2 h-4 w-4" />
-          New connection
+          Neue Verbindung
         </Link>
       </div>
     );
@@ -330,8 +329,8 @@ function ConnectionList({
                 </CardHeader>
                 <CardContent className="pt-0">
                   <CardDescription className="text-xs">
-                    Created {new Date(conn.createdAt).toLocaleDateString()} · Updated{" "}
-                    {new Date(conn.updatedAt).toLocaleDateString()}
+                    Erstellt {new Date(conn.createdAt).toLocaleDateString("de-DE")} · Aktualisiert{" "}
+                    {new Date(conn.updatedAt).toLocaleDateString("de-DE")}
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -345,9 +344,9 @@ function ConnectionList({
 
 function StatusBadge({ status }: { status: "active" | "paused" | "revoked" }) {
   const map = {
-    active: { variant: "default" as const, icon: CheckCircle2, label: "Active" },
-    paused: { variant: "secondary" as const, icon: PauseCircle, label: "Paused" },
-    revoked: { variant: "destructive" as const, icon: AlertCircle, label: "Revoked" },
+    active: { variant: "default" as const, icon: CheckCircle2, label: "Aktiv" },
+    paused: { variant: "secondary" as const, icon: PauseCircle, label: "Pausiert" },
+    revoked: { variant: "destructive" as const, icon: AlertCircle, label: "Widerrufen" },
   };
   const { variant, icon: Icon, label } = map[status];
   return (

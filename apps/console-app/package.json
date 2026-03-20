@@ -37,6 +37,8 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.17.1",
     "@falcon-framework/config": "workspace:*",
+    "@tanstack/devtools-vite": "^0.6.0",
+    "@tanstack/react-devtools": "^0.10.0",
     "@tanstack/react-query-devtools": "^5.91.1",
     "@tanstack/react-router-devtools": "^1.141.1",
     "@tauri-apps/cli": "^2.4.0",
