@@ -54,23 +54,22 @@ export const ApiHandlers = HttpApiBuilder.group(
       .handle("getCapabilities", ({ path: { appId } }) =>
         Effect.gen(function* () {
           const svc = yield* AppService;
-          const app = yield* svc
-            .listApps()
-            .pipe(
-              Effect.flatMap((apps) =>
-                Effect.fromNullable(apps.find((a) => a.id === appId)),
+          const app = yield* svc.getApp(appId).pipe(
+            Effect.flatMap((a) =>
+              a
+                ? Effect.succeed(a)
+                : Effect.fail(
+                    new ApiNotFoundError({
+                      message: germanMessages.appNotFound(appId),
+                    }),
+                  ),
+            ),
+            Effect.catchTag("DatabaseError", () =>
+              Effect.fail(
+                new ApiNotFoundError({ message: germanMessages.appNotFound(appId) }),
               ),
-              Effect.catchTag("NoSuchElementException", () =>
-                Effect.fail(
-                  new ApiNotFoundError({ message: germanMessages.appNotFound(appId) }),
-                ),
-              ),
-              Effect.catchTag("DatabaseError", () =>
-                Effect.fail(
-                  new ApiNotFoundError({ message: germanMessages.appNotFound(appId) }),
-                ),
-              ),
-            );
+            ),
+          );
           void app;
           const caps = yield* svc.getCapabilities(appId).pipe(Effect.orDie);
           return caps.map(

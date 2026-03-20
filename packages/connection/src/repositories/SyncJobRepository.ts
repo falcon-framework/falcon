@@ -26,7 +26,7 @@ export const SyncJobRepositoryLive = Layer.effect(
             db
               .insert(syncJob)
               .values({
-                id: `sync_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+                id: crypto.randomUUID(),
                 connectionId,
                 status: "requested",
               })

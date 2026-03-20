@@ -32,7 +32,7 @@ export const SettingsRepositoryLive = Layer.effect(
             db
               .insert(connectionSetting)
               .values({
-                id: `settings_${connectionId}_${Date.now()}`,
+                id: crypto.randomUUID(),
                 connectionId,
                 settings,
                 version,

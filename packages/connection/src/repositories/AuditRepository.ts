@@ -32,7 +32,7 @@ export const AuditRepositoryLive = Layer.effect(
             db
               .insert(connectionAuditLog)
               .values({
-                id: `audit_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+                id: crypto.randomUUID(),
                 organizationId: orgId,
                 actorUserId,
                 eventType,

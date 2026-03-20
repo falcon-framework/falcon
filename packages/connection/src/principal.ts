@@ -1,8 +1,9 @@
 import { member } from "@falcon-framework/db/schema/auth";
 import { db } from "@falcon-framework/db";
 import { Context } from "effect";
-import { eq, and } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { createRemoteJWKSet, jwtVerify } from "jose";
+import { germanMessages } from "./i18n.js";
 
 export interface Principal {
   userId: string;
@@ -17,34 +18,40 @@ export class PrincipalTag extends Context.Tag(
 
 async function resolveOrgMembership(
   userId: string,
-  organizationId: string | undefined,
+  organizationId: string,
 ): Promise<{ organizationId: string; role: string } | null> {
-  // If no org specified, find the first org the user belongs to
-  if (!organizationId) {
-    const rows = await db
-      .select()
-      .from(member)
-      .where(eq(member.userId, userId))
-      .limit(1);
-    const row = rows[0];
-    if (!row) return null;
-    return { organizationId: row.organizationId, role: row.role };
-  }
-
   const rows = await db
     .select()
     .from(member)
-    .where(and(eq(member.userId, userId), eq(member.organizationId, organizationId)))
+    .where(
+      and(eq(member.userId, userId), eq(member.organizationId, organizationId)),
+    )
     .limit(1);
   const row = rows[0];
   if (!row) return null;
   return { organizationId: row.organizationId, role: row.role };
 }
 
+/**
+ * Resolves the authenticated principal from request headers.
+ *
+ * Requires an explicit `X-Organization-Id` header — without it this function
+ * returns null so the caller can respond with 401.  This avoids the
+ * non-deterministic "first membership row" behaviour that would occur if we
+ * fell back to picking an arbitrary org when none was specified.
+ *
+ * Auth strategies (tried in order):
+ *   1. Better Auth session cookie → proxy GET /api/auth/get-session
+ *   2. JWT Bearer token → verified against Better Auth JWKS
+ */
 export async function resolvePrincipal(
   headers: Headers,
   betterAuthUrl: string,
 ): Promise<Principal | null> {
+  // An explicit org header is required for every call
+  const organizationId = headers.get("x-organization-id");
+  if (!organizationId) return null;
+
   // 1. Try Better Auth session via cookie
   const cookie = headers.get("cookie");
   if (cookie) {
@@ -55,11 +62,12 @@ export async function resolvePrincipal(
       if (response.ok) {
         const session = (await response.json()) as {
           user?: { id: string };
-          session?: { activeOrganizationId?: string };
         };
         if (session?.user?.id) {
-          const orgId = session.session?.activeOrganizationId;
-          const membership = await resolveOrgMembership(session.user.id, orgId);
+          const membership = await resolveOrgMembership(
+            session.user.id,
+            organizationId,
+          );
           if (membership) {
             return {
               userId: session.user.id,
@@ -80,16 +88,13 @@ export async function resolvePrincipal(
   if (authHeader?.startsWith("Bearer ")) {
     const token = authHeader.slice(7);
     try {
-      // Fetch JWKS from Better Auth
       const jwksUrl = new URL(`${betterAuthUrl}/.well-known/jwks.json`);
       const JWKS = createRemoteJWKSet(jwksUrl);
       const { payload } = await jwtVerify(token, JWKS);
 
       const userId = payload.sub;
-      const orgId = payload["org_id"] as string | undefined;
-
       if (userId) {
-        const membership = await resolveOrgMembership(userId, orgId);
+        const membership = await resolveOrgMembership(userId, organizationId);
         if (membership) {
           return {
             userId,
@@ -116,7 +121,7 @@ export async function withPrincipal(
 
   if (!principal) {
     return Response.json(
-      { error: "Authentifizierung erforderlich. Bitte melden Sie sich an." },
+      { error: germanMessages.unauthorized },
       { status: 401 },
     );
   }

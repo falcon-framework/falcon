@@ -2,21 +2,27 @@ import {
   canApproveInstallation,
   canCreateInstallationRequest,
 } from "@falcon-framework/auth";
+import {
+  connection,
+  connectionScope,
+  connectionSetting,
+  installationRequest,
+} from "@falcon-framework/db/schema/connection";
+import { eq } from "drizzle-orm";
 import { Context, Effect, Layer } from "effect";
 import {
   DuplicateConnectionError,
   ForbiddenError,
   InvalidStateError,
   NotFoundError,
-  type DatabaseError,
+  DatabaseError,
 } from "../errors.js";
+import { DbService } from "../Db.js";
 import {
   ConnectionRepository,
   type ConnectionRow,
   InstallationRepository,
   type InstallationRequestRow,
-  ScopeRepository,
-  SettingsRepository,
 } from "../repositories/index.js";
 import { AuditService } from "./AuditService.js";
 import type { Principal } from "../principal.js";
@@ -54,10 +60,9 @@ export class InstallationService extends Context.Tag(
 export const InstallationServiceLive = Layer.effect(
   InstallationService,
   Effect.gen(function* () {
+    const db = yield* DbService;
     const installationRepo = yield* InstallationRepository;
     const connectionRepo = yield* ConnectionRepository;
-    const scopeRepo = yield* ScopeRepository;
-    const settingsRepo = yield* SettingsRepository;
     const auditService = yield* AuditService;
 
     return {
@@ -76,7 +81,7 @@ export const InstallationServiceLive = Layer.effect(
               reason: "Insufficient role to create installation request",
             });
           }
-          const id = `req_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+          const id = crypto.randomUUID();
           const row = yield* installationRepo.create({
             id,
             organizationId: principal.organizationId,
@@ -109,7 +114,6 @@ export const InstallationServiceLive = Layer.effect(
               resource: "installation_request",
               id: installationId,
             });
-            // TypeScript needs help after yield* with error types
             return undefined as never;
           }
 
@@ -140,24 +144,58 @@ export const InstallationServiceLive = Layer.effect(
             });
           }
 
-          const connId = `conn_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-          const conn = yield* connectionRepo.create({
-            id: connId,
-            organizationId: principal.organizationId,
-            sourceAppId: req.sourceAppId,
-            targetAppId: req.targetAppId,
-            installationRequestId: req.id,
-            createdByUserId: principal.userId,
-          });
-
+          const connId = crypto.randomUUID();
           const scopes = req.requestedScopes as string[];
-          yield* scopeRepo.createMany(connId, scopes);
 
-          if (req.settingsDraft) {
-            yield* settingsRepo.create(connId, req.settingsDraft, 1);
-          }
+          // Atomically create connection + scopes + settings + mark request approved
+          const conn = yield* Effect.tryPromise({
+            try: () =>
+              db.transaction(async (tx) => {
+                const [newConn] = await tx
+                  .insert(connection)
+                  .values({
+                    id: connId,
+                    organizationId: principal.organizationId,
+                    sourceAppId: req.sourceAppId,
+                    targetAppId: req.targetAppId,
+                    installationRequestId: req.id,
+                    createdByUserId: principal.userId,
+                    status: "active",
+                  })
+                  .returning();
 
-          yield* installationRepo.updateStatus(installationId, "approved");
+                if (scopes.length > 0) {
+                  await tx.insert(connectionScope).values(
+                    scopes.map((scopeKey) => ({
+                      id: crypto.randomUUID(),
+                      connectionId: connId,
+                      scopeKey,
+                    })),
+                  );
+                }
+
+                if (req.settingsDraft) {
+                  await tx.insert(connectionSetting).values({
+                    id: crypto.randomUUID(),
+                    connectionId: connId,
+                    settings: req.settingsDraft,
+                    version: 1,
+                  });
+                }
+
+                await tx
+                  .update(installationRequest)
+                  .set({ status: "approved", updatedAt: new Date() })
+                  .where(eq(installationRequest.id, installationId));
+
+                return newConn!;
+              }),
+            catch: (e) =>
+              new DatabaseError({
+                message: "Failed to approve installation request",
+                cause: e,
+              }),
+          });
 
           yield* auditService.log(
             principal.organizationId,

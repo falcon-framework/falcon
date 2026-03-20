@@ -12,13 +12,8 @@
     "desktop:build": "tauri build"
   },
   "dependencies": {
-    "@falcon-framework/api": "workspace:*",
-    "@falcon-framework/auth": "workspace:*",
     "@falcon-framework/env": "workspace:*",
     "@falcon-framework/ui": "workspace:*",
-    "@orpc/client": "catalog:",
-    "@orpc/server": "catalog:",
-    "@orpc/tanstack-query": "^1.13.6",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-form": "^1.28.0",
     "@tanstack/react-query": "^5.80.6",
@@ -29,6 +24,7 @@
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "lucide-react": "catalog:",
+    "motion": "^12.38.0",
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

@@ -37,7 +37,7 @@ export const ScopeServiceLive = Layer.effect(
       checkScope: (
         principal: Principal,
         connectionId: string,
-        _appId: string,
+        appId: string,
         scope: string,
       ) =>
         Effect.gen(function* () {
@@ -57,6 +57,13 @@ export const ScopeServiceLive = Layer.effect(
               id: connectionId,
             });
             return false as never;
+          }
+
+          // Verify the requesting appId is actually a party in this connection
+          if (conn.sourceAppId !== appId && conn.targetAppId !== appId) {
+            yield* new ForbiddenError({
+              reason: `App '${appId}' is not a party to connection '${connectionId}'`,
+            });
           }
 
           const scopeRow = yield* scopeRepo.findScope(connectionId, scope);

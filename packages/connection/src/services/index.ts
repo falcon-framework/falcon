@@ -1,4 +1,5 @@
 import { Layer } from "effect";
+import { DbServiceLive } from "../Db.js";
 import { RepositoriesLive } from "../repositories/index.js";
 import { AppServiceLive } from "./AppService.js";
 import { AuditServiceLive } from "./AuditService.js";
@@ -15,8 +16,10 @@ export * from "./ScopeService.js";
 export * from "./SyncService.js";
 
 // Services that need AuditService must have it explicitly provided
-const InstallationServiceWithAudit = InstallationServiceLive.pipe(
+// InstallationService needs AuditService AND DbService (for the transaction)
+const InstallationServiceWithDeps = InstallationServiceLive.pipe(
   Layer.provide(AuditServiceLive),
+  Layer.provide(DbServiceLive),
 );
 const ConnectionServiceWithAudit = ConnectionServiceLive.pipe(
   Layer.provide(AuditServiceLive),
@@ -28,7 +31,7 @@ const SyncServiceWithAudit = SyncServiceLive.pipe(
 export const ServicesLive = Layer.mergeAll(
   AuditServiceLive,
   AppServiceLive,
-  InstallationServiceWithAudit,
+  InstallationServiceWithDeps,
   ConnectionServiceWithAudit,
   ScopeServiceLive,
   SyncServiceWithAudit,

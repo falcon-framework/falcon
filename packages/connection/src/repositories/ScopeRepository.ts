@@ -37,8 +37,8 @@ export const ScopeRepositoryLive = Layer.effect(
               : db
                   .insert(connectionScope)
                   .values(
-                    scopes.map((scopeKey, i) => ({
-                      id: `scope_${connectionId}_${i}_${Date.now()}`,
+                    scopes.map((scopeKey) => ({
+                      id: crypto.randomUUID(),
                       connectionId,
                       scopeKey,
                     })),

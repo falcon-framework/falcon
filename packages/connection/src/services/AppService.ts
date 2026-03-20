@@ -9,6 +9,7 @@ import type { DatabaseError } from "../errors.js";
 
 export interface AppServiceService {
   listApps(): Effect.Effect<AppRow[], DatabaseError>;
+  getApp(appId: string): Effect.Effect<AppRow | undefined, DatabaseError>;
   getCapabilities(
     appId: string,
   ): Effect.Effect<CapabilityRow[], DatabaseError>;
@@ -25,6 +26,7 @@ export const AppServiceLive = Layer.effect(
     const capRepo = yield* CapabilityRepository;
     return {
       listApps: () => appRepo.listActive(),
+      getApp: (appId: string) => appRepo.findById(appId),
       getCapabilities: (appId: string) => capRepo.listByAppId(appId),
     };
   }),
