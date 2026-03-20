@@ -1,5 +1,7 @@
 {
-  "name": "@falcon/db",
+  "name": "@falcon-framework/db",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
   "exports": {
     ".": {

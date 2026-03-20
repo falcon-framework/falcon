@@ -1,5 +1,7 @@
 {
-  "name": "@falcon/auth",
+  "name": "@falcon-framework/auth",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
   "exports": {
     ".": {

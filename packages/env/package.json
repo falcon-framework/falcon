@@ -1,5 +1,5 @@
 {
-  "name": "@falcon/env",
+  "name": "@falcon-framework/env",
   "version": "0.0.0",
   "private": true,
   "type": "module",
