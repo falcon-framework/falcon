@@ -26,26 +26,50 @@ const apps = [
 ];
 
 const capabilities = [
-  { id: "cap_crm_read", appId: "app_crm", scopeKey: "customers.read", description: "Read customer data" },
-  { id: "cap_crm_write", appId: "app_crm", scopeKey: "customers.write", description: "Write customer data" },
-  { id: "cap_billing_read", appId: "app_billing", scopeKey: "invoices.read", description: "Read invoices" },
-  { id: "cap_billing_write", appId: "app_billing", scopeKey: "invoices.write", description: "Create/update invoices" },
-  { id: "cap_helpdesk_read", appId: "app_helpdesk", scopeKey: "tickets.read", description: "Read support tickets" },
-  { id: "cap_helpdesk_write", appId: "app_helpdesk", scopeKey: "tickets.write", description: "Create/update tickets" },
+  {
+    id: "cap_crm_read",
+    appId: "app_crm",
+    scopeKey: "customers.read",
+    description: "Read customer data",
+  },
+  {
+    id: "cap_crm_write",
+    appId: "app_crm",
+    scopeKey: "customers.write",
+    description: "Write customer data",
+  },
+  {
+    id: "cap_billing_read",
+    appId: "app_billing",
+    scopeKey: "invoices.read",
+    description: "Read invoices",
+  },
+  {
+    id: "cap_billing_write",
+    appId: "app_billing",
+    scopeKey: "invoices.write",
+    description: "Create/update invoices",
+  },
+  {
+    id: "cap_helpdesk_read",
+    appId: "app_helpdesk",
+    scopeKey: "tickets.read",
+    description: "Read support tickets",
+  },
+  {
+    id: "cap_helpdesk_write",
+    appId: "app_helpdesk",
+    scopeKey: "tickets.write",
+    description: "Create/update tickets",
+  },
 ];
 
 async function seed() {
   console.log("Seeding connection apps...");
 
-  await db
-    .insert(falconApp)
-    .values(apps)
-    .onConflictDoNothing();
+  await db.insert(falconApp).values(apps).onConflictDoNothing();
 
-  await db
-    .insert(appCapability)
-    .values(capabilities)
-    .onConflictDoNothing();
+  await db.insert(appCapability).values(capabilities).onConflictDoNothing();
 
   console.log("Seed complete.");
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "serve": "vite preview",
-    "dev:bare": "vite dev",
+    "dev:bare": "vite dev --host 0.0.0.0 --port 3002",
     "tauri": "tauri",
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build"

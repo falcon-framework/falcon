@@ -48,10 +48,7 @@ function AppDetailPage() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      <Link
-        to="/apps"
-        className={buttonVariants({ variant: "ghost", size: "sm" }) + " -ml-2"}
-      >
+      <Link to="/apps" className={buttonVariants({ variant: "ghost", size: "sm" }) + " -ml-2"}>
         <ArrowLeft className="h-4 w-4" />
         Apps
       </Link>
@@ -139,11 +136,7 @@ function AppDetailPage() {
       {/* Action */}
       {app && (
         <div className="flex justify-end">
-          <Link
-            to="/connections/new"
-            search={{ sourceAppId: app.id }}
-            className={buttonVariants()}
-          >
+          <Link to="/connections/new" search={{ sourceAppId: app.id }} className={buttonVariants()}>
             <Link2 className="mr-2 h-4 w-4" />
             Create connection
           </Link>

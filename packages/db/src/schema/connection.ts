@@ -1,13 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-  index,
-  integer,
-  jsonb,
-  pgTable,
-  text,
-  timestamp,
-  unique,
-} from "drizzle-orm/pg-core";
+import { index, integer, jsonb, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
 
 export const falconApp = pgTable("falcon_app", {
   id: text("id").primaryKey(),
@@ -32,10 +24,7 @@ export const appCapability = pgTable(
   },
   (table) => [
     index("app_capability_appId_idx").on(table.appId),
-    unique("app_capability_appId_scopeKey_unique").on(
-      table.appId,
-      table.scopeKey,
-    ),
+    unique("app_capability_appId_scopeKey_unique").on(table.appId, table.scopeKey),
   ],
 );
 
@@ -57,9 +46,7 @@ export const installationRequest = pgTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  (table) => [
-    index("installation_request_organizationId_idx").on(table.organizationId),
-  ],
+  (table) => [index("installation_request_organizationId_idx").on(table.organizationId)],
 );
 
 export const connection = pgTable(
@@ -73,17 +60,13 @@ export const connection = pgTable(
     targetAppId: text("target_app_id")
       .notNull()
       .references(() => falconApp.id),
-    installationRequestId: text("installation_request_id").references(
-      () => installationRequest.id,
-    ),
+    installationRequestId: text("installation_request_id").references(() => installationRequest.id),
     status: text("status").notNull().default("active"),
     createdByUserId: text("created_by_user_id").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
-  (table) => [
-    index("connection_organizationId_idx").on(table.organizationId),
-  ],
+  (table) => [index("connection_organizationId_idx").on(table.organizationId)],
 );
 
 export const connectionScope = pgTable("connection_scope", {
@@ -95,15 +78,12 @@ export const connectionScope = pgTable("connection_scope", {
   grantedAt: timestamp("granted_at").defaultNow().notNull(),
 });
 
-export const connectionScopeRelations = relations(
-  connectionScope,
-  ({ one }) => ({
-    connection: one(connection, {
-      fields: [connectionScope.connectionId],
-      references: [connection.id],
-    }),
+export const connectionScopeRelations = relations(connectionScope, ({ one }) => ({
+  connection: one(connection, {
+    fields: [connectionScope.connectionId],
+    references: [connection.id],
   }),
-);
+}));
 
 export const connectionSetting = pgTable("connection_setting", {
   id: text("id").primaryKey(),
@@ -126,9 +106,7 @@ export const connectionAuditLog = pgTable(
     payload: jsonb("payload"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => [
-    index("connection_audit_log_organizationId_idx").on(table.organizationId),
-  ],
+  (table) => [index("connection_audit_log_organizationId_idx").on(table.organizationId)],
 );
 
 export const syncJob = pgTable(
@@ -156,19 +134,16 @@ export const appCapabilityRelations = relations(appCapability, ({ one }) => ({
   }),
 }));
 
-export const installationRequestRelations = relations(
-  installationRequest,
-  ({ one }) => ({
-    sourceApp: one(falconApp, {
-      fields: [installationRequest.sourceAppId],
-      references: [falconApp.id],
-    }),
-    targetApp: one(falconApp, {
-      fields: [installationRequest.targetAppId],
-      references: [falconApp.id],
-    }),
+export const installationRequestRelations = relations(installationRequest, ({ one }) => ({
+  sourceApp: one(falconApp, {
+    fields: [installationRequest.sourceAppId],
+    references: [falconApp.id],
   }),
-);
+  targetApp: one(falconApp, {
+    fields: [installationRequest.targetAppId],
+    references: [falconApp.id],
+  }),
+}));
 
 export const connectionRelations = relations(connection, ({ one, many }) => ({
   sourceApp: one(falconApp, {
@@ -188,15 +163,12 @@ export const connectionRelations = relations(connection, ({ one, many }) => ({
   syncJobs: many(syncJob),
 }));
 
-export const connectionSettingRelations = relations(
-  connectionSetting,
-  ({ one }) => ({
-    connection: one(connection, {
-      fields: [connectionSetting.connectionId],
-      references: [connection.id],
-    }),
+export const connectionSettingRelations = relations(connectionSetting, ({ one }) => ({
+  connection: one(connection, {
+    fields: [connectionSetting.connectionId],
+    references: [connection.id],
   }),
-);
+}));
 
 export const syncJobRelations = relations(syncJob, ({ one }) => ({
   connection: one(connection, {

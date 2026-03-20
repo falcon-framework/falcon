@@ -12,9 +12,7 @@ export interface SettingsRepositoryService {
     settings: unknown,
     version: number,
   ): Effect.Effect<SettingsRow, DatabaseError>;
-  findByConnection(
-    connectionId: string,
-  ): Effect.Effect<SettingsRow | undefined, DatabaseError>;
+  findByConnection(connectionId: string): Effect.Effect<SettingsRow | undefined, DatabaseError>;
 }
 
 export class SettingsRepository extends Context.Tag(
@@ -39,8 +37,7 @@ export const SettingsRepositoryLive = Layer.effect(
               })
               .returning()
               .then((rows) => rows[0]!),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to create settings", cause: e }),
+          catch: (e) => new DatabaseError({ message: "Failed to create settings", cause: e }),
         }),
       findByConnection: (connectionId: string) =>
         Effect.tryPromise({
@@ -51,8 +48,7 @@ export const SettingsRepositoryLive = Layer.effect(
               .where(eq(connectionSetting.connectionId, connectionId))
               .limit(1)
               .then((rows) => rows[0]),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to find settings", cause: e }),
+          catch: (e) => new DatabaseError({ message: "Failed to find settings", cause: e }),
         }),
     };
   }),

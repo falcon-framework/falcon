@@ -8,12 +8,7 @@ import {
 import { Badge } from "@falcon-framework/ui/components/badge";
 import { buttonVariants } from "@falcon-framework/ui/components/button";
 import { Skeleton } from "@falcon-framework/ui/components/skeleton";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@falcon-framework/ui/components/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@falcon-framework/ui/components/tabs";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "motion/react";
@@ -51,9 +46,7 @@ function ConnectionsPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Manage your app integrations
-          </p>
+          <p className="text-sm text-muted-foreground mt-1">Manage your app integrations</p>
         </div>
         <Link to="/connections/new" className={buttonVariants()}>
           <PlusCircle className="mr-2 h-4 w-4" />
@@ -97,10 +90,7 @@ function ConnectionsPage() {
           { value: "all", list: connections },
         ].map((tab) => (
           <TabsContent key={tab.value} value={tab.value}>
-            <ConnectionList
-              connections={tab.list}
-              isLoading={connectionsQuery.isLoading}
-            />
+            <ConnectionList connections={tab.list} isLoading={connectionsQuery.isLoading} />
           </TabsContent>
         ))}
       </Tabs>
@@ -133,10 +123,7 @@ function ConnectionList({
         <p className="text-sm text-muted-foreground">
           Create a new connection to integrate your apps
         </p>
-        <Link
-          to="/connections/new"
-          className={buttonVariants({ variant: "outline" })}
-        >
+        <Link to="/connections/new" className={buttonVariants({ variant: "outline" })}>
           <PlusCircle className="mr-2 h-4 w-4" />
           New connection
         </Link>
@@ -177,8 +164,8 @@ function ConnectionList({
                 </CardHeader>
                 <CardContent className="pt-0">
                   <CardDescription className="text-xs">
-                    Created {new Date(conn.createdAt).toLocaleDateString()} ·{" "}
-                    Updated {new Date(conn.updatedAt).toLocaleDateString()}
+                    Created {new Date(conn.createdAt).toLocaleDateString()} · Updated{" "}
+                    {new Date(conn.updatedAt).toLocaleDateString()}
                   </CardDescription>
                 </CardContent>
               </Card>

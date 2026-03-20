@@ -47,7 +47,7 @@ export const connectService = await Worker("connect-service", {
     BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,
   },
   dev: {
-    port: 3000,
+    port: 3001,
   },
 });
 

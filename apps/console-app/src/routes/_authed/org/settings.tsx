@@ -178,9 +178,7 @@ function MembersSection(_: { org: { id: string } }) {
       </CardHeader>
       <CardContent className="space-y-2">
         {members.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">
-            Loading members…
-          </p>
+          <p className="text-sm text-muted-foreground text-center py-4">Loading members…</p>
         ) : (
           members.map((m: any) => {
             const RoleIcon = ROLE_ICONS[m.role as keyof typeof ROLE_ICONS] ?? User;
@@ -197,16 +195,15 @@ function MembersSection(_: { org: { id: string } }) {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium truncate">
-                    {m.user?.name ?? m.userId}
-                  </div>
+                  <div className="text-sm font-medium truncate">{m.user?.name ?? m.userId}</div>
                   {m.user?.email && (
-                    <div className="text-xs text-muted-foreground truncate">
-                      {m.user.email}
-                    </div>
+                    <div className="text-xs text-muted-foreground truncate">{m.user.email}</div>
                   )}
                 </div>
-                <Badge variant={ROLE_COLORS[m.role as keyof typeof ROLE_COLORS] ?? "outline"} className="gap-1 text-[10px]">
+                <Badge
+                  variant={ROLE_COLORS[m.role as keyof typeof ROLE_COLORS] ?? "outline"}
+                  className="gap-1 text-[10px]"
+                >
                   <RoleIcon className="h-2.5 w-2.5" />
                   {m.role}
                 </Badge>
@@ -296,10 +293,7 @@ function InviteSection({ orgId }: { orgId: string }) {
 
               <div className="space-y-1.5">
                 <Label>Role</Label>
-                <Select
-                  value={role}
-                  onValueChange={(v) => setRole(v as "admin" | "member")}
-                >
+                <Select value={role} onValueChange={(v) => setRole(v as "admin" | "member")}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>

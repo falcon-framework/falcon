@@ -1,14 +1,7 @@
 import { canCheckScope } from "@falcon-framework/auth";
 import { Context, Effect, Layer } from "effect";
-import {
-  ForbiddenError,
-  NotFoundError,
-  type DatabaseError,
-} from "../errors.js";
-import {
-  ConnectionRepository,
-  ScopeRepository,
-} from "../repositories/index.js";
+import { ForbiddenError, NotFoundError, type DatabaseError } from "../errors.js";
+import { ConnectionRepository, ScopeRepository } from "../repositories/index.js";
 import type { Principal } from "../principal.js";
 
 export interface ScopeServiceService {
@@ -17,15 +10,13 @@ export interface ScopeServiceService {
     connectionId: string,
     appId: string,
     scope: string,
-  ): Effect.Effect<
-    boolean,
-    ForbiddenError | NotFoundError | DatabaseError
-  >;
+  ): Effect.Effect<boolean, ForbiddenError | NotFoundError | DatabaseError>;
 }
 
-export class ScopeService extends Context.Tag(
-  "@falcon-framework/connection/ScopeService",
-)<ScopeService, ScopeServiceService>() {}
+export class ScopeService extends Context.Tag("@falcon-framework/connection/ScopeService")<
+  ScopeService,
+  ScopeServiceService
+>() {}
 
 export const ScopeServiceLive = Layer.effect(
   ScopeService,
@@ -34,12 +25,7 @@ export const ScopeServiceLive = Layer.effect(
     const scopeRepo = yield* ScopeRepository;
 
     return {
-      checkScope: (
-        principal: Principal,
-        connectionId: string,
-        appId: string,
-        scope: string,
-      ) =>
+      checkScope: (principal: Principal, connectionId: string, appId: string, scope: string) =>
         Effect.gen(function* () {
           if (!canCheckScope(principal.role)) {
             yield* new ForbiddenError({
@@ -47,10 +33,7 @@ export const ScopeServiceLive = Layer.effect(
             });
           }
 
-          const conn = yield* connectionRepo.findById(
-            connectionId,
-            principal.organizationId,
-          );
+          const conn = yield* connectionRepo.findById(connectionId, principal.organizationId);
           if (!conn) {
             yield* new NotFoundError({
               resource: "connection",

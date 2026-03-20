@@ -23,5 +23,6 @@ export const germanMessages = {
     `Der Scope '${scope}' wurde für diese Verbindung nicht gewährt.`,
 
   // Database errors
-  databaseError: "Ein interner Datenbankfehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
+  databaseError:
+    "Ein interner Datenbankfehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
 } as const;

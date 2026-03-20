@@ -130,7 +130,9 @@ function ConnectionDetailPage() {
                     onClick={() => syncMutation.mutate()}
                     disabled={syncMutation.isPending}
                   >
-                    <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${syncMutation.isPending ? "animate-spin" : ""}`} />
+                    <RefreshCw
+                      className={`h-3.5 w-3.5 mr-1.5 ${syncMutation.isPending ? "animate-spin" : ""}`}
+                    />
                     Sync
                   </Button>
                   <Button
@@ -159,8 +161,8 @@ function ConnectionDetailPage() {
                       <AlertDialogTitle>Revoke connection?</AlertDialogTitle>
                       <AlertDialogDescription>
                         This will permanently revoke the connection between{" "}
-                        <strong>{conn.sourceAppId}</strong> and{" "}
-                        <strong>{conn.targetAppId}</strong>. This action cannot be undone.
+                        <strong>{conn.sourceAppId}</strong> and <strong>{conn.targetAppId}</strong>.
+                        This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -184,14 +186,8 @@ function ConnectionDetailPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <InfoCard label="Organization" value={conn.organizationId} mono />
             <InfoCard label="Created by" value={conn.createdByUserId} mono />
-            <InfoCard
-              label="Created"
-              value={new Date(conn.createdAt).toLocaleString()}
-            />
-            <InfoCard
-              label="Last updated"
-              value={new Date(conn.updatedAt).toLocaleString()}
-            />
+            <InfoCard label="Created" value={new Date(conn.createdAt).toLocaleString()} />
+            <InfoCard label="Last updated" value={new Date(conn.updatedAt).toLocaleString()} />
           </div>
 
           {/* Scopes */}
@@ -230,9 +226,7 @@ function InfoCard({ label, value, mono }: { label: string; value: string; mono?:
   return (
     <div className="rounded-lg border p-3 space-y-1">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className={`text-sm font-medium truncate ${mono ? "font-mono text-xs" : ""}`}>
-        {value}
-      </p>
+      <p className={`text-sm font-medium truncate ${mono ? "font-mono text-xs" : ""}`}>{value}</p>
     </div>
   );
 }

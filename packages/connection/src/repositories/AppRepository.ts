@@ -11,9 +11,10 @@ export interface AppRepositoryService {
   findById(id: string): Effect.Effect<AppRow | undefined, DatabaseError>;
 }
 
-export class AppRepository extends Context.Tag(
-  "@falcon-framework/connection/AppRepository",
-)<AppRepository, AppRepositoryService>() {}
+export class AppRepository extends Context.Tag("@falcon-framework/connection/AppRepository")<
+  AppRepository,
+  AppRepositoryService
+>() {}
 
 export const AppRepositoryLive = Layer.effect(
   AppRepository,
@@ -22,13 +23,8 @@ export const AppRepositoryLive = Layer.effect(
     return {
       listActive: () =>
         Effect.tryPromise({
-          try: () =>
-            db
-              .select()
-              .from(falconApp)
-              .where(eq(falconApp.status, "active")),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to list apps", cause: e }),
+          try: () => db.select().from(falconApp).where(eq(falconApp.status, "active")),
+          catch: (e) => new DatabaseError({ message: "Failed to list apps", cause: e }),
         }),
       findById: (id: string) =>
         Effect.tryPromise({
@@ -39,8 +35,7 @@ export const AppRepositoryLive = Layer.effect(
               .where(eq(falconApp.id, id))
               .limit(1)
               .then((rows) => rows[0]),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to find app", cause: e }),
+          catch: (e) => new DatabaseError({ message: "Failed to find app", cause: e }),
         }),
     };
   }),

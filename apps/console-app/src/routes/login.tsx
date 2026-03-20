@@ -56,9 +56,7 @@ function LoginPage() {
               <Zap className="h-6 w-6" />
             </div>
             <h1 className="text-xl font-bold tracking-tight">Falcon Connect</h1>
-            <p className="text-sm text-muted-foreground">
-              Unified app integration platform
-            </p>
+            <p className="text-sm text-muted-foreground">Unified app integration platform</p>
           </div>
 
           <AnimatePresence mode="wait">

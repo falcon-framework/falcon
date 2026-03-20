@@ -25,14 +25,10 @@ export default function OrgSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={
-          <Button variant="ghost" size="sm" className="h-8 gap-1.5 text-sm" />
-        }
+        render={<Button variant="ghost" size="sm" className="h-8 gap-1.5 text-sm" />}
       >
         <Building2 className="h-4 w-4 text-muted-foreground" />
-        <span className="max-w-[160px] truncate">
-          {activeOrg?.name ?? "Select organization"}
-        </span>
+        <span className="max-w-[160px] truncate">{activeOrg?.name ?? "Select organization"}</span>
         <ChevronDown className="h-3 w-3 text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-60">

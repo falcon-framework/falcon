@@ -21,12 +21,8 @@ const InstallationServiceWithDeps = InstallationServiceLive.pipe(
   Layer.provide(AuditServiceLive),
   Layer.provide(DbServiceLive),
 );
-const ConnectionServiceWithAudit = ConnectionServiceLive.pipe(
-  Layer.provide(AuditServiceLive),
-);
-const SyncServiceWithAudit = SyncServiceLive.pipe(
-  Layer.provide(AuditServiceLive),
-);
+const ConnectionServiceWithAudit = ConnectionServiceLive.pipe(Layer.provide(AuditServiceLive));
+const SyncServiceWithAudit = SyncServiceLive.pipe(Layer.provide(AuditServiceLive));
 
 export const ServicesLive = Layer.mergeAll(
   AuditServiceLive,

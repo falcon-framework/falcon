@@ -1,10 +1,6 @@
 import { canRevokeOrPauseConnection } from "@falcon-framework/auth";
 import { Context, Effect, Layer } from "effect";
-import {
-  ForbiddenError,
-  NotFoundError,
-  type DatabaseError,
-} from "../errors.js";
+import { ForbiddenError, NotFoundError, type DatabaseError } from "../errors.js";
 import {
   ConnectionRepository,
   type ConnectionRow,
@@ -49,10 +45,7 @@ export const ConnectionServiceLive = Layer.effect(
 
     const requireConnection = (principal: Principal, connectionId: string) =>
       Effect.gen(function* () {
-        const conn = yield* connectionRepo.findById(
-          connectionId,
-          principal.organizationId,
-        );
+        const conn = yield* connectionRepo.findById(connectionId, principal.organizationId);
         if (!conn) {
           yield* new NotFoundError({ resource: "connection", id: connectionId });
           return undefined as never;
@@ -61,8 +54,7 @@ export const ConnectionServiceLive = Layer.effect(
       });
 
     return {
-      list: (principal: Principal) =>
-        connectionRepo.listByOrganization(principal.organizationId),
+      list: (principal: Principal) => connectionRepo.listByOrganization(principal.organizationId),
 
       getDetail: (principal: Principal, connectionId: string) =>
         Effect.gen(function* () {
@@ -72,9 +64,7 @@ export const ConnectionServiceLive = Layer.effect(
           return {
             ...conn,
             scopes: scopeRows.map((s) => s.scopeKey),
-            settings: settingsRow
-              ? (settingsRow.settings as Record<string, unknown>)
-              : null,
+            settings: settingsRow ? (settingsRow.settings as Record<string, unknown>) : null,
           };
         }),
 
@@ -113,12 +103,9 @@ export const ConnectionServiceLive = Layer.effect(
             principal.organizationId,
             "paused",
           );
-          yield* auditService.log(
-            principal.organizationId,
-            principal.userId,
-            "connection.paused",
-            { connectionId },
-          );
+          yield* auditService.log(principal.organizationId, principal.userId, "connection.paused", {
+            connectionId,
+          });
           return conn;
         }),
     };

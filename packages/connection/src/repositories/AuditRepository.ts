@@ -12,21 +12,17 @@ export interface AuditRepositoryService {
   ): Effect.Effect<void, DatabaseError>;
 }
 
-export class AuditRepository extends Context.Tag(
-  "@falcon-framework/connection/AuditRepository",
-)<AuditRepository, AuditRepositoryService>() {}
+export class AuditRepository extends Context.Tag("@falcon-framework/connection/AuditRepository")<
+  AuditRepository,
+  AuditRepositoryService
+>() {}
 
 export const AuditRepositoryLive = Layer.effect(
   AuditRepository,
   Effect.gen(function* () {
     const db = yield* DbService;
     return {
-      log: (
-        orgId: string,
-        actorUserId: string,
-        eventType: string,
-        payload: unknown,
-      ) =>
+      log: (orgId: string, actorUserId: string, eventType: string, payload: unknown) =>
         Effect.tryPromise({
           try: () =>
             db
@@ -39,8 +35,7 @@ export const AuditRepositoryLive = Layer.effect(
                 payload,
               })
               .then(() => undefined),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to write audit log", cause: e }),
+          catch: (e) => new DatabaseError({ message: "Failed to write audit log", cause: e }),
         }),
     };
   }),

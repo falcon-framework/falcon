@@ -134,18 +134,13 @@ function DashboardPage() {
               <CardTitle className="text-base">Recent Connections</CardTitle>
               <CardDescription>Your latest app integrations</CardDescription>
             </div>
-            <Link
-              to="/connections"
-              className={buttonVariants({ variant: "ghost", size: "sm" })}
-            >
+            <Link to="/connections" className={buttonVariants({ variant: "ghost", size: "sm" })}>
               View all <ArrowRight className="ml-1 h-3.5 w-3.5" />
             </Link>
           </CardHeader>
           <CardContent className="space-y-2">
             {connectionsQuery.isLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full" />
-              ))
+              Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)
             ) : connections.length === 0 ? (
               <EmptyState
                 icon={Plug}
@@ -184,18 +179,13 @@ function DashboardPage() {
               <CardTitle className="text-base">App Marketplace</CardTitle>
               <CardDescription>Available integrations</CardDescription>
             </div>
-            <Link
-              to="/apps"
-              className={buttonVariants({ variant: "ghost", size: "sm" })}
-            >
+            <Link to="/apps" className={buttonVariants({ variant: "ghost", size: "sm" })}>
               Browse <ArrowRight className="ml-1 h-3.5 w-3.5" />
             </Link>
           </CardHeader>
           <CardContent className="space-y-2">
             {appsQuery.isLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full" />
-              ))
+              Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)
             ) : apps.length === 0 ? (
               <EmptyState icon={Store} message="No apps in marketplace" />
             ) : (
@@ -215,7 +205,10 @@ function DashboardPage() {
                       {app.description ?? app.slug}
                     </div>
                   </div>
-                  <Badge variant={app.status === "active" ? "default" : "secondary"} className="text-[10px]">
+                  <Badge
+                    variant={app.status === "active" ? "default" : "secondary"}
+                    className="text-[10px]"
+                  >
                     {app.status}
                   </Badge>
                 </Link>
@@ -257,10 +250,7 @@ function EmptyState({
       <Icon className="h-8 w-8 text-muted-foreground/50" />
       <p className="text-sm text-muted-foreground">{message}</p>
       {action && (
-        <Link
-          to={action.to as any}
-          className={buttonVariants({ variant: "outline", size: "sm" })}
-        >
+        <Link to={action.to as any} className={buttonVariants({ variant: "outline", size: "sm" })}>
           {action.label}
         </Link>
       )}

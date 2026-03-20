@@ -17,13 +17,8 @@ export type CreateConnectionData = {
 
 export interface ConnectionRepositoryService {
   create(data: CreateConnectionData): Effect.Effect<ConnectionRow, DatabaseError>;
-  findById(
-    id: string,
-    orgId: string,
-  ): Effect.Effect<ConnectionRow | undefined, DatabaseError>;
-  listByOrganization(
-    orgId: string,
-  ): Effect.Effect<ConnectionRow[], DatabaseError>;
+  findById(id: string, orgId: string): Effect.Effect<ConnectionRow | undefined, DatabaseError>;
+  listByOrganization(orgId: string): Effect.Effect<ConnectionRow[], DatabaseError>;
   updateStatus(
     id: string,
     orgId: string,
@@ -61,8 +56,7 @@ export const ConnectionRepositoryLive = Layer.effect(
               })
               .returning()
               .then((rows) => rows[0]!),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to create connection", cause: e }),
+          catch: (e) => new DatabaseError({ message: "Failed to create connection", cause: e }),
         }),
       findById: (id: string, orgId: string) =>
         Effect.tryPromise({
@@ -70,26 +64,15 @@ export const ConnectionRepositoryLive = Layer.effect(
             db
               .select()
               .from(connection)
-              .where(
-                and(
-                  eq(connection.id, id),
-                  eq(connection.organizationId, orgId),
-                ),
-              )
+              .where(and(eq(connection.id, id), eq(connection.organizationId, orgId)))
               .limit(1)
               .then((rows) => rows[0]),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to find connection", cause: e }),
+          catch: (e) => new DatabaseError({ message: "Failed to find connection", cause: e }),
         }),
       listByOrganization: (orgId: string) =>
         Effect.tryPromise({
-          try: () =>
-            db
-              .select()
-              .from(connection)
-              .where(eq(connection.organizationId, orgId)),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to list connections", cause: e }),
+          try: () => db.select().from(connection).where(eq(connection.organizationId, orgId)),
+          catch: (e) => new DatabaseError({ message: "Failed to list connections", cause: e }),
         }),
       updateStatus: (id: string, orgId: string, status: string) =>
         Effect.tryPromise({
@@ -97,12 +80,7 @@ export const ConnectionRepositoryLive = Layer.effect(
             db
               .update(connection)
               .set({ status, updatedAt: new Date() })
-              .where(
-                and(
-                  eq(connection.id, id),
-                  eq(connection.organizationId, orgId),
-                ),
-              )
+              .where(and(eq(connection.id, id), eq(connection.organizationId, orgId)))
               .returning()
               .then((rows) => rows[0]!),
           catch: (e) =>

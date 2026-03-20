@@ -26,9 +26,7 @@ const ApiHandlersLive = ApiHandlers.pipe(
   Layer.provide(PrincipalPlaceholderLayer),
 );
 
-const ApiLive = HttpApiBuilder.api(FalconConnectionApi).pipe(
-  Layer.provide(ApiHandlersLive),
-);
+const ApiLive = HttpApiBuilder.api(FalconConnectionApi).pipe(Layer.provide(ApiHandlersLive));
 
 const AppLayer = Layer.merge(ApiLive, HttpServer.layerContext);
 
@@ -36,17 +34,13 @@ export function makeConnectionWebHandler(betterAuthUrl: string): {
   handler: (request: Request) => Promise<Response>;
   dispose: () => Promise<void>;
 } {
-  const { handler: effectHandler, dispose } =
-    HttpApiBuilder.toWebHandler(AppLayer);
+  const { handler: effectHandler, dispose } = HttpApiBuilder.toWebHandler(AppLayer);
 
   const handler = async (request: Request): Promise<Response> => {
     const principal = await resolvePrincipal(request.headers, betterAuthUrl);
 
     if (!principal) {
-      return Response.json(
-        { error: germanMessages.unauthorized },
-        { status: 401 },
-      );
+      return Response.json({ error: germanMessages.unauthorized }, { status: 401 });
     }
 
     const principalContext = Context.make(

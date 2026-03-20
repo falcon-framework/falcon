@@ -191,10 +191,7 @@ function NewConnectionPage() {
           Back
         </Button>
         {step === "review" ? (
-          <Button
-            onClick={() => createMutation.mutate()}
-            disabled={createMutation.isPending}
-          >
+          <Button onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
             {createMutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -241,9 +238,7 @@ function AppSelector({
       </CardHeader>
       <CardContent className="space-y-2">
         {isLoading ? (
-          Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-14" />
-          ))
+          Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-14" />)
         ) : available.length === 0 ? (
           <p className="text-sm text-muted-foreground py-4 text-center">No apps available</p>
         ) : (
@@ -253,9 +248,7 @@ function AppSelector({
               type="button"
               onClick={() => onSelect(app)}
               className={`w-full flex items-center gap-3 rounded-lg border p-3 text-left text-sm transition-all hover:border-primary/50 hover:bg-muted/30 ${
-                selected?.id === app.id
-                  ? "border-primary bg-primary/5 ring-1 ring-primary"
-                  : ""
+                selected?.id === app.id ? "border-primary bg-primary/5 ring-1 ring-primary" : ""
               }`}
             >
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-muted font-bold text-xs">
@@ -309,9 +302,7 @@ function ScopesSelector({
       </CardHeader>
       <CardContent className="space-y-3">
         {isLoading ? (
-          Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-12" />
-          ))
+          Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-12" />)
         ) : capabilities.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-4">
             No capabilities defined for this app
@@ -384,10 +375,7 @@ function ReviewStep({
           ) : (
             <div className="flex flex-wrap gap-2">
               {scopes.map((s) => (
-                <code
-                  key={s}
-                  className="rounded bg-muted px-2 py-1 text-xs font-mono text-primary"
-                >
+                <code key={s} className="rounded bg-muted px-2 py-1 text-xs font-mono text-primary">
                   {s}
                 </code>
               ))}

@@ -10,14 +10,13 @@ import type { DatabaseError } from "../errors.js";
 export interface AppServiceService {
   listApps(): Effect.Effect<AppRow[], DatabaseError>;
   getApp(appId: string): Effect.Effect<AppRow | undefined, DatabaseError>;
-  getCapabilities(
-    appId: string,
-  ): Effect.Effect<CapabilityRow[], DatabaseError>;
+  getCapabilities(appId: string): Effect.Effect<CapabilityRow[], DatabaseError>;
 }
 
-export class AppService extends Context.Tag(
-  "@falcon-framework/connection/AppService",
-)<AppService, AppServiceService>() {}
+export class AppService extends Context.Tag("@falcon-framework/connection/AppService")<
+  AppService,
+  AppServiceService
+>() {}
 
 export const AppServiceLive = Layer.effect(
   AppService,

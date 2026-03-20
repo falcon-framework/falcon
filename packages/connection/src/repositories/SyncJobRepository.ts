@@ -32,8 +32,7 @@ export const SyncJobRepositoryLive = Layer.effect(
               })
               .returning()
               .then((rows) => rows[0]!),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to create sync job", cause: e }),
+          catch: (e) => new DatabaseError({ message: "Failed to create sync job", cause: e }),
         }),
       findById: (id: string) =>
         Effect.tryPromise({
@@ -44,8 +43,7 @@ export const SyncJobRepositoryLive = Layer.effect(
               .where(eq(syncJob.id, id))
               .limit(1)
               .then((rows) => rows[0]),
-          catch: (e) =>
-            new DatabaseError({ message: "Failed to find sync job", cause: e }),
+          catch: (e) => new DatabaseError({ message: "Failed to find sync job", cause: e }),
         }),
     };
   }),

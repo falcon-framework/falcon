@@ -1,7 +1,4 @@
-import {
-  canApproveInstallation,
-  canCreateInstallationRequest,
-} from "@falcon-framework/auth";
+import { canApproveInstallation, canCreateInstallationRequest } from "@falcon-framework/auth";
 import {
   connection,
   connectionScope,
@@ -36,20 +33,13 @@ export interface InstallationServiceService {
       requestedScopes: readonly string[];
       settingsDraft?: Record<string, unknown>;
     },
-  ): Effect.Effect<
-    InstallationRequestRow,
-    ForbiddenError | NotFoundError | DatabaseError
-  >;
+  ): Effect.Effect<InstallationRequestRow, ForbiddenError | NotFoundError | DatabaseError>;
   approve(
     principal: Principal,
     installationId: string,
   ): Effect.Effect<
     ConnectionRow,
-    | ForbiddenError
-    | NotFoundError
-    | InvalidStateError
-    | DuplicateConnectionError
-    | DatabaseError
+    ForbiddenError | NotFoundError | InvalidStateError | DuplicateConnectionError | DatabaseError
   >;
 }
 

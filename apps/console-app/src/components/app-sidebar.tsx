@@ -11,13 +11,7 @@ import {
   SidebarMenuItem,
 } from "@falcon-framework/ui/components/sidebar";
 import { Link, useRouterState } from "@tanstack/react-router";
-import {
-  LayoutDashboard,
-  Plug,
-  Store,
-  Settings,
-  ChevronRight,
-} from "lucide-react";
+import { LayoutDashboard, Plug, Store, Settings, ChevronRight } from "lucide-react";
 
 import UserNav from "./user-nav";
 
@@ -72,9 +66,7 @@ export default function AppSidebar() {
                       >
                         <item.icon />
                         <span>{item.title}</span>
-                        {isActive && (
-                          <ChevronRight className="ml-auto h-3 w-3 opacity-50" />
-                        )}
+                        {isActive && <ChevronRight className="ml-auto h-3 w-3 opacity-50" />}
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );

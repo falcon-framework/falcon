@@ -12,9 +12,10 @@ export interface Principal {
   authMethod: "session" | "jwt";
 }
 
-export class PrincipalTag extends Context.Tag(
-  "@falcon-framework/connection/Principal",
-)<PrincipalTag, Principal>() {}
+export class PrincipalTag extends Context.Tag("@falcon-framework/connection/Principal")<
+  PrincipalTag,
+  Principal
+>() {}
 
 async function resolveOrgMembership(
   userId: string,
@@ -23,9 +24,7 @@ async function resolveOrgMembership(
   const rows = await db
     .select()
     .from(member)
-    .where(
-      and(eq(member.userId, userId), eq(member.organizationId, organizationId)),
-    )
+    .where(and(eq(member.userId, userId), eq(member.organizationId, organizationId)))
     .limit(1);
   const row = rows[0];
   if (!row) return null;
@@ -64,10 +63,7 @@ export async function resolvePrincipal(
           user?: { id: string };
         };
         if (session?.user?.id) {
-          const membership = await resolveOrgMembership(
-            session.user.id,
-            organizationId,
-          );
+          const membership = await resolveOrgMembership(session.user.id, organizationId);
           if (membership) {
             return {
               userId: session.user.id,
@@ -120,10 +116,7 @@ export async function withPrincipal(
   const principal = await resolvePrincipal(request.headers, betterAuthUrl);
 
   if (!principal) {
-    return Response.json(
-      { error: germanMessages.unauthorized },
-      { status: 401 },
-    );
+    return Response.json({ error: germanMessages.unauthorized }, { status: 401 });
   }
 
   return handler(principal);

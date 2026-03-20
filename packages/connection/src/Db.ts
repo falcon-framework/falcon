@@ -5,11 +5,9 @@ import { Context, Layer } from "effect";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Db = typeof _db;
 
-export class DbService extends Context.Tag(
-  "@falcon-framework/connection/DbService",
-)<DbService, Db>() {}
-
-export const DbServiceLive: Layer.Layer<DbService> = Layer.succeed(
+export class DbService extends Context.Tag("@falcon-framework/connection/DbService")<
   DbService,
-  _db as Db,
-);
+  Db
+>() {}
+
+export const DbServiceLive: Layer.Layer<DbService> = Layer.succeed(DbService, _db as Db);

@@ -87,8 +87,7 @@ async function request<T>(
 }
 
 export function makeConnectClient(organizationId: string) {
-  const r = <T>(path: string, init?: RequestInit) =>
-    request<T>(path, organizationId, init);
+  const r = <T>(path: string, init?: RequestInit) => request<T>(path, organizationId, init);
 
   return {
     apps: {

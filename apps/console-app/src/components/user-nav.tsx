@@ -46,15 +46,11 @@ export default function UserNav() {
             }
           >
             <Avatar className="h-8 w-8 rounded-lg">
-              <AvatarFallback className="rounded-lg text-xs">
-                {initials}
-              </AvatarFallback>
+              <AvatarFallback className="rounded-lg text-xs">{initials}</AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-semibold">{session.user.name}</span>
-              <span className="truncate text-xs text-muted-foreground">
-                {session.user.email}
-              </span>
+              <span className="truncate text-xs text-muted-foreground">{session.user.email}</span>
             </div>
             <ChevronsUpDown className="ml-auto size-4" />
           </DropdownMenuTrigger>
@@ -67,9 +63,7 @@ export default function UserNav() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarFallback className="rounded-lg text-xs">
-                    {initials}
-                  </AvatarFallback>
+                  <AvatarFallback className="rounded-lg text-xs">{initials}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{session.user.name}</span>

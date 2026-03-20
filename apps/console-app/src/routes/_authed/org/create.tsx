@@ -73,9 +73,7 @@ function CreateOrgPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Organization details</CardTitle>
-            <CardDescription>
-              You can change these later in organization settings
-            </CardDescription>
+            <CardDescription>You can change these later in organization settings</CardDescription>
           </CardHeader>
           <CardContent>
             <form
@@ -129,9 +127,7 @@ function CreateOrgPage() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) =>
-                        field.handleChange(
-                          e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"),
-                        )
+                        field.handleChange(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-"))
                       }
                     />
                     <p className="text-xs text-muted-foreground">
@@ -150,11 +146,7 @@ function CreateOrgPage() {
                 selector={(s) => ({ canSubmit: s.canSubmit, isSubmitting: s.isSubmitting })}
               >
                 {({ canSubmit, isSubmitting }) => (
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={!canSubmit || isSubmitting}
-                  >
+                  <Button type="submit" className="w-full" disabled={!canSubmit || isSubmitting}>
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

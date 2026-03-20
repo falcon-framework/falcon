@@ -1,14 +1,6 @@
 import { Context, Effect, Layer } from "effect";
-import {
-  ForbiddenError,
-  NotFoundError,
-  type DatabaseError,
-} from "../errors.js";
-import {
-  ConnectionRepository,
-  SyncJobRepository,
-  type SyncJobRow,
-} from "../repositories/index.js";
+import { ForbiddenError, NotFoundError, type DatabaseError } from "../errors.js";
+import { ConnectionRepository, SyncJobRepository, type SyncJobRow } from "../repositories/index.js";
 import { AuditService } from "./AuditService.js";
 import type { Principal } from "../principal.js";
 
@@ -19,9 +11,10 @@ export interface SyncServiceService {
   ): Effect.Effect<SyncJobRow, ForbiddenError | NotFoundError | DatabaseError>;
 }
 
-export class SyncService extends Context.Tag(
-  "@falcon-framework/connection/SyncService",
-)<SyncService, SyncServiceService>() {}
+export class SyncService extends Context.Tag("@falcon-framework/connection/SyncService")<
+  SyncService,
+  SyncServiceService
+>() {}
 
 export const SyncServiceLive = Layer.effect(
   SyncService,
@@ -33,10 +26,7 @@ export const SyncServiceLive = Layer.effect(
     return {
       triggerSync: (principal: Principal, connectionId: string) =>
         Effect.gen(function* () {
-          const conn = yield* connectionRepo.findById(
-            connectionId,
-            principal.organizationId,
-          );
+          const conn = yield* connectionRepo.findById(connectionId, principal.organizationId);
           if (!conn) {
             yield* new NotFoundError({
               resource: "connection",

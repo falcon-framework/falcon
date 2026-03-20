@@ -4,8 +4,7 @@ import { Context, Effect, Layer } from "effect";
 import { DbService } from "../Db.js";
 import { DatabaseError } from "../errors.js";
 
-export type InstallationRequestRow =
-  typeof installationRequest.$inferSelect;
+export type InstallationRequestRow = typeof installationRequest.$inferSelect;
 
 export type CreateInstallationData = {
   id: string;
@@ -18,16 +17,9 @@ export type CreateInstallationData = {
 };
 
 export interface InstallationRepositoryService {
-  create(
-    data: CreateInstallationData,
-  ): Effect.Effect<InstallationRequestRow, DatabaseError>;
-  findById(
-    id: string,
-  ): Effect.Effect<InstallationRequestRow | undefined, DatabaseError>;
-  updateStatus(
-    id: string,
-    status: string,
-  ): Effect.Effect<void, DatabaseError>;
+  create(data: CreateInstallationData): Effect.Effect<InstallationRequestRow, DatabaseError>;
+  findById(id: string): Effect.Effect<InstallationRequestRow | undefined, DatabaseError>;
+  updateStatus(id: string, status: string): Effect.Effect<void, DatabaseError>;
 }
 
 export class InstallationRepository extends Context.Tag(

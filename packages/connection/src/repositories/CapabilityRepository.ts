@@ -21,11 +21,7 @@ export const CapabilityRepositoryLive = Layer.effect(
     return {
       listByAppId: (appId: string) =>
         Effect.tryPromise({
-          try: () =>
-            db
-              .select()
-              .from(appCapability)
-              .where(eq(appCapability.appId, appId)),
+          try: () => db.select().from(appCapability).where(eq(appCapability.appId, appId)),
           catch: (e) =>
             new DatabaseError({
               message: "Failed to list capabilities",

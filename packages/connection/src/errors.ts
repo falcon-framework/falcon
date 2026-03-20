@@ -9,16 +9,12 @@ export class ForbiddenError extends Data.TaggedError("ForbiddenError")<{
   readonly reason: string;
 }> {}
 
-export class TenantMismatchError extends Data.TaggedError(
-  "TenantMismatchError",
-)<{
+export class TenantMismatchError extends Data.TaggedError("TenantMismatchError")<{
   readonly expected: string;
   readonly actual: string;
 }> {}
 
-export class DuplicateConnectionError extends Data.TaggedError(
-  "DuplicateConnectionError",
-)<{
+export class DuplicateConnectionError extends Data.TaggedError("DuplicateConnectionError")<{
   readonly organizationId: string;
   readonly sourceAppId: string;
   readonly targetAppId: string;
