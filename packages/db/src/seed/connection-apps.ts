@@ -1,4 +1,4 @@
-import { db } from "../index.js";
+import { db } from "../tooling.js";
 import { falconApp, appCapability } from "../schema/connection.js";
 
 const apps = [
