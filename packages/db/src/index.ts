@@ -1,4 +1,4 @@
-import { env } from "@falcon/env/server";
+import { env } from "@falcon-framework/env/server";
 import { drizzle } from "drizzle-orm/node-postgres";
 
 import * as schema from "./schema";

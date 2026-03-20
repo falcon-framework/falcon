@@ -13,9 +13,9 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@falcon/config": "workspace:*",
-    "@falcon/infra": "workspace:*",
+    "@falcon-framework/config": "workspace:*",
+    "@falcon-framework/infra": "workspace:*",
     "@types/node": "catalog:",
-    "typescript": "^5"
+    "typescript": "catalog:"
   }
 }

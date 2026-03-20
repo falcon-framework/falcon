@@ -1,0 +1,45 @@
+{
+  "name": "@falcon-framework/sdk",
+  "private": false,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "FALCON SDK to let third-party app integrate with the FALCON platform. It provides all primitives to implement FALCON Connect ('install apps') and FALCON Auth, the unified authentication system for having a single sign-on experience across all apps.",
+  "keywords": [
+    "falcon",
+    "sdk",
+    "connect",
+    "auth",
+    "sso",
+    "unified authentication",
+    "single sign-on",
+    "single sign-on across all apps"
+  ],
+  "author": "FALCON",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/falcon-framework/falcon.git"
+  },
+  "homepage": "https://falcon-framework.com",
+  "bugs": {
+    "url": "https://github.com/falcon-framework/falcon/issues"
+  },
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@falcon-framework/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@falcon-framework/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

@@ -18,16 +18,16 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
-    "@falcon/env": "workspace:*",
+    "@falcon-framework/env": "workspace:*",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
     "pg": "^8.17.1",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@falcon/config": "workspace:*",
+    "@falcon-framework/config": "workspace:*",
     "@types/pg": "^8.16.0",
     "drizzle-kit": "^0.31.8",
-    "typescript": "^5"
+    "typescript": "catalog:"
   }
 }

@@ -1,4 +1,4 @@
-import { cn } from "@falcon/ui/lib/utils";
+import { cn } from "@falcon-framework/ui/lib/utils";
 
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (

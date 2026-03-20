@@ -13,9 +13,9 @@
   },
   "scripts": {},
   "dependencies": {
-    "@falcon/auth": "workspace:*",
-    "@falcon/db": "workspace:*",
-    "@falcon/env": "workspace:*",
+    "@falcon-framework/auth": "workspace:*",
+    "@falcon-framework/db": "workspace:*",
+    "@falcon-framework/env": "workspace:*",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
@@ -24,8 +24,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@falcon/config": "workspace:*",
+    "@falcon-framework/config": "workspace:*",
     "hono": "catalog:",
-    "typescript": "^5"
+    "typescript": "catalog:"
   }
 }

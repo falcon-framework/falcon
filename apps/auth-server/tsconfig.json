@@ -1,5 +1,5 @@
 {
-  "extends": "@falcon/config/tsconfig.base.json",
+  "extends": "@falcon-framework/config/tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
     "outDir": "dist",

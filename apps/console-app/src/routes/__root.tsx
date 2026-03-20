@@ -1,4 +1,4 @@
-import { Toaster } from "@falcon/ui/components/sonner";
+import { Toaster } from "@falcon-framework/ui/components/sonner";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";

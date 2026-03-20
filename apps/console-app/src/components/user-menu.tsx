@@ -1,4 +1,4 @@
-import { Button } from "@falcon/ui/components/button";
+import { Button } from "@falcon-framework/ui/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,8 +7,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@falcon/ui/components/dropdown-menu";
-import { Skeleton } from "@falcon/ui/components/skeleton";
+} from "@falcon-framework/ui/components/dropdown-menu";
+import { Skeleton } from "@falcon-framework/ui/components/skeleton";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 import { authClient } from "@/lib/auth-client";

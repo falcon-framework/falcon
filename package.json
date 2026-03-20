@@ -24,6 +24,7 @@
       "react-dom": "^19.2.3",
       "sonner": "^2.0.5",
       "tailwindcss": "^4.1.18",
+      "typescript": "^5.9.3",
       "@orpc/client": "^1.12.2",
       "@types/react": "^19.2.10",
       "@types/react-dom": "^19.2.3"
@@ -36,28 +37,28 @@
     "check-types": "nx run-many -t check-types",
     "dev:web": "nx run-many -t dev --projects=web",
     "dev:server": "nx run-many -t dev --projects=server",
-    "db:push": "nx run-many -t db:push --projects=@falcon/db",
-    "db:studio": "nx run-many -t db:studio --projects=@falcon/db",
-    "db:generate": "nx run-many -t db:generate --projects=@falcon/db",
-    "db:migrate": "nx run-many -t db:migrate --projects=@falcon/db",
-    "deploy": "nx run-many -t deploy --projects=@falcon/infra",
-    "destroy": "nx run-many -t destroy --projects=@falcon/infra",
+    "db:push": "nx run-many -t db:push --projects=@falcon-framework/db",
+    "db:studio": "nx run-many -t db:studio --projects=@falcon-framework/db",
+    "db:generate": "nx run-many -t db:generate --projects=@falcon-framework/db",
+    "db:migrate": "nx run-many -t db:migrate --projects=@falcon-framework/db",
+    "deploy": "nx run-many -t deploy --projects=@falcon-framework/infra",
+    "destroy": "nx run-many -t destroy --projects=@falcon-framework/infra",
     "check": "oxlint && oxfmt --write"
   },
   "dependencies": {
-    "@falcon/env": "workspace:*",
+    "@falcon-framework/env": "workspace:*",
     "dotenv": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
-    "@falcon/config": "workspace:*",
+    "@falcon-framework/config": "workspace:*",
     "@types/node": "catalog:",
     "lefthook": "^2.0.13",
     "nx": "^21.5.2",
     "oxfmt": "^0.26.0",
     "oxlint": "^1.41.0",
-    "typescript": "^5"
+    "typescript": "catalog:"
   },
   "packageManager": "bun@1.3.9"
 }

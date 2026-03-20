@@ -1,4 +1,4 @@
-import { type authServer } from "@falcon/infra/alchemy.run";
+import { type authServer } from "@falcon-framework/infra/alchemy.run";
 
 // This file infers types for the cloudflare:workers environment from your Alchemy Worker.
 // @see https://alchemy.run/concepts/bindings/#type-safe-bindings
