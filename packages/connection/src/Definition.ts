@@ -116,13 +116,20 @@ const ApiGroup = HttpApiGroup.make("api")
       .addSuccess(Schema.Array(CapabilityItem))
       .addError(ApiNotFoundError, { status: 404 }),
   )
+  // GET /installation-requests
+  .add(
+    HttpApiEndpoint.get("listInstallationRequests", "/installation-requests").addSuccess(
+      Schema.Array(InstallationRequestItem),
+    ),
+  )
   // POST /installation-requests
   .add(
     HttpApiEndpoint.post("createInstallationRequest", "/installation-requests")
       .setPayload(CreateInstallationBody)
       .addSuccess(InstallationRequestItem, { status: 201 })
       .addError(ApiForbiddenError, { status: 403 })
-      .addError(ApiNotFoundError, { status: 404 }),
+      .addError(ApiNotFoundError, { status: 404 })
+      .addError(ApiConflictError, { status: 409 }),
   )
   // POST /installation-requests/:requestId/approve
   .add(
@@ -160,6 +167,15 @@ const ApiGroup = HttpApiGroup.make("api")
       .addSuccess(ConnectionItem)
       .addError(ApiForbiddenError, { status: 403 })
       .addError(ApiNotFoundError, { status: 404 }),
+  )
+  // POST /connections/:connectionId/resume
+  .add(
+    HttpApiEndpoint.post("resumeConnection", "/connections/:connectionId/resume")
+      .setPath(Schema.Struct({ connectionId: Schema.String }))
+      .addSuccess(ConnectionItem)
+      .addError(ApiForbiddenError, { status: 403 })
+      .addError(ApiNotFoundError, { status: 404 })
+      .addError(ApiUnprocessableError, { status: 422 }),
   )
   // POST /connections/:connectionId/sync
   .add(

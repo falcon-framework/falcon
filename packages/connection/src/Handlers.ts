@@ -30,8 +30,8 @@ function formatDate(d: Date | string): string {
 export const ApiHandlers = HttpApiBuilder.group(FalconConnectionApi, "api", (handlers) =>
   handlers
     // GET /v1/apps
-    .handle("listApps", () =>
-      Effect.gen(function* () {
+    .handle("listApps", () => {
+      return Effect.gen(function* () {
         const svc = yield* AppService;
         const apps = yield* svc.listApps().pipe(Effect.orDie);
         return apps.map(
@@ -45,8 +45,8 @@ export const ApiHandlers = HttpApiBuilder.group(FalconConnectionApi, "api", (han
               createdAt: formatDate(a.createdAt),
             }),
         );
-      }),
-    )
+      });
+    })
     // GET /v1/apps/:appId/capabilities
     .handle("getCapabilities", ({ path: { appId } }) =>
       Effect.gen(function* () {
@@ -78,6 +78,27 @@ export const ApiHandlers = HttpApiBuilder.group(FalconConnectionApi, "api", (han
         );
       }),
     )
+    // GET /v1/installation-requests
+    .handle("listInstallationRequests", () =>
+      Effect.gen(function* () {
+        const principal = yield* PrincipalTag;
+        const svc = yield* InstallationService;
+        const rows = yield* svc.listPending(principal).pipe(Effect.orDie);
+        return rows.map(
+          (req) =>
+            new InstallationRequestItem({
+              id: req.id,
+              organizationId: req.organizationId,
+              sourceAppId: req.sourceAppId,
+              targetAppId: req.targetAppId,
+              requestedScopes: req.requestedScopes as string[],
+              status: req.status as "pending" | "approved" | "rejected" | "expired",
+              initiatedByUserId: req.initiatedByUserId,
+              createdAt: formatDate(req.createdAt),
+            }),
+        );
+      }),
+    )
     // POST /v1/installation-requests
     .handle("createInstallationRequest", ({ payload }) =>
       Effect.gen(function* () {
@@ -99,6 +120,14 @@ export const ApiHandlers = HttpApiBuilder.group(FalconConnectionApi, "api", (han
               Effect.fail(
                 new ApiNotFoundError({ message: `${e.resource} '${e.id}' nicht gefunden.` }),
               ),
+            ),
+            Effect.catchTag("DuplicateInstallationRequestError", () =>
+              Effect.fail(
+                new ApiConflictError({ message: germanMessages.duplicateInstallationRequest }),
+              ),
+            ),
+            Effect.catchTag("DuplicateConnectionError", () =>
+              Effect.fail(new ApiConflictError({ message: germanMessages.duplicateConnection })),
             ),
             Effect.orDie,
           );
@@ -240,6 +269,41 @@ export const ApiHandlers = HttpApiBuilder.group(FalconConnectionApi, "api", (han
           Effect.catchTag("NotFoundError", (e) =>
             Effect.fail(
               new ApiNotFoundError({ message: `${e.resource} '${e.id}' nicht gefunden.` }),
+            ),
+          ),
+          Effect.orDie,
+        );
+        return new ConnectionItem({
+          id: conn.id,
+          organizationId: conn.organizationId,
+          sourceAppId: conn.sourceAppId,
+          targetAppId: conn.targetAppId,
+          status: conn.status as "active" | "paused" | "revoked",
+          createdByUserId: conn.createdByUserId,
+          createdAt: formatDate(conn.createdAt),
+          updatedAt: formatDate(conn.updatedAt),
+        });
+      }),
+    )
+    // POST /v1/connections/:connectionId/resume
+    .handle("resumeConnection", ({ path: { connectionId } }) =>
+      Effect.gen(function* () {
+        const principal = yield* PrincipalTag;
+        const svc = yield* ConnectionService;
+        const conn = yield* svc.resume(principal, connectionId).pipe(
+          Effect.catchTag("ForbiddenError", (e) =>
+            Effect.fail(new ApiForbiddenError({ message: e.reason })),
+          ),
+          Effect.catchTag("NotFoundError", (e) =>
+            Effect.fail(
+              new ApiNotFoundError({ message: `${e.resource} '${e.id}' nicht gefunden.` }),
+            ),
+          ),
+          Effect.catchTag("InvalidStateError", (e) =>
+            Effect.fail(
+              new ApiUnprocessableError({
+                message: `Ungültiger Status: ${e.currentStatus}, erwartet: ${e.requiredStatus}`,
+              }),
             ),
           ),
           Effect.orDie,

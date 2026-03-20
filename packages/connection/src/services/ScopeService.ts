@@ -28,14 +28,14 @@ export const ScopeServiceLive = Layer.effect(
       checkScope: (principal: Principal, connectionId: string, appId: string, scope: string) =>
         Effect.gen(function* () {
           if (!canCheckScope(principal.role)) {
-            yield* new ForbiddenError({
+            return yield* new ForbiddenError({
               reason: "Insufficient role to check scope",
             });
           }
 
           const conn = yield* connectionRepo.findById(connectionId, principal.organizationId);
           if (!conn) {
-            yield* new NotFoundError({
+            return yield* new NotFoundError({
               resource: "connection",
               id: connectionId,
             });
@@ -44,7 +44,7 @@ export const ScopeServiceLive = Layer.effect(
 
           // Verify the requesting appId is actually a party in this connection
           if (conn.sourceAppId !== appId && conn.targetAppId !== appId) {
-            yield* new ForbiddenError({
+            return yield* new ForbiddenError({
               reason: `App '${appId}' is not a party to connection '${connectionId}'`,
             });
           }

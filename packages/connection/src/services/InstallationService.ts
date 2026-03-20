@@ -9,6 +9,7 @@ import { eq } from "drizzle-orm";
 import { Context, Effect, Layer } from "effect";
 import {
   DuplicateConnectionError,
+  DuplicateInstallationRequestError,
   ForbiddenError,
   InvalidStateError,
   NotFoundError,
@@ -25,6 +26,7 @@ import { AuditService } from "./AuditService.js";
 import type { Principal } from "../principal.js";
 
 export interface InstallationServiceService {
+  listPending(principal: Principal): Effect.Effect<InstallationRequestRow[], DatabaseError>;
   createRequest(
     principal: Principal,
     data: {
@@ -33,7 +35,14 @@ export interface InstallationServiceService {
       requestedScopes: readonly string[];
       settingsDraft?: Record<string, unknown>;
     },
-  ): Effect.Effect<InstallationRequestRow, ForbiddenError | NotFoundError | DatabaseError>;
+  ): Effect.Effect<
+    InstallationRequestRow,
+    | ForbiddenError
+    | NotFoundError
+    | DuplicateInstallationRequestError
+    | DuplicateConnectionError
+    | DatabaseError
+  >;
   approve(
     principal: Principal,
     installationId: string,
@@ -56,6 +65,9 @@ export const InstallationServiceLive = Layer.effect(
     const auditService = yield* AuditService;
 
     return {
+      listPending: (principal: Principal) =>
+        installationRepo.listPendingByOrganization(principal.organizationId),
+
       createRequest: (
         principal: Principal,
         data: {
@@ -67,10 +79,37 @@ export const InstallationServiceLive = Layer.effect(
       ) =>
         Effect.gen(function* () {
           if (!canCreateInstallationRequest(principal.role)) {
-            yield* new ForbiddenError({
+            return yield* new ForbiddenError({
               reason: "Insufficient role to create installation request",
             });
           }
+
+          const pendingDuplicate = yield* installationRepo.findPendingByOrgAndAppPair(
+            principal.organizationId,
+            data.sourceAppId,
+            data.targetAppId,
+          );
+          if (pendingDuplicate) {
+            return yield* new DuplicateInstallationRequestError({
+              organizationId: principal.organizationId,
+              sourceAppId: data.sourceAppId,
+              targetAppId: data.targetAppId,
+            });
+          }
+
+          const connectionDuplicate = yield* connectionRepo.findNonRevokedByOrgAndAppPair(
+            principal.organizationId,
+            data.sourceAppId,
+            data.targetAppId,
+          );
+          if (connectionDuplicate) {
+            return yield* new DuplicateConnectionError({
+              organizationId: principal.organizationId,
+              sourceAppId: data.sourceAppId,
+              targetAppId: data.targetAppId,
+            });
+          }
+
           const id = crypto.randomUUID();
           const row = yield* installationRepo.create({
             id,
@@ -93,14 +132,14 @@ export const InstallationServiceLive = Layer.effect(
       approve: (principal: Principal, installationId: string) =>
         Effect.gen(function* () {
           if (!canApproveInstallation(principal.role)) {
-            yield* new ForbiddenError({
+            return yield* new ForbiddenError({
               reason: "Insufficient role to approve installation",
             });
           }
 
           const req = yield* installationRepo.findById(installationId);
           if (!req) {
-            yield* new NotFoundError({
+            return yield* new NotFoundError({
               resource: "installation_request",
               id: installationId,
             });
@@ -108,13 +147,13 @@ export const InstallationServiceLive = Layer.effect(
           }
 
           if (req.organizationId !== principal.organizationId) {
-            yield* new ForbiddenError({
+            return yield* new ForbiddenError({
               reason: "Installation request belongs to a different organization",
             });
           }
 
           if (req.status !== "pending") {
-            yield* new InvalidStateError({
+            return yield* new InvalidStateError({
               resource: "installation_request",
               currentStatus: req.status,
               requiredStatus: "pending",
@@ -127,7 +166,7 @@ export const InstallationServiceLive = Layer.effect(
             req.targetAppId,
           );
           if (duplicate) {
-            yield* new DuplicateConnectionError({
+            return yield* new DuplicateConnectionError({
               organizationId: principal.organizationId,
               sourceAppId: req.sourceAppId,
               targetAppId: req.targetAppId,

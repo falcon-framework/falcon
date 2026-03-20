@@ -1,5 +1,6 @@
+import type { Db } from "../Db.js";
+import { dbLayer } from "../Db.js";
 import { Layer } from "effect";
-import { DbServiceLive } from "../Db.js";
 import { AppRepositoryLive } from "./AppRepository.js";
 import { AuditRepositoryLive } from "./AuditRepository.js";
 import { CapabilityRepositoryLive } from "./CapabilityRepository.js";
@@ -18,13 +19,14 @@ export * from "./ScopeRepository.js";
 export * from "./SettingsRepository.js";
 export * from "./SyncJobRepository.js";
 
-export const RepositoriesLive = Layer.mergeAll(
-  AppRepositoryLive,
-  CapabilityRepositoryLive,
-  InstallationRepositoryLive,
-  ConnectionRepositoryLive,
-  ScopeRepositoryLive,
-  SettingsRepositoryLive,
-  AuditRepositoryLive,
-  SyncJobRepositoryLive,
-).pipe(Layer.provide(DbServiceLive));
+export const makeRepositoriesLive = (db: Db) =>
+  Layer.mergeAll(
+    AppRepositoryLive,
+    CapabilityRepositoryLive,
+    InstallationRepositoryLive,
+    ConnectionRepositoryLive,
+    ScopeRepositoryLive,
+    SettingsRepositoryLive,
+    AuditRepositoryLive,
+    SyncJobRepositoryLive,
+  ).pipe(Layer.provide(dbLayer(db)));

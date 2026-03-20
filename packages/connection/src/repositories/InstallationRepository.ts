@@ -1,5 +1,5 @@
 import { installationRequest } from "@falcon-framework/db/schema/connection";
-import { eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { Context, Effect, Layer } from "effect";
 import { DbService } from "../Db.js";
 import { DatabaseError } from "../errors.js";
@@ -19,6 +19,14 @@ export type CreateInstallationData = {
 export interface InstallationRepositoryService {
   create(data: CreateInstallationData): Effect.Effect<InstallationRequestRow, DatabaseError>;
   findById(id: string): Effect.Effect<InstallationRequestRow | undefined, DatabaseError>;
+  listPendingByOrganization(
+    organizationId: string,
+  ): Effect.Effect<InstallationRequestRow[], DatabaseError>;
+  findPendingByOrgAndAppPair(
+    organizationId: string,
+    sourceAppId: string,
+    targetAppId: string,
+  ): Effect.Effect<InstallationRequestRow | undefined, DatabaseError>;
   updateStatus(id: string, status: string): Effect.Effect<void, DatabaseError>;
 }
 
@@ -66,6 +74,51 @@ export const InstallationRepositoryLive = Layer.effect(
           catch: (e) =>
             new DatabaseError({
               message: "Failed to find installation request",
+              cause: e,
+            }),
+        }),
+      listPendingByOrganization: (organizationId: string) =>
+        Effect.tryPromise({
+          try: () =>
+            db
+              .select()
+              .from(installationRequest)
+              .where(
+                and(
+                  eq(installationRequest.organizationId, organizationId),
+                  eq(installationRequest.status, "pending"),
+                ),
+              )
+              .orderBy(desc(installationRequest.createdAt)),
+          catch: (e) =>
+            new DatabaseError({
+              message: "Failed to list installation requests",
+              cause: e,
+            }),
+        }),
+      findPendingByOrgAndAppPair: (
+        organizationId: string,
+        sourceAppId: string,
+        targetAppId: string,
+      ) =>
+        Effect.tryPromise({
+          try: () =>
+            db
+              .select()
+              .from(installationRequest)
+              .where(
+                and(
+                  eq(installationRequest.organizationId, organizationId),
+                  eq(installationRequest.sourceAppId, sourceAppId),
+                  eq(installationRequest.targetAppId, targetAppId),
+                  eq(installationRequest.status, "pending"),
+                ),
+              )
+              .limit(1)
+              .then((rows) => rows[0]),
+          catch: (e) =>
+            new DatabaseError({
+              message: "Failed to look up installation request",
               cause: e,
             }),
         }),

@@ -21,22 +21,28 @@ export const AppRepositoryLive = Layer.effect(
   Effect.gen(function* () {
     const db = yield* DbService;
     return {
-      listActive: () =>
-        Effect.tryPromise({
-          try: () => db.select().from(falconApp).where(eq(falconApp.status, "active")),
+      listActive: () => {
+        return Effect.tryPromise({
+          try: async () => {
+            const apps = await db.select().from(falconApp).where(eq(falconApp.status, "active"));
+            return apps;
+          },
           catch: (e) => new DatabaseError({ message: "Failed to list apps", cause: e }),
-        }),
-      findById: (id: string) =>
-        Effect.tryPromise({
-          try: () =>
-            db
+        });
+      },
+      findById: (id: string) => {
+        return Effect.tryPromise({
+          try: () => {
+            return db
               .select()
               .from(falconApp)
               .where(eq(falconApp.id, id))
               .limit(1)
-              .then((rows) => rows[0]),
+              .then((rows) => rows[0]);
+          },
           catch: (e) => new DatabaseError({ message: "Failed to find app", cause: e }),
-        }),
+        });
+      },
     };
   }),
 );

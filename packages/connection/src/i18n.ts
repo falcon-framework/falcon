@@ -17,6 +17,8 @@ export const germanMessages = {
     `Die Verbindung ist nicht aktiv (aktueller Status: ${status}).`,
   duplicateConnection:
     "Eine aktive Verbindung zwischen diesen Anwendungen existiert bereits für Ihre Organisation.",
+  duplicateInstallationRequest:
+    "Für diese Anwendungen gibt es bereits eine ausstehende Installationsanfrage für Ihre Organisation.",
 
   // Scope errors
   scopeNotGranted: (scope: string) =>

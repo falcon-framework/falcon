@@ -1,5 +1,5 @@
 import { connection } from "@falcon-framework/db/schema/connection";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { Context, Effect, Layer } from "effect";
 import { DbService } from "../Db.js";
 import { DatabaseError } from "../errors.js";
@@ -25,6 +25,12 @@ export interface ConnectionRepositoryService {
     status: string,
   ): Effect.Effect<ConnectionRow, DatabaseError>;
   findDuplicate(
+    orgId: string,
+    sourceAppId: string,
+    targetAppId: string,
+  ): Effect.Effect<ConnectionRow | undefined, DatabaseError>;
+  /** Any connection between the apps that is not revoked (blocks new installation requests). */
+  findNonRevokedByOrgAndAppPair(
     orgId: string,
     sourceAppId: string,
     targetAppId: string,
@@ -104,6 +110,25 @@ export const ConnectionRepositoryLive = Layer.effect(
               .then((rows) => rows[0]),
           catch: (e) =>
             new DatabaseError({ message: "Failed to check duplicate connection", cause: e }),
+        }),
+      findNonRevokedByOrgAndAppPair: (orgId: string, sourceAppId: string, targetAppId: string) =>
+        Effect.tryPromise({
+          try: () =>
+            db
+              .select()
+              .from(connection)
+              .where(
+                and(
+                  eq(connection.organizationId, orgId),
+                  eq(connection.sourceAppId, sourceAppId),
+                  eq(connection.targetAppId, targetAppId),
+                  inArray(connection.status, ["active", "paused"]),
+                ),
+              )
+              .limit(1)
+              .then((rows) => rows[0]),
+          catch: (e) =>
+            new DatabaseError({ message: "Failed to check existing connection", cause: e }),
         }),
     };
   }),

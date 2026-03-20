@@ -1,5 +1,6 @@
+import type { Db } from "@falcon-framework/db";
+import { closeDb, makeDb } from "@falcon-framework/db";
 import { member } from "@falcon-framework/db/schema/auth";
-import { db } from "@falcon-framework/db";
 import { Context } from "effect";
 import { and, eq } from "drizzle-orm";
 import { createRemoteJWKSet, jwtVerify } from "jose";
@@ -18,6 +19,7 @@ export class PrincipalTag extends Context.Tag("@falcon-framework/connection/Prin
 >() {}
 
 async function resolveOrgMembership(
+  db: Db,
   userId: string,
   organizationId: string,
 ): Promise<{ organizationId: string; role: string } | null> {
@@ -46,9 +48,10 @@ async function resolveOrgMembership(
 export async function resolvePrincipal(
   headers: Headers,
   betterAuthUrl: string,
+  db: Db,
 ): Promise<Principal | null> {
-  // An explicit org header is required for every call
-  const organizationId = headers.get("x-organization-id");
+  // An explicit org header is required for every call (trim — clients sometimes send whitespace)
+  const organizationId = headers.get("x-organization-id")?.trim();
   if (!organizationId) return null;
 
   // 1. Try Better Auth session via cookie
@@ -63,7 +66,7 @@ export async function resolvePrincipal(
           user?: { id: string };
         };
         if (session?.user?.id) {
-          const membership = await resolveOrgMembership(session.user.id, organizationId);
+          const membership = await resolveOrgMembership(db, session.user.id, organizationId);
           if (membership) {
             return {
               userId: session.user.id,
@@ -90,7 +93,7 @@ export async function resolvePrincipal(
 
       const userId = payload.sub;
       if (userId) {
-        const membership = await resolveOrgMembership(userId, organizationId);
+        const membership = await resolveOrgMembership(db, userId, organizationId);
         if (membership) {
           return {
             userId,
@@ -108,16 +111,37 @@ export async function resolvePrincipal(
   return null;
 }
 
+/** Same as resolvePrincipal, but retries once when session + org were present (intermittent get-session / membership races). */
+export async function resolvePrincipalWithRetry(
+  headers: Headers,
+  betterAuthUrl: string,
+  db: Db,
+): Promise<Principal | null> {
+  const first = await resolvePrincipal(headers, betterAuthUrl, db);
+  if (first) return first;
+  const cookie = headers.get("cookie");
+  const org = headers.get("x-organization-id")?.trim();
+  if (cookie && org) {
+    return resolvePrincipal(headers, betterAuthUrl, db);
+  }
+  return null;
+}
+
 export async function withPrincipal(
   request: Request,
   betterAuthUrl: string,
   handler: (principal: Principal) => Promise<Response>,
 ): Promise<Response> {
-  const principal = await resolvePrincipal(request.headers, betterAuthUrl);
+  const db = makeDb();
+  try {
+    const principal = await resolvePrincipal(request.headers, betterAuthUrl, db);
 
-  if (!principal) {
-    return Response.json({ error: germanMessages.unauthorized }, { status: 401 });
+    if (!principal) {
+      return Response.json({ error: germanMessages.unauthorized }, { status: 401 });
+    }
+
+    return handler(principal);
+  } finally {
+    await closeDb(db);
   }
-
-  return handler(principal);
 }

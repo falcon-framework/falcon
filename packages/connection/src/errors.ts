@@ -20,6 +20,14 @@ export class DuplicateConnectionError extends Data.TaggedError("DuplicateConnect
   readonly targetAppId: string;
 }> {}
 
+export class DuplicateInstallationRequestError extends Data.TaggedError(
+  "DuplicateInstallationRequestError",
+)<{
+  readonly organizationId: string;
+  readonly sourceAppId: string;
+  readonly targetAppId: string;
+}> {}
+
 export class InvalidStateError extends Data.TaggedError("InvalidStateError")<{
   readonly resource: string;
   readonly currentStatus: string;

@@ -1,6 +1,11 @@
 import { canRevokeOrPauseConnection } from "@falcon-framework/auth";
 import { Context, Effect, Layer } from "effect";
-import { ForbiddenError, NotFoundError, type DatabaseError } from "../errors.js";
+import {
+  ForbiddenError,
+  InvalidStateError,
+  NotFoundError,
+  type DatabaseError,
+} from "../errors.js";
 import {
   ConnectionRepository,
   type ConnectionRow,
@@ -29,6 +34,13 @@ export interface ConnectionServiceService {
     principal: Principal,
     connectionId: string,
   ): Effect.Effect<ConnectionRow, ForbiddenError | NotFoundError | DatabaseError>;
+  resume(
+    principal: Principal,
+    connectionId: string,
+  ): Effect.Effect<
+    ConnectionRow,
+    ForbiddenError | NotFoundError | InvalidStateError | DatabaseError
+  >;
 }
 
 export class ConnectionService extends Context.Tag(
@@ -107,6 +119,35 @@ export const ConnectionServiceLive = Layer.effect(
             connectionId,
           });
           return conn;
+        }),
+
+      resume: (principal: Principal, connectionId: string) =>
+        Effect.gen(function* () {
+          if (!canRevokeOrPauseConnection(principal.role)) {
+            return yield* new ForbiddenError({
+              reason: "Insufficient role to resume connection",
+            });
+          }
+          const conn = yield* requireConnection(principal, connectionId);
+          if (conn.status !== "paused") {
+            return yield* new InvalidStateError({
+              resource: "connection",
+              currentStatus: conn.status,
+              requiredStatus: "paused",
+            });
+          }
+          const updated = yield* connectionRepo.updateStatus(
+            connectionId,
+            principal.organizationId,
+            "active",
+          );
+          yield* auditService.log(
+            principal.organizationId,
+            principal.userId,
+            "connection.resumed",
+            { connectionId },
+          );
+          return updated;
         }),
     };
   }),
