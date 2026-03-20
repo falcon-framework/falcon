@@ -10,16 +10,17 @@ app.use(logger());
 app.use(
   "/*",
   cors({
+    // origin: (o) => o,
     origin: env.CORS_ORIGIN,
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowHeaders: ["Content-Type", "Authorization"],
+    allowHeaders: ["Content-Type", "Authorization", "X-Organization-Id"],
     credentials: true,
   }),
 );
 
 const { handler } = makeConnectionWebHandler(env.BETTER_AUTH_URL);
 
-app.all("/v1/*", (c) => handler(c.req.raw));
+app.all("/v1/*", async (c) => handler(c.req.raw));
 
 app.get("/", (c) => c.text("OK"));
 
