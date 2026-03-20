@@ -49,7 +49,11 @@
     "db:migrate": "nx run-many -t db:migrate --projects=@falcon-framework/db",
     "deploy": "nx run-many -t deploy --projects=@falcon-framework/infra",
     "destroy": "nx run-many -t destroy --projects=@falcon-framework/infra",
-    "check": "oxlint && oxfmt --write"
+    "check": "oxlint && oxfmt --write",
+    "lint": "oxlint",
+    "format": "oxfmt --write",
+    "test": "vitest run",
+    "prepare": "effect-tsgo patch"
   },
   "dependencies": {
     "@effect/platform": "catalog:",
@@ -63,9 +67,11 @@
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
     "@effect/language-service": "catalog:",
+    "@effect/tsgo": "0.0.15",
     "@effect/vitest": "catalog:",
     "@falcon-framework/config": "workspace:*",
     "@types/node": "catalog:",
+    "@typescript/native-preview": "^7.0.0-dev.20260320.1",
     "lefthook": "^2.0.13",
     "nx": "^21.5.2",
     "oxfmt": "^0.41.0",

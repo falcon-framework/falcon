@@ -1,4 +1,3 @@
-
 # Project: FALCON — Framework for Application Linking, Communication, Orchestration, and Networking
 
 ## Overview
@@ -9,18 +8,18 @@ The system is conceptually similar to OAuth-based app integrations (e.g. “Conn
 
 The goal is to allow users to:
 
-* connect one app to another (e.g. CRM ↔ Order Management App ↔ Other apps)
-* grant scoped permissions between apps
-* configure how data flows between them
-* manage and revoke those connections
+- connect one app to another (e.g. CRM ↔ Order Management App ↔ Other apps)
+- grant scoped permissions between apps
+- configure how data flows between them
+- manage and revoke those connections
 
 The platform must be:
 
-* modular
-* type-safe (TypeScript)
-* cloud-native (Cloudflare Workers)
-* scalable across multiple apps
-* maintainable long-term
+- modular
+- type-safe (TypeScript)
+- cloud-native (Cloudflare Workers)
+- scalable across multiple apps
+- maintainable long-term
 
 ---
 
@@ -30,9 +29,9 @@ The platform must be:
 
 A centralized authentication system:
 
-* users sign in once and can access all apps (SSO)
-* identity, sessions, and tenants are managed centrally
-* the auth system acts as an OAuth/OIDC provider for internal apps
+- users sign in once and can access all apps (SSO)
+- identity, sessions, and tenants are managed centrally
+- the auth system acts as an OAuth/OIDC provider for internal apps
 
 Better Auth helps a lot with the annyoing boilerplate and integration with their great in-house plugins for SSO and OAuth.
 
@@ -44,17 +43,17 @@ A **Connection** represents a persistent, user-approved relationship between two
 
 Example:
 
-* Orders app connects to CRM
-* CRM grants `customers.read` and `customers.subscribe`
+- Orders app connects to CRM
+- CRM grants `customers.read` and `customers.subscribe`
 
 A connection includes:
 
-* source app
-* target app
-* tenant mapping
-* granted scopes
-* configuration (sync rules, mappings)
-* lifecycle status
+- source app
+- target app
+- tenant mapping
+- granted scopes
+- configuration (sync rules, mappings)
+- lifecycle status
 
 ---
 
@@ -74,9 +73,9 @@ A connection is created via an **installation flow**:
 
 Each app defines capabilities such as:
 
-* `customers.read`
-* `orders.write`
-* `customers.subscribe`
+- `customers.read`
+- `orders.write`
+- `customers.subscribe`
 
 Connections grant a subset of these as **scopes**.
 
@@ -93,14 +92,14 @@ Formats:
 
 Apps remain independent:
 
-* each app owns its own database
-* no shared database between apps
+- each app owns its own database
+- no shared database between apps
 
 Data exchange happens via:
 
-* direct API calls (for synchronous needs)
-* event-driven sync (for eventual consistency)
-* whatever the way is that apps want to communicate
+- direct API calls (for synchronous needs)
+- event-driven sync (for eventual consistency)
+- whatever the way is that apps want to communicate
 
 The connection system only governs **permission and configuration**, not data transport.
 
@@ -112,9 +111,9 @@ The connection system only governs **permission and configuration**, not data tr
 
 #### 1. Auth Service (`auth-server` and packages)
 
-* handles identity, sessions, tokens
-* acts as OAuth/OIDC provider
-* controls which apps can use this service
+- handles identity, sessions, tokens
+- acts as OAuth/OIDC provider
+- controls which apps can use this service
 
 #### 2. Connection Service (`connection-service` and packages)
 
@@ -122,33 +121,33 @@ Connection service to implement.
 
 Responsibilities:
 
-* app registry
-* installation flow
-* connection lifecycle
-* scope management
-* tenant mapping
-* sync triggers
-* audit logging
+- app registry
+- installation flow
+- connection lifecycle
+- scope management
+- tenant mapping
+- sync triggers
+- audit logging
 
 #### 3. App Services
 
 Independent apps (e.g. CRM, Order Management, etc.)
 
-* each has its own API and database, therefore infra-wise completely independent
-* integrates with auth server to provide cross-app auth
-* integrates with connection service
-* enforces scope checks on incoming requests
+- each has its own API and database, therefore infra-wise completely independent
+- integrates with auth server to provide cross-app auth
+- integrates with connection service
+- enforces scope checks on incoming requests
 
 ---
 
 ## Tech Stack
 
-* Runtime: Cloudflare Workers
-* Language: TypeScript
-* Framework: Hono (for APIs)
-* Database: PostgreSQL (for connection + auth services)
-* Event system: Cloudflare Queues (later)
-* Monorepo structure (bun, nx)
+- Runtime: Cloudflare Workers
+- Language: TypeScript
+- Framework: Hono (for APIs)
+- Database: PostgreSQL (for connection + auth services)
+- Event system: Cloudflare Queues (later)
+- Monorepo structure (bun, nx)
 
 These should already be scaffolded. Study the codebase to learn the parts.
 
@@ -201,34 +200,34 @@ Required endpoints:
 
 ### Apps
 
-* `GET /apps`
-* `GET /apps/:appId/capabilities`
+- `GET /apps`
+- `GET /apps/:appId/capabilities`
 
 ### Installations
 
-* `POST /installations`
-* `POST /installations/:id/approve`
+- `POST /installations`
+- `POST /installations/:id/approve`
 
 ### Connections
 
-* `GET /connections`
-* `GET /connections/:id`
-* `POST /connections/:id/revoke`
-* `POST /connections/:id/pause`
+- `GET /connections`
+- `GET /connections/:id`
+- `POST /connections/:id/revoke`
+- `POST /connections/:id/pause`
 
 ### Scopes
 
-* `POST /connections/:id/check-scope`
+- `POST /connections/:id/check-scope`
 
 ### Sync
 
-* `POST /connections/:id/sync`
+- `POST /connections/:id/sync`
 
 All endpoints must:
 
-* validate user identity via auth service
-* enforce tenant permissions
-* return typed responses
+- validate user identity via auth service
+- enforce tenant permissions
+- return typed responses
 
 ---
 
@@ -239,32 +238,32 @@ Documentation, except for user-facing docs, must be written in English as usual.
 
 Use clear, enterprise-style naming:
 
-* Use “Verbindung” / "Connection" for persistent relationships
-* Use “Installation” for setup flows
-* Use “Bereiche” / "Scopes" for permissions
-* Use “Erlaubnis” / "Grant" for authorization decisions
+- Use “Verbindung” / "Connection" for persistent relationships
+- Use “Installation” for setup flows
+- Use “Bereiche” / "Scopes" for permissions
+- Use “Erlaubnis” / "Grant" for authorization decisions
 
 ---
 
 ## Code Structure Guidelines
 
-* separate domain logic from infrastructure - use Effect-TS for implementing high quality dependency injection with clear separation of concerns
-* use repositories for DB access (Effect Context and Layers)
-* use services for business logic (Effect Context and Layers)
-* keep routes thin (controllers only)
-* strongly type all inputs/outputs
-* do NOT use `any`, `unknown` or similar unless EXPLICITLY at STRONGLY necessary
-* use Effect for everything: Schema, service contracts, service implementations, OTel, error management, dependency injection, logging, etc.
+- separate domain logic from infrastructure - use Effect-TS for implementing high quality dependency injection with clear separation of concerns
+- use repositories for DB access (Effect Context and Layers)
+- use services for business logic (Effect Context and Layers)
+- keep routes thin (controllers only)
+- strongly type all inputs/outputs
+- do NOT use `any`, `unknown` or similar unless EXPLICITLY at STRONGLY necessary
+- use Effect for everything: Schema, service contracts, service implementations, OTel, error management, dependency injection, logging, etc.
 
 ---
 
 ## Security Requirements
 
-* every request must be authenticated
-* every operation must validate tenant ownership
-* every cross-app action must check scope grants
-* no implicit trust between apps
-* only pre-defined apps are allowed to make use of the auth service
+- every request must be authenticated
+- every operation must validate tenant ownership
+- every cross-app action must check scope grants
+- no implicit trust between apps
+- only pre-defined apps are allowed to make use of the auth service
 
 ---
 
@@ -272,10 +271,10 @@ Use clear, enterprise-style naming:
 
 Do NOT implement:
 
-* third-party integrations (Slack, etc.)
-* generic iPaaS features
-* workflow engine (future concern)
-* data synchronization logic inside this service
+- third-party integrations (Slack, etc.)
+- generic iPaaS features
+- workflow engine (future concern)
+- data synchronization logic inside this service
 
 ---
 
@@ -298,10 +297,9 @@ This system is **not about data movement**.
 
 It is about:
 
-* **who is allowed to connect which apps**
-* **under which permissions**
-* **for which tenant**
-* **with which configuration**
+- **who is allowed to connect which apps**
+- **under which permissions**
+- **for which tenant**
+- **with which configuration**
 
 Keep the system focused on that responsibility.
-

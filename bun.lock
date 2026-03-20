@@ -16,9 +16,11 @@
       "devDependencies": {
         "@cloudflare/workers-types": "catalog:",
         "@effect/language-service": "catalog:",
+        "@effect/tsgo": "0.0.15",
         "@effect/vitest": "catalog:",
         "@falcon-framework/config": "workspace:*",
         "@types/node": "catalog:",
+        "@typescript/native-preview": "^7.0.0-dev.20260320.1",
         "lefthook": "^2.0.13",
         "nx": "^21.5.2",
         "oxfmt": "^0.41.0",
@@ -477,6 +479,22 @@
     "@effect/platform-browser": ["@effect/platform-browser@0.76.0", "", { "dependencies": { "multipasta": "^0.2.7" }, "peerDependencies": { "@effect/platform": "^0.96.0", "effect": "^3.21.0" } }, "sha512-cUyBpcLstrP/HiNsIePMBAI6R1+u6aRFlAUZb4wf08y1d1Vqf/Dmxsq14ZjBfnSYiqBPrCeYf1ZI+qMGQQL0RA=="],
 
     "@effect/rpc": ["@effect/rpc@0.75.0", "", { "dependencies": { "msgpackr": "^1.11.4" }, "peerDependencies": { "@effect/platform": "^0.96.0", "effect": "^3.21.0" } }, "sha512-VFeJ16cZUXqiIzG9UHOVKGuiBPJ7fV+0lEbJU6xi12JnnxXe/19BQPpOwiRawCUbPOR3/xIURDUgGxU+Ft0pvQ=="],
+
+    "@effect/tsgo": ["@effect/tsgo@0.0.15", "", { "optionalDependencies": { "@effect/tsgo-darwin-arm64": "0.0.15", "@effect/tsgo-darwin-x64": "0.0.15", "@effect/tsgo-linux-arm": "0.0.15", "@effect/tsgo-linux-arm64": "0.0.15", "@effect/tsgo-linux-x64": "0.0.15", "@effect/tsgo-win32-arm64": "0.0.15", "@effect/tsgo-win32-x64": "0.0.15" }, "bin": { "effect-tsgo": "bin/effect-tsgo.js" } }, "sha512-BEymf3qvCq0H9FnxU5FwVp3rhPrxfiRrUk/J9eIDTGkXdR890dK9Pp1ufu4g7NFMTZepRqRaqfUbFXW5npe6jA=="],
+
+    "@effect/tsgo-darwin-arm64": ["@effect/tsgo-darwin-arm64@0.0.15", "", { "os": "darwin", "cpu": "arm64" }, "sha512-6fblE07/wVfzVbP17ul408xn5TR2nlqtKe6OBv14EApO+ZhlZLbdB/Tn1adrGKQCBdAsP7f5/vSGpHyDx1iKEg=="],
+
+    "@effect/tsgo-darwin-x64": ["@effect/tsgo-darwin-x64@0.0.15", "", { "os": "darwin", "cpu": "x64" }, "sha512-4TS94JDkegkA8neaz6dz8BrkEPmPivnRuKVnvtH5VMoRGxuwxjXbuWHCb14A1spNebhsjSJTeKtEWlOqRr17dQ=="],
+
+    "@effect/tsgo-linux-arm": ["@effect/tsgo-linux-arm@0.0.15", "", { "os": "linux", "cpu": "arm" }, "sha512-punz4SABdszPD2xxPw2u+W1jJX6z8ohpnGMYDMo70LpQouafVOCLqE8CBgpdDfh0POEaalUZLF35c8td4gUWGA=="],
+
+    "@effect/tsgo-linux-arm64": ["@effect/tsgo-linux-arm64@0.0.15", "", { "os": "linux", "cpu": "arm64" }, "sha512-3eSHKNPcBhH8UaKA+6gQOVWIr86RcPt8pHE6hXmTVSRMB1oisfG+uT3sw4B8oK5RxR+4Ry2oyXlRZ4LI/buVaA=="],
+
+    "@effect/tsgo-linux-x64": ["@effect/tsgo-linux-x64@0.0.15", "", { "os": "linux", "cpu": "x64" }, "sha512-q9RMzSchiGtSEf5B7t2ddaulxwCZrIAQ/ufNaOulDis+HL+CDTSIPpG8LKbdI/iIANLjd73EMVmlnuCP1RotbQ=="],
+
+    "@effect/tsgo-win32-arm64": ["@effect/tsgo-win32-arm64@0.0.15", "", { "os": "win32", "cpu": "arm64" }, "sha512-mCzTrSuozXrCjAVPKDzLf6Vu27kLO/w/P0I0z/YWGcRDtqKpcG6VZwuCXph7aWre7dEnJQzM45VYOn4OffjbVQ=="],
+
+    "@effect/tsgo-win32-x64": ["@effect/tsgo-win32-x64@0.0.15", "", { "os": "win32", "cpu": "x64" }, "sha512-pYYptkoJqWUfxjwohIvPLAPRFtbDTu8XD1NwHQPkvvoRGLfO1YGPDMcNfUzI9rBjxvnQ8ckFYMCNAMgpNBlxkQ=="],
 
     "@effect/vitest": ["@effect/vitest@0.29.0", "", { "peerDependencies": { "effect": "^3.21.0", "vitest": "^3.2.0" } }, "sha512-DvWr1aeEcaZ8mtu8hNVb4e3rEYvGEwQSr7wsNrW53t6nKYjkmjRICcvVEsXUhjoCblRHSxRsRV0TOt0+UmcvaQ=="],
 
@@ -1221,6 +1239,22 @@
     "@types/webidl-conversions": ["@types/webidl-conversions@7.0.3", "", {}, "sha512-CiJJvcRtIgzadHCYXw7dqEnMNRjhGZlYK05Mj9OyktqV8uVT8fD2BFOB7S1uwBE3Kj2Z+4UyPmFw/Ixgw/LAlA=="],
 
     "@types/whatwg-url": ["@types/whatwg-url@13.0.0", "", { "dependencies": { "@types/webidl-conversions": "*" } }, "sha512-N8WXpbE6Wgri7KUSvrmQcqrMllKZ9uxkYWMt+mCSGwNc0Hsw9VQTW7ApqI4XNrx6/SaM2QQJCzMPDEXE058s+Q=="],
+
+    "@typescript/native-preview": ["@typescript/native-preview@7.0.0-dev.20260320.1", "", { "optionalDependencies": { "@typescript/native-preview-darwin-arm64": "7.0.0-dev.20260320.1", "@typescript/native-preview-darwin-x64": "7.0.0-dev.20260320.1", "@typescript/native-preview-linux-arm": "7.0.0-dev.20260320.1", "@typescript/native-preview-linux-arm64": "7.0.0-dev.20260320.1", "@typescript/native-preview-linux-x64": "7.0.0-dev.20260320.1", "@typescript/native-preview-win32-arm64": "7.0.0-dev.20260320.1", "@typescript/native-preview-win32-x64": "7.0.0-dev.20260320.1" }, "bin": { "tsgo": "bin/tsgo.js" } }, "sha512-uLkkdYwvJQ/atPqMW9RUt1j71lcbL53e7a+G/I3AXb5QioMdWkG6nbNfKPM+06RgXwPDyDV9+bI0FT/13BEVgg=="],
+
+    "@typescript/native-preview-darwin-arm64": ["@typescript/native-preview-darwin-arm64@7.0.0-dev.20260320.1", "", { "os": "darwin", "cpu": "arm64" }, "sha512-9zadqk/wJ+4bCheapoP/wZZxIGbHotKj+QDvwlCeB93LFrcuIYDt8q91xW1tzrc12YrUTgWXqJuYHTNZ9fzyHw=="],
+
+    "@typescript/native-preview-darwin-x64": ["@typescript/native-preview-darwin-x64@7.0.0-dev.20260320.1", "", { "os": "darwin", "cpu": "x64" }, "sha512-uw3sflQVaIIJhfu6xtFFogE8aC0MQ4xt9yRx2CDngp8/PQ0Qp8xp0LrUigQHbwtt7Y8AKR3YCRaX53rbovj4dg=="],
+
+    "@typescript/native-preview-linux-arm": ["@typescript/native-preview-linux-arm@7.0.0-dev.20260320.1", "", { "os": "linux", "cpu": "arm" }, "sha512-tCKwcnikt4uvSfHc14A6FJwEQox1yTsKcssTsAhxycH2bYuUr05AQNUdud3W41tr0MySHrcQG4CstzFxE9C86w=="],
+
+    "@typescript/native-preview-linux-arm64": ["@typescript/native-preview-linux-arm64@7.0.0-dev.20260320.1", "", { "os": "linux", "cpu": "arm64" }, "sha512-fmi8apETnFd6KhLzcGFLUcPRTZO+6vHnFw0Yz08IT68aX2Vft91LnxlJuuaiKVfzE8w9fxQlU1lAZyTVWARGIg=="],
+
+    "@typescript/native-preview-linux-x64": ["@typescript/native-preview-linux-x64@7.0.0-dev.20260320.1", "", { "os": "linux", "cpu": "x64" }, "sha512-ouNWS+eUHna/mxP0tLQRzBfR5CwldCrG9mi+pTZY1pKnjvvu7b0i6OOFh9em36wIsDCjPGu6dQiv2sfBCCyRwA=="],
+
+    "@typescript/native-preview-win32-arm64": ["@typescript/native-preview-win32-arm64@7.0.0-dev.20260320.1", "", { "os": "win32", "cpu": "arm64" }, "sha512-fG32mrKJOW8U9pq3VdHNXCfxCN3T7Uh5zkf3beH3mFIRtIv65BUONwW6rh63DCtyGZTeBkF6GTJO2nIIfx3dbA=="],
+
+    "@typescript/native-preview-win32-x64": ["@typescript/native-preview-win32-x64@7.0.0-dev.20260320.1", "", { "os": "win32", "cpu": "x64" }, "sha512-iklQlFdDWkV62GbxqVltm7y148vL6TC18BYZRzRaJjf2r+Gd2UGW3FPydNwKViTRfvWWwNx0aU8fnqTaoMBGqw=="],
 
     "@vitejs/plugin-react": ["@vitejs/plugin-react@5.2.0", "", { "dependencies": { "@babel/core": "^7.29.0", "@babel/plugin-transform-react-jsx-self": "^7.27.1", "@babel/plugin-transform-react-jsx-source": "^7.27.1", "@rolldown/pluginutils": "1.0.0-rc.3", "@types/babel__core": "^7.20.5", "react-refresh": "^0.18.0" }, "peerDependencies": { "vite": "^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0" } }, "sha512-YmKkfhOAi3wsB1PhJq5Scj3GXMn3WvtQ/JC0xoopuHoXSdmtdStOpFrYaT1kie2YgFBcIe64ROzMYRjCrYOdYw=="],
 
