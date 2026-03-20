@@ -8,6 +8,12 @@
     ],
     "catalog": {
       "dotenv": "^17.2.2",
+      "effect": "^3.21.0",
+      "@effect/language-service": "^0.80.0",
+      "@effect/platform": "^0.96.0",
+      "@effect/platform-browser": "^0.76.0",
+      "@effect/rpc": "^0.75.0",
+      "@effect/vitest": "^0.29.0",
       "zod": "^4.1.13",
       "@types/node": "^22.13.14",
       "@cloudflare/workers-types": "^4.20260317.1",
@@ -46,12 +52,18 @@
     "check": "oxlint && oxfmt --write"
   },
   "dependencies": {
+    "@effect/platform": "catalog:",
+    "@effect/platform-browser": "catalog:",
+    "@effect/rpc": "catalog:",
     "@falcon-framework/env": "workspace:*",
     "dotenv": "catalog:",
+    "effect": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
+    "@effect/language-service": "catalog:",
+    "@effect/vitest": "catalog:",
     "@falcon-framework/config": "workspace:*",
     "@types/node": "catalog:",
     "lefthook": "^2.0.13",
