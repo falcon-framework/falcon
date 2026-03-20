@@ -1,5 +1,5 @@
 {
-  "name": "@falcon-framework/db",
+  "name": "@falcon-framework/connection",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,23 +12,20 @@
     }
   },
   "scripts": {
-    "db:push": "drizzle-kit push",
-    "db:generate": "drizzle-kit generate",
-    "db:studio": "drizzle-kit studio",
-    "db:migrate": "drizzle-kit migrate",
-    "db:seed": "bun run src/seed/connection-apps.ts"
+    "check-types": "tsc -b"
   },
   "dependencies": {
+    "@effect/platform": "catalog:",
+    "@falcon-framework/auth": "workspace:*",
+    "@falcon-framework/db": "workspace:*",
     "@falcon-framework/env": "workspace:*",
-    "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
-    "pg": "^8.17.1",
-    "zod": "catalog:"
+    "effect": "catalog:",
+    "jose": "^6.0.0"
   },
   "devDependencies": {
     "@falcon-framework/config": "workspace:*",
-    "@types/pg": "^8.16.0",
-    "drizzle-kit": "^0.31.8",
+    "@types/pg": "^8.0.0",
     "typescript": "catalog:"
   }
 }

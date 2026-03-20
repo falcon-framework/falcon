@@ -3,6 +3,7 @@ import * as schema from "@falcon-framework/db/schema/auth";
 import { env } from "@falcon-framework/env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { organization } from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -36,4 +37,7 @@ export const auth = betterAuth({
     //   domain: "<your-workers-subdomain>",
     // },
   },
+  plugins: [organization()],
 });
+
+export * from "./permissions.js";

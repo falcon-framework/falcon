@@ -1,0 +1,10 @@
+{
+  "extends": "@falcon-framework/config/tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": false,
+    "sourceMap": true,
+    "outDir": "dist",
+    "composite": false
+  },
+  "include": ["src/**/*"]
+}

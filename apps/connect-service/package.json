@@ -10,17 +10,11 @@
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server"
   },
   "dependencies": {
-    "@falcon-framework/api": "workspace:*",
-    "@falcon-framework/auth": "workspace:*",
-    "@falcon-framework/db": "workspace:*",
+    "@falcon-framework/connection": "workspace:*",
     "@falcon-framework/env": "workspace:*",
-    "@orpc/openapi": "catalog:",
-    "@orpc/server": "catalog:",
-    "@orpc/zod": "catalog:",
-    "better-auth": "catalog:",
     "dotenv": "catalog:",
-    "hono": "catalog:",
-    "zod": "catalog:"
+    "effect": "catalog:",
+    "hono": "catalog:"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "catalog:",
