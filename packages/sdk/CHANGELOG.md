@@ -1,5 +1,11 @@
 # @falcon-framework/sdk
 
+## 0.2.3
+
+### Patch Changes
+
+- [`fc4bab6`](https://github.com/falcon-framework/falcon/commit/fc4bab6eb60e061bd3dd6c46e98d11979b1240d1) Thanks [@benjamin-kraatz](https://github.com/benjamin-kraatz)! - Set **`prepublishOnly`** to `npm run build` so `tsdown` resolves from `node_modules/.bin` during `changeset publish` and CI (fixes `tsdown: command not found`).
+
 ## 0.2.2
 
 ### Patch Changes
