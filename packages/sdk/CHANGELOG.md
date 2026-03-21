@@ -1,5 +1,19 @@
 # @falcon-framework/sdk
 
+## 0.3.0
+
+### Minor Changes
+
+- [#6](https://github.com/falcon-framework/falcon/pull/6) [`534dbcf`](https://github.com/falcon-framework/falcon/commit/534dbcf6be91378383f08cb41bbf87857dfeb028) Thanks [@benjamin-kraatz](https://github.com/benjamin-kraatz)! - Add `completeAuthCallback` to the main SDK entry. It validates the OAuth `code` and optional `state`, runs the code exchange (typically `exchangeCodeForSession`), and polls until the session is visible to the app or retries are exhausted—matching the flow used by the demo apps.
+
+  Refresh the package README: peer dependencies, entry points, browser auth (redirects, callback, session), and development commands are documented accurately.
+
+### Patch Changes
+
+- [#8](https://github.com/falcon-framework/falcon/pull/8) [`e7e32bb`](https://github.com/falcon-framework/falcon/commit/e7e32bb2e1558984c9de7b0dbf646e25eec6bfe4) Thanks [@benjamin-kraatz](https://github.com/benjamin-kraatz)! - Support **comma-separated** `CORS_ORIGIN` values when running Falcon Auth: the auth server’s CORS allow-list and Better Auth **trusted origins** (in `@falcon-framework/auth`) now parse `CORS_ORIGIN` as a list (split on commas, trimmed). You can list several first-party origins in one variable—for example the console and multiple local demo apps on different ports—without relying on a single origin string.
+
+  **Migration:** If you already use a single origin, behavior is unchanged. To allow multiple origins, set `CORS_ORIGIN` to a comma-separated list (no spaces required, but surrounding spaces around each entry are trimmed).
+
 ## 0.2.3
 
 ### Patch Changes
