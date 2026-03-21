@@ -8,8 +8,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import type { FalconAuthClient } from "../core/client";
 import type { FalconOrganizationSummary } from "../core/types";
-import { useFalconAuthContext } from "./provider";
+import { useFalconAuthContextOptional } from "./provider";
 
 export type FalconActiveOrganizationItem = Pick<
   FalconOrganizationSummary,
@@ -32,6 +33,11 @@ export interface ActiveOrganizationProviderProps {
    * @default "falcon:activeOrgId"
    */
   storageKey?: string;
+  /**
+   * Better Auth React client with the organization plugin (e.g. `createAuthClient` or `createFalconAuth`).
+   * Pass this when the tree is not wrapped with `FalconAuthProvider`.
+   */
+  client?: FalconAuthClient;
 }
 
 function toOrgItem(row: unknown): FalconActiveOrganizationItem | null {
@@ -46,13 +52,20 @@ function toOrgItem(row: unknown): FalconActiveOrganizationItem | null {
 
 /**
  * Keeps a **selected organization** in sync with Better Auth (`organization.setActive`) and `localStorage`.
- * Must be used inside {@link FalconAuthProvider}.
+ * Either wrap with {@link FalconAuthProvider} or pass a **`client`** prop (Better Auth React client with `organizationClient()`).
  */
 export function ActiveOrganizationProvider({
   children,
   storageKey = "falcon:activeOrgId",
+  client: clientProp,
 }: ActiveOrganizationProviderProps) {
-  const { client } = useFalconAuthContext();
+  const contextValue = useFalconAuthContextOptional();
+  const client = clientProp ?? contextValue?.client;
+  if (!client) {
+    throw new Error(
+      "ActiveOrganizationProvider requires a `client` prop or an ancestor <FalconAuthProvider>.",
+    );
+  }
   const { data: orgsData, isPending } = client.useListOrganizations();
 
   const orgs = useMemo(() => {
@@ -137,7 +150,7 @@ export function useActiveOrganization(): ActiveOrganizationContextValue {
   const ctx = useContext(ActiveOrganizationContext);
   if (!ctx) {
     throw new Error(
-      "useActiveOrganization must be used within <ActiveOrganizationProvider> inside <FalconAuthProvider>.",
+      "useActiveOrganization must be used within <ActiveOrganizationProvider> (with <FalconAuthProvider> or a `client` prop on the provider).",
     );
   }
   return ctx;

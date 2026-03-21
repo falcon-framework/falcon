@@ -1,5 +1,9 @@
 // React entry point — provider, hooks, and pre-built components
-export { FalconAuthProvider, type FalconAuthProviderProps } from "./react/provider";
+export {
+  FalconAuthProvider,
+  useFalconAuthContextOptional,
+  type FalconAuthProviderProps,
+} from "./react/provider";
 export { useFalconAuth, useUser, useSession } from "./react/hooks";
 export {
   ActiveOrganizationProvider,

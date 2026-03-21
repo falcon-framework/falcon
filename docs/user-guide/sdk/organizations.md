@@ -14,6 +14,8 @@ Falcon Auth runs Better Auth’s **organization** plugin. The SDK turns it on by
 | **`buildFalconConnectHeaders`** | Pure helper for **`X-Falcon-App-Id`** + **`X-Organization-Id`** on Connect `fetch` calls. |
 | Session types | **`FalconSession.activeOrganizationId`**, optional **`activeOrganization`** / **`organizations`** on **`fetchFalconSession`** and **`verifySession`** when the auth server returns them. |
 
+The monorepo **demo-01** and **demo-02** apps render **`OrganizationSwitcher`** in the header (via `DemoOrgSwitcher`) whenever you are signed in and have at least one organization—use them as a live reference when running the stack locally.
+
 ## Install and provider tree
 
 ```tsx
@@ -30,7 +32,7 @@ export function App() {
 }
 ```
 
-**`ActiveOrganizationProvider`** must sit **inside** **`FalconAuthProvider`**. It uses **`localStorage`** (browser-only); use it in client-rendered routes.
+**`ActiveOrganizationProvider`** needs a Better Auth client with the organization plugin: wrap with **`FalconAuthProvider`**, **or** pass **`client={yourAuthClient}`** when you use `createAuthClient` from `better-auth/react` directly (for example the FALCON console). It uses **`localStorage`** (browser-only); use it in client-rendered routes.
 
 ## Using the active organization hook
 

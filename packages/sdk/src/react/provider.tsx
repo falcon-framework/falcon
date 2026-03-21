@@ -50,3 +50,8 @@ export function useFalconAuthContext(): FalconAuthContextValue {
   }
   return ctx;
 }
+
+/** Same context as {@link useFalconAuthContext} but returns `null` outside {@link FalconAuthProvider}. */
+export function useFalconAuthContextOptional(): FalconAuthContextValue | null {
+  return useContext(FalconAuthContext);
+}
