@@ -5,6 +5,7 @@ import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
+import { de } from "@/i18n/de";
 import appCss from "../index.css?url";
 
 export interface RouterAppContext {
@@ -16,7 +17,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Falcon — My Account" },
+      { title: de.meta.title },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
   }),

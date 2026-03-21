@@ -50,10 +50,10 @@ function DocsPage() {
   return (
     <div className="max-w-3xl space-y-8">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Falcon Auth SDK</h1>
+        <h1 className="text-2xl font-bold tracking-tight">FALCON Auth SDK</h1>
         <p className="text-muted-foreground text-sm mt-1">
           This console is your account portal — manage your profile, see which apps you've signed in
-          to, and control your connections. Below is the SDK reference for using Falcon as your
+          to, and control your connections. Below is the SDK reference for using FALCON as your
           authentication provider in any React app.
         </p>
       </div>
@@ -83,7 +83,7 @@ function DocsPage() {
       <Section id="getting-started" title="Getting Started">
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Install the SDK in your React app and configure it with your Falcon auth server URL and
+            Install the SDK in your React app and configure it with your FALCON auth server URL and
             publishable key.
           </p>
 
@@ -147,7 +147,7 @@ function App() {
       <Separator />
 
       {/* Provider */}
-      <Section id="provider" title="FalconAuthProvider">
+      <Section id="provider" title="FALCON Auth Provider">
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
             Wrap your app with{" "}
@@ -160,7 +160,7 @@ function App() {
           <CodeBlock title="Props">
             {`interface FalconAuthProviderProps {
   config: {
-    serverUrl: string;       // Your Falcon auth server URL
+    serverUrl: string;       // Your FALCON auth server URL
     publishableKey: string;  // Your app's publishable key (pk_...)
   };
   children: React.ReactNode;
@@ -328,7 +328,7 @@ function SessionInfo() {
           <p className="text-sm text-muted-foreground">
             Use{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">verifySession</code>{" "}
-            in your backend to protect API routes. It forwards the session cookie to the Falcon auth
+            in your backend to protect API routes. It forwards the session cookie to the FALCON auth
             server and returns the user if valid.
           </p>
 

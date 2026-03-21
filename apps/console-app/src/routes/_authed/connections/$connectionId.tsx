@@ -40,6 +40,7 @@ import { useConnectClient } from "@/hooks/use-connect-client";
 import type { AppItem } from "@/lib/connect-client";
 import { useActiveOrg } from "@/providers/active-org";
 import AppNameDisplay from "@/components/app-name-display";
+import { de } from "@/i18n/de";
 
 export const Route = createFileRoute("/_authed/connections/$connectionId")({
   component: ConnectionDetailPage,
@@ -119,7 +120,7 @@ function ConnectionDetailPage() {
         className={buttonVariants({ variant: "ghost", size: "sm" }) + " -ml-2"}
       >
         <ArrowLeft className="h-4 w-4" />
-        Verbindungen
+        {de.connectionDetail.back}
       </Link>
 
       {connQuery.isLoading ? (
@@ -128,7 +129,7 @@ function ConnectionDetailPage() {
           <Skeleton className="h-40" />
         </div>
       ) : !conn ? (
-        <p className="text-muted-foreground">Verbindung nicht gefunden.</p>
+        <p className="text-muted-foreground">{de.connectionDetail.notFound}</p>
       ) : (
         <motion.div
           initial={{ opacity: 0 }}
@@ -147,10 +148,11 @@ function ConnectionDetailPage() {
                 <StatusBadge status={conn.status} />
               </div>
               <p className="text-xs text-muted-foreground font-mono mt-1.5 break-all">
-                Apps: {conn.sourceAppId} → {conn.targetAppId}
+                {de.connectionDetail.appsPrefix} {conn.sourceAppId} → {conn.targetAppId}
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Connection ID: <span className="font-mono">{conn.id}</span>
+                {de.connectionDetail.connectionId}{" "}
+                <span className="font-mono">{conn.id}</span>
               </p>
             </div>
 

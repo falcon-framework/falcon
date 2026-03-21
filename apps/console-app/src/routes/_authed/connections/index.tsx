@@ -14,6 +14,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Plug, AlertCircle, CheckCircle2, PauseCircle } from "lucide-react";
 
 import type { AppItem, ConnectionItem } from "@/lib/connect-client";
+import { de } from "@/i18n/de";
 import { useConnectClient } from "@/hooks/use-connect-client";
 import { useActiveOrg } from "@/providers/active-org";
 
@@ -47,16 +48,14 @@ function ConnectionsPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Your app-to-app integrations via FALCON Connect
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{de.connections.title}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{de.connections.subtitle}</p>
       </div>
 
       <Tabs defaultValue="active">
         <TabsList className="flex-wrap h-auto gap-1">
           <TabsTrigger value="active">
-            Active
+            {de.connections.tabActive}
             {active.length > 0 && (
               <Badge variant="secondary" className="ml-1.5 text-[10px]">
                 {active.length}
@@ -64,7 +63,7 @@ function ConnectionsPage() {
             )}
           </TabsTrigger>
           <TabsTrigger value="paused">
-            Paused
+            {de.connections.tabPaused}
             {paused.length > 0 && (
               <Badge variant="secondary" className="ml-1.5 text-[10px]">
                 {paused.length}
@@ -72,14 +71,14 @@ function ConnectionsPage() {
             )}
           </TabsTrigger>
           <TabsTrigger value="revoked">
-            Revoked
+            {de.connections.tabRevoked}
             {revoked.length > 0 && (
               <Badge variant="secondary" className="ml-1.5 text-[10px]">
                 {revoked.length}
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="all">All</TabsTrigger>
+          <TabsTrigger value="all">{de.connections.tabAll}</TabsTrigger>
         </TabsList>
 
         {[
@@ -126,11 +125,8 @@ function ConnectionList({
     return (
       <div className="flex flex-col items-center gap-3 py-16 text-center">
         <Plug className="h-12 w-12 text-muted-foreground/40" />
-        <h3 className="font-semibold">No connections</h3>
-        <p className="text-sm text-muted-foreground max-w-sm">
-          When your apps are connected via FALCON Connect, they'll appear here. You can manage
-          access at any time.
-        </p>
+        <h3 className="font-semibold">{de.connections.emptyTitle}</h3>
+        <p className="text-sm text-muted-foreground max-w-sm">{de.connections.emptyBody}</p>
       </div>
     );
   }
@@ -166,8 +162,9 @@ function ConnectionList({
                 </CardHeader>
                 <CardContent className="pt-0">
                   <CardDescription className="text-xs">
-                    Created {new Date(conn.createdAt).toLocaleDateString()} · Updated{" "}
-                    {new Date(conn.updatedAt).toLocaleDateString()}
+                    {de.connections.created}{" "}
+                    {new Date(conn.createdAt).toLocaleDateString("de-DE")} · {de.connections.updated}{" "}
+                    {new Date(conn.updatedAt).toLocaleDateString("de-DE")}
                   </CardDescription>
                 </CardContent>
               </Card>
@@ -181,9 +178,13 @@ function ConnectionList({
 
 function StatusBadge({ status }: { status: "active" | "paused" | "revoked" }) {
   const map = {
-    active: { variant: "default" as const, icon: CheckCircle2, label: "Active" },
-    paused: { variant: "secondary" as const, icon: PauseCircle, label: "Paused" },
-    revoked: { variant: "destructive" as const, icon: AlertCircle, label: "Revoked" },
+    active: { variant: "default" as const, icon: CheckCircle2, label: de.connections.statusActive },
+    paused: { variant: "secondary" as const, icon: PauseCircle, label: de.connections.statusPaused },
+    revoked: {
+      variant: "destructive" as const,
+      icon: AlertCircle,
+      label: de.connections.statusRevoked,
+    },
   };
   const { variant, icon: Icon, label } = map[status];
   return (

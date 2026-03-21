@@ -18,6 +18,7 @@ import { motion } from "motion/react";
 import { Shield, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
+import { de } from "@/i18n/de";
 import { authAppsClient } from "@/lib/auth-apps-client";
 
 export const Route = createFileRoute("/_authed/apps/")({
@@ -35,7 +36,7 @@ function AuthAppsPage() {
   const revokeMutation = useMutation({
     mutationFn: (appId: string) => authAppsClient.revoke(appId),
     onSuccess: () => {
-      toast.success("Access revoked");
+      toast.success(de.apps.toastRevoked);
       void qc.invalidateQueries({ queryKey: ["auth-apps"] });
     },
     onError: (e: Error) => toast.error(e.message),
@@ -46,10 +47,8 @@ function AuthAppsPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Your Auth Apps</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Apps you've signed in to using your Falcon account
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{de.apps.title}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{de.apps.subtitle}</p>
       </div>
 
       {appsQuery.isLoading ? (
@@ -61,11 +60,8 @@ function AuthAppsPage() {
       ) : apps.length === 0 ? (
         <div className="flex flex-col items-center gap-3 py-16 text-center">
           <Shield className="h-12 w-12 text-muted-foreground/40" />
-          <h3 className="font-semibold">No connected apps</h3>
-          <p className="text-sm text-muted-foreground max-w-sm">
-            When you sign in to apps that use Falcon Auth, they'll appear here. You can revoke
-            access at any time.
-          </p>
+          <h3 className="font-semibold">{de.apps.emptyTitle}</h3>
+          <p className="text-sm text-muted-foreground max-w-sm">{de.apps.emptyBody}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -86,7 +82,8 @@ function AuthAppsPage() {
                       <div className="min-w-0">
                         <CardTitle className="text-sm truncate">{app.name}</CardTitle>
                         <CardDescription className="text-xs">
-                          Connected {new Date(app.connectedAt).toLocaleDateString()}
+                          {de.apps.connected}{" "}
+                          {new Date(app.connectedAt).toLocaleDateString("de-DE")}
                         </CardDescription>
                       </div>
                     </div>
@@ -100,26 +97,26 @@ function AuthAppsPage() {
                             className="text-muted-foreground hover:text-destructive"
                           >
                             <XCircle className="h-4 w-4 mr-1.5" />
-                            Revoke
+                            {de.apps.revoke}
                           </Button>
                         }
                       />
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Revoke access?</AlertDialogTitle>
+                          <AlertDialogTitle>{de.apps.revokeTitle}</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This will remove your connection to <strong>{app.name}</strong>. The app
-                            will no longer be able to identify you through Falcon Auth. You can
-                            reconnect by signing in again.
+                            {de.apps.revokeDescriptionBefore}
+                            <strong>{app.name}</strong>
+                            {de.apps.revokeDescriptionAfter}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogCancel>{de.apps.cancel}</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => revokeMutation.mutate(app.appId)}
                             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                           >
-                            Revoke access
+                            {de.apps.revokeConfirm}
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>

@@ -13,23 +13,25 @@ import {
 import { Link, useRouterState } from "@tanstack/react-router";
 import { UserCircle, Shield, Plug, BookOpen, ChevronRight } from "lucide-react";
 
+import { de } from "@/i18n/de";
+
 import UserNav from "./user-nav";
 
 const navItems = [
   {
-    label: "Account",
-    items: [{ title: "Account", url: "/account", icon: UserCircle }],
+    label: de.sidebar.groups.account,
+    items: [{ title: de.sidebar.items.account, url: "/account", icon: UserCircle }],
   },
   {
-    label: "My Apps",
+    label: de.sidebar.groups.myApps,
     items: [
-      { title: "Auth Apps", url: "/apps", icon: Shield },
-      { title: "Connections", url: "/connections", icon: Plug },
+      { title: de.sidebar.items.authApps, url: "/apps", icon: Shield },
+      { title: de.sidebar.items.connections, url: "/connections", icon: Plug },
     ],
   },
   {
-    label: "Developer",
-    items: [{ title: "Docs", url: "/docs", icon: BookOpen }],
+    label: de.sidebar.groups.developer,
+    items: [{ title: de.sidebar.items.docs, url: "/docs", icon: BookOpen }],
   },
 ];
 
@@ -44,7 +46,7 @@ export default function AppSidebar() {
             F
           </div>
           <span className="truncate font-semibold text-sm group-data-[collapsible=icon]:hidden">
-            Falcon Auth
+            {de.sidebar.brand}
           </span>
         </div>
       </SidebarHeader>

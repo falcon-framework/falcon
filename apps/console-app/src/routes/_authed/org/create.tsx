@@ -17,6 +17,7 @@ import { Building2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { de } from "@/i18n/de";
 import { authClient } from "@/lib/auth-client";
 import { useActiveOrg } from "@/providers/active-org";
 
@@ -44,23 +45,23 @@ function CreateOrgPage() {
         slug: value.slug,
       });
       if (result.error) {
-        toast.error(result.error.message ?? "Failed to create organization");
+        toast.error(result.error.message ?? de.orgCreate.toastError);
         return;
       }
       await authClient.organization.setActive({
         organizationId: result.data!.id,
       });
       await switchOrg(result.data!.id);
-      toast.success(`Organization "${value.name}" created!`);
+      toast.success(de.orgCreate.toastSuccess(value.name));
       navigate({ to: "/account" });
     },
     validators: {
       onSubmit: z.object({
-        name: z.string().min(2, "At least 2 characters"),
+        name: z.string().min(2, de.orgCreate.validationMin),
         slug: z
           .string()
-          .min(2, "At least 2 characters")
-          .regex(/^[a-z0-9-]+$/, "Only lowercase letters, numbers and hyphens"),
+          .min(2, de.orgCreate.validationMin)
+          .regex(/^[a-z0-9-]+$/, de.orgCreate.validationSlug),
       }),
     },
   });
@@ -77,16 +78,14 @@ function CreateOrgPage() {
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <Building2 className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold">Create Organization</h1>
-          <p className="text-sm text-muted-foreground">
-            Organizations group your connections and apps
-          </p>
+          <h1 className="text-2xl font-bold">{de.orgCreate.title}</h1>
+          <p className="text-sm text-muted-foreground">{de.orgCreate.subtitle}</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Organization details</CardTitle>
-            <CardDescription>You can change these later in organization settings</CardDescription>
+            <CardTitle className="text-base">{de.orgCreate.cardTitle}</CardTitle>
+            <CardDescription>{de.orgCreate.cardDescription}</CardDescription>
           </CardHeader>
           <CardContent>
             <form
@@ -99,7 +98,7 @@ function CreateOrgPage() {
               <form.Field name="name">
                 {(field) => (
                   <div className="space-y-1.5">
-                    <Label htmlFor={field.name}>Organization name</Label>
+                    <Label htmlFor={field.name}>{de.orgCreate.orgName}</Label>
                     <Input
                       id={field.name}
                       placeholder="Acme Corp"
@@ -125,7 +124,7 @@ function CreateOrgPage() {
               <form.Field name="slug">
                 {(field) => (
                   <div className="space-y-1.5">
-                    <Label htmlFor={field.name}>Slug</Label>
+                    <Label htmlFor={field.name}>{de.orgCreate.slug}</Label>
                     <Input
                       id={field.name}
                       placeholder="acme-corp"
@@ -142,9 +141,7 @@ function CreateOrgPage() {
                         field.handleChange(toOrgSlug(e.target.value));
                       }}
                     />
-                    <p className="text-xs text-muted-foreground">
-                      Used in URLs · Only lowercase letters, numbers, and hyphens
-                    </p>
+                    <p className="text-xs text-muted-foreground">{de.orgCreate.slugHint}</p>
                     {field.state.meta.errors.map((err) => (
                       <p key={err?.message} className="text-xs text-destructive">
                         {err?.message}
@@ -162,10 +159,10 @@ function CreateOrgPage() {
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Creating…
+                        {de.orgCreate.creating}
                       </>
                     ) : (
-                      "Create organization"
+                      de.orgCreate.submit
                     )}
                   </Button>
                 )}

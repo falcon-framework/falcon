@@ -19,12 +19,19 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { de } from "@/i18n/de";
 import { authClient } from "@/lib/auth-client";
 import { useActiveOrg } from "@/providers/active-org";
 
 export const Route = createFileRoute("/_authed/account")({
   component: AccountPage,
 });
+
+function orgRoleLabel(role: string | undefined) {
+  if (!role) return de.account.roleMember;
+  if (role in de.roles) return de.roles[role as keyof typeof de.roles];
+  return role;
+}
 
 function AccountPage() {
   const { data: session } = authClient.useSession();
@@ -44,8 +51,8 @@ function AccountPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Account</h1>
-        <p className="text-sm text-muted-foreground mt-1">Manage your profile</p>
+        <h1 className="text-2xl font-bold tracking-tight">{de.account.title}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{de.account.subtitle}</p>
       </div>
 
       {/* Profile card */}
@@ -60,7 +67,8 @@ function AccountPage() {
                 <CardTitle>{user.name}</CardTitle>
                 <CardDescription>{user.email}</CardDescription>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Member since {new Date(user.createdAt).toLocaleDateString()}
+                  {de.account.memberSince}{" "}
+                  {new Date(user.createdAt).toLocaleDateString("de-DE")}
                 </p>
               </div>
             </div>
@@ -79,7 +87,7 @@ function AccountPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <Building2 className="h-4 w-4" />
-                Active Organization
+                {de.account.activeOrg}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -89,8 +97,9 @@ function AccountPage() {
                   <p className="text-xs text-muted-foreground">{(activeOrg as any).slug ?? ""}</p>
                 </div>
                 <Badge variant="secondary" className="text-[10px]">
-                  {(activeOrg as any).members?.find?.((m: any) => m.userId === user.id)?.role ??
-                    "member"}
+                  {orgRoleLabel(
+                    (activeOrg as any).members?.find?.((m: any) => m.userId === user.id)?.role,
+                  )}
                 </Badge>
               </div>
             </CardContent>
@@ -102,8 +111,8 @@ function AccountPage() {
       <Separator />
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Session</CardTitle>
-          <CardDescription>Sign out of your account on this device</CardDescription>
+          <CardTitle className="text-base">{de.account.sessionTitle}</CardTitle>
+          <CardDescription>{de.account.sessionDescription}</CardDescription>
         </CardHeader>
         <CardContent>
           <Button
@@ -118,7 +127,7 @@ function AccountPage() {
             }
           >
             <LogOut className="mr-2 h-4 w-4" />
-            Sign out
+            {de.account.signOut}
           </Button>
         </CardContent>
       </Card>
@@ -135,16 +144,16 @@ function EditProfileForm({ currentName }: { currentName: string }) {
       setSaving(true);
       try {
         await authClient.updateUser({ name: value.name });
-        toast.success("Profile updated");
+        toast.success(de.account.toastSuccess);
       } catch {
-        toast.error("Failed to update profile");
+        toast.error(de.account.toastError);
       } finally {
         setSaving(false);
       }
     },
     validators: {
       onSubmit: z.object({
-        name: z.string().min(2, "Name must be at least 2 characters"),
+        name: z.string().min(2, de.account.validationName),
       }),
     },
   });
@@ -154,7 +163,7 @@ function EditProfileForm({ currentName }: { currentName: string }) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base">
           <UserCircle className="h-4 w-4" />
-          Edit Profile
+          {de.account.editProfile}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -168,7 +177,7 @@ function EditProfileForm({ currentName }: { currentName: string }) {
           <form.Field name="name">
             {(field) => (
               <div className="space-y-1.5">
-                <Label>Display name</Label>
+                <Label>{de.account.displayName}</Label>
                 <Input
                   value={field.state.value}
                   onBlur={field.handleBlur}
@@ -187,10 +196,10 @@ function EditProfileForm({ currentName }: { currentName: string }) {
             {saving ? (
               <>
                 <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                Saving…
+                {de.account.saving}
               </>
             ) : (
-              "Save changes"
+              de.account.saveChanges
             )}
           </Button>
         </form>

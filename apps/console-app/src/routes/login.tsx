@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Loader2, Zap } from "lucide-react";
 import z from "zod";
 
+import { de } from "@/i18n/de";
 import { authClient } from "@/lib/auth-client";
 import { getUser } from "@/functions/get-user";
 
@@ -55,8 +56,8 @@ function LoginPage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
               <Zap className="h-6 w-6" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight">Falcon Connect</h1>
-            <p className="text-sm text-muted-foreground">Unified app integration platform</p>
+            <h1 className="text-xl font-bold tracking-tight">FALCON Connect</h1>
+            <p className="text-sm text-muted-foreground">{de.login.tagline}</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -99,16 +100,16 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
         password: value.password,
       });
       if (result.error) {
-        toast.error(result.error.message ?? "Sign in failed");
+        toast.error(result.error.message ?? de.login.signIn.toastError);
         return;
       }
-      toast.success("Welcome back!");
+      toast.success(de.login.signIn.toastWelcome);
       navigate({ to: "/account" });
     },
     validators: {
       onSubmit: z.object({
-        email: z.email("Invalid email"),
-        password: z.string().min(1, "Required"),
+        email: z.email(de.login.signIn.validationEmail),
+        password: z.string().min(1, de.login.signIn.validationRequired),
       }),
     },
   });
@@ -116,8 +117,8 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sign in</CardTitle>
-        <CardDescription>Enter your credentials to continue</CardDescription>
+        <CardTitle>{de.login.signIn.title}</CardTitle>
+        <CardDescription>{de.login.signIn.description}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -130,7 +131,7 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="email">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>Email</Label>
+                <Label htmlFor={field.name}>{de.login.signIn.email}</Label>
                 <Input
                   id={field.name}
                   type="email"
@@ -151,7 +152,7 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="password">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>Password</Label>
+                <Label htmlFor={field.name}>{de.login.signIn.password}</Label>
                 <Input
                   id={field.name}
                   type="password"
@@ -172,10 +173,10 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in…
+                    {de.login.signIn.submitting}
                   </>
                 ) : (
-                  "Sign in"
+                  de.login.signIn.submit
                 )}
               </Button>
             )}
@@ -185,13 +186,13 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
       <CardFooter className="flex-col gap-2">
         <Separator />
         <p className="text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
+          {de.login.signIn.switchPrompt}{" "}
           <button
             type="button"
             onClick={onSwitch}
             className="text-primary underline-offset-4 hover:underline"
           >
-            Sign up
+            {de.login.signIn.switchAction}
           </button>
         </p>
       </CardFooter>
@@ -211,17 +212,17 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
         password: value.password,
       });
       if (result.error) {
-        toast.error(result.error.message ?? "Sign up failed");
+        toast.error(result.error.message ?? de.login.signUp.toastError);
         return;
       }
-      toast.success("Account created! Welcome to Falcon.");
+      toast.success(de.login.signUp.toastSuccess);
       navigate({ to: "/org/create" });
     },
     validators: {
       onSubmit: z.object({
-        name: z.string().min(2, "Name must be at least 2 characters"),
-        email: z.email("Invalid email"),
-        password: z.string().min(8, "At least 8 characters"),
+        name: z.string().min(2, de.login.signUp.validationName),
+        email: z.email(de.login.signIn.validationEmail),
+        password: z.string().min(8, de.login.signUp.validationPassword),
       }),
     },
   });
@@ -229,8 +230,8 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create account</CardTitle>
-        <CardDescription>Get started with Falcon Connect</CardDescription>
+        <CardTitle>{de.login.signUp.title}</CardTitle>
+        <CardDescription>{de.login.signUp.description}</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -243,7 +244,7 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="name">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>Full name</Label>
+                <Label htmlFor={field.name}>{de.login.signUp.fullName}</Label>
                 <Input
                   id={field.name}
                   placeholder="Ada Lovelace"
@@ -263,7 +264,7 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="email">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>Email</Label>
+                <Label htmlFor={field.name}>{de.login.signIn.email}</Label>
                 <Input
                   id={field.name}
                   type="email"
@@ -284,11 +285,11 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="password">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>Password</Label>
+                <Label htmlFor={field.name}>{de.login.signIn.password}</Label>
                 <Input
                   id={field.name}
                   type="password"
-                  placeholder="Min. 8 characters"
+                  placeholder={de.login.signUp.placeholderPasswordHint}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -310,10 +311,10 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating account…
+                    {de.login.signUp.submitting}
                   </>
                 ) : (
-                  "Create account"
+                  de.login.signUp.submit
                 )}
               </Button>
             )}
@@ -323,13 +324,13 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
       <CardFooter className="flex-col gap-2">
         <Separator />
         <p className="text-sm text-muted-foreground">
-          Already have an account?{" "}
+          {de.login.signUp.switchPrompt}{" "}
           <button
             type="button"
             onClick={onSwitch}
             className="text-primary underline-offset-4 hover:underline"
           >
-            Sign in
+            {de.login.signUp.switchAction}
           </button>
         </p>
       </CardFooter>

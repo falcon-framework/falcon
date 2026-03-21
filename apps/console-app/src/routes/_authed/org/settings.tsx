@@ -35,6 +35,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { de } from "@/i18n/de";
 import { authClient } from "@/lib/auth-client";
 import { getUser } from "@/functions/get-user";
 import { useActiveOrg } from "@/providers/active-org";
@@ -168,6 +169,11 @@ const ROLE_COLORS = {
   member: "outline",
 } as const;
 
+function memberRoleLabel(role: string) {
+  if (role in de.roles) return de.roles[role as keyof typeof de.roles];
+  return role;
+}
+
 function MembersSection(_: { org: { id: string } }) {
   const { activeOrg: fullOrg } = useActiveOrg();
 
@@ -210,7 +216,7 @@ function MembersSection(_: { org: { id: string } }) {
                   className="gap-1 text-[10px]"
                 >
                   <RoleIcon className="h-2.5 w-2.5" />
-                  {m.role}
+                  {memberRoleLabel(m.role)}
                 </Badge>
               </motion.div>
             );
