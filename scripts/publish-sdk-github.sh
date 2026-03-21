@@ -17,5 +17,10 @@ trap 'rm -f "$TMP_NPMRC"' EXIT
   echo "//npm.pkg.github.com/:_authToken=${TOKEN}"
 } > "$TMP_NPMRC"
 export NPM_CONFIG_USERCONFIG="$TMP_NPMRC"
-(cd "$ROOT/packages/sdk" && npm publish --registry=https://npm.pkg.github.com --no-provenance)
+VERSION="$(node -p "JSON.parse(require('fs').readFileSync('$ROOT/packages/sdk/package.json','utf8')).version")"
+if EXISTING="$(npm view "@falcon-framework/sdk@${VERSION}" version --registry=https://npm.pkg.github.com 2>/dev/null)" && [ -n "$EXISTING" ]; then
+  echo "GitHub Packages already has @falcon-framework/sdk@${VERSION}; skipping (avoids 409 on retries)."
+else
+  (cd "$ROOT/packages/sdk" && npm publish --registry=https://npm.pkg.github.com --no-provenance)
+fi
 unset NPM_CONFIG_USERCONFIG
