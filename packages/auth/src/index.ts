@@ -145,6 +145,14 @@ function isHttpsUrl(value: string): boolean {
   }
 }
 
+/** Comma-separated `CORS_ORIGIN` values (e.g. console + demo apps on different localhost ports). */
+function parseCorsOrigins(value: string): string[] {
+  return value
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean);
+}
+
 /**
  * Localhost development runs over plain HTTP, so browsers will reject
  * `SameSite=None; Secure` cookies there. In deployed HTTPS environments we
@@ -193,7 +201,7 @@ export async function sessionAllowedForApp(
 
 export const auth = (options?: AuthOptions) => {
   const db = makeDb();
-  const trustedOrigins = [env.CORS_ORIGIN];
+  const trustedOrigins = [...parseCorsOrigins(env.CORS_ORIGIN)];
   if (options?.extraTrustedOrigins) {
     trustedOrigins.push(...options.extraTrustedOrigins);
   }
