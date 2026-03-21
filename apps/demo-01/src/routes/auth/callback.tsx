@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { exchangeCodeForSession } from '@falcon-framework/sdk'
+import { exchangeCodeForSession, sessionCookieName } from '@falcon-framework/sdk'
 import { falconAuthConfig } from '#/lib/demo-env'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
@@ -36,8 +36,9 @@ function CallbackPage() {
     exchangeCodeForSession(falconAuthConfig, { code })
       .then(({ sessionToken }) => {
         // Store the session token as a cookie so verifySession() can forward it
-        // to the Falcon Auth server. Mirrors Better-Auth's cookie name.
-        document.cookie = `better-auth.session_token=${sessionToken}; path=/; SameSite=None; Secure`
+        // to the Falcon Auth server. Uses the per-app cookie name.
+        const cookieName = sessionCookieName(falconAuthConfig.publishableKey)
+        document.cookie = `${cookieName}=${sessionToken}; path=/; SameSite=None; Secure`
         void navigate({ to: '/dashboard' })
       })
       .catch((err: unknown) => {
