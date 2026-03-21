@@ -457,6 +457,14 @@ app.post("/auth/token", async (c) => {
     .set({ usedAt: new Date() })
     .where(eq(authorizationCode.id, row.id));
 
+  // Set the session cookie on the auth server's origin so the Better-Auth client
+  // can read it when it calls /api/auth/get-session directly from the browser.
+  const cookieName = `${cookiePrefixForPublishableKey(client_id)}.session_token`;
+  c.header(
+    "Set-Cookie",
+    `${cookieName}=${row.sessionToken}; Path=/; HttpOnly; SameSite=None; Secure`,
+  );
+
   return c.json({ sessionToken: row.sessionToken });
 });
 
