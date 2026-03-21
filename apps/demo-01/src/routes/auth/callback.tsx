@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { exchangeCodeForSession, fetchFalconSession } from "@falcon-framework/sdk";
+import {
+  completeAuthCallback,
+  exchangeCodeForSession,
+  fetchFalconSession,
+} from "@falcon-framework/sdk";
 import { falconAuthConfig } from "#/lib/demo-env";
-import { completeAuthCallback } from "#/lib/auth-callback";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 

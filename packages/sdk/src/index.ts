@@ -15,3 +15,5 @@ export type {
   ExchangeCodeResult,
 } from "./core/redirect";
 export { sessionCookieName } from "./core/cookie";
+export { completeAuthCallback } from "./core/auth-callback";
+export type { CompleteAuthCallbackOptions, SessionLookupResult } from "./core/auth-callback";
