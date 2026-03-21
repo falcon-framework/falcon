@@ -19,6 +19,16 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 
+/** Comma-separated `CORS_ORIGIN` values (e.g. console + demo apps on different localhost ports). */
+function parseCorsOrigins(value: string): string[] {
+  return value
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean);
+}
+
+const corsAllowedOrigins = parseCorsOrigins(env.CORS_ORIGIN);
+
 const app = new Hono();
 
 app.use(logger());
@@ -26,7 +36,7 @@ app.use(logger());
 /**
  * Dynamic CORS middleware.
  *
- * 1. If the request Origin matches env.CORS_ORIGIN (the console app), allow immediately.
+ * 1. If the request Origin is listed in env.CORS_ORIGIN (comma-separated), allow immediately.
  * 2. Otherwise, read the X-Falcon-App-Id header (the publishable key).
  * 3. Look up the falcon_auth_app by publishable key and check its allowed origins.
  */
@@ -38,8 +48,11 @@ app.use(
       if (origin === "http://localhost:3010" || origin === "http://localhost:3011") {
         return origin;
       }
-      // Console app is always allowed
-      if (origin === env.CORS_ORIGIN) {
+      if (!origin) {
+        return corsAllowedOrigins[0] ?? "";
+      }
+      // Console app and global origin configs are always allowed
+      if (corsAllowedOrigins.includes(origin)) {
         return origin;
       }
 
@@ -56,7 +69,7 @@ app.use(
         }
       }
 
-      return env.CORS_ORIGIN;
+      return corsAllowedOrigins[0] ?? null;
     },
     allowMethods: ["GET", "POST", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization", "X-Falcon-App-Id"],
