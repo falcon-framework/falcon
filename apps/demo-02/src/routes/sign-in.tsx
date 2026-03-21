@@ -1,14 +1,24 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { SignIn } from '@falcon-framework/sdk/react'
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { SignIn, useFalconAuth } from "@falcon-framework/sdk/react";
 
-export const Route = createFileRoute('/sign-in')({
+export const Route = createFileRoute("/sign-in")({
   component: SignInPage,
-})
+});
 
 function SignInPage() {
+  const { isSignedIn } = useFalconAuth();
+  if (isSignedIn) {
+    return (
+      <main className="page-wrap px-4 py-12">
+        <p>You are already signed in</p>
+        <Navigate to="/" />
+      </main>
+    );
+  }
+
   return (
     <main className="page-wrap px-4 py-12">
       <SignIn afterSignInUrl="/" signUpUrl="/sign-up" />
     </main>
-  )
+  );
 }
