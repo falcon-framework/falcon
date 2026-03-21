@@ -29,10 +29,11 @@ export function createIdentity(testInfo: TestInfo): Identity {
     name: `Demo User ${suffix}`,
     email: `demo-${suffix}@example.com`,
     password: `Password!${suffix}`,
-    orgName: `Workspace ${suffix}`,
-    orgSlug: `workspace-${suffix}`.replace(/[^a-z0-9-]/g, "-"),
-    secondOrgName: `Extra Workspace ${suffix}`,
-    secondOrgSlug: `extra-workspace-${suffix}`.replace(/[^a-z0-9-]/g, "-"),
+    orgName: `North ${suffix}`,
+    orgSlug: `north-${suffix}`.replace(/[^a-z0-9-]/g, "-"),
+    /** Must not be a substring of `orgName` (Playwright role name matching is substring-based). */
+    secondOrgName: `South ${suffix}`,
+    secondOrgSlug: `south-${suffix}`.replace(/[^a-z0-9-]/g, "-"),
     targetOrgName: `Partner Workspace ${suffix}`,
     targetOrgSlug: `partner-workspace-${suffix}`.replace(/[^a-z0-9-]/g, "-"),
   };

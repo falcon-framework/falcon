@@ -4,7 +4,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -88,11 +87,12 @@ export function ActiveOrganizationProvider({
     }
   });
 
-  const didInit = useRef(false);
-
+  /**
+   * Keep React state in sync with `localStorage` and the org list. Runs again when the list
+   * updates (e.g. after creating an org on another route that writes `storageKey` and `setActive`).
+   */
   useEffect(() => {
-    if (isPending || !orgs.length || didInit.current) return;
-    didInit.current = true;
+    if (isPending || !orgs.length) return;
 
     let stored: string | null = null;
     try {
@@ -101,16 +101,26 @@ export function ActiveOrganizationProvider({
       stored = null;
     }
 
+    // If localStorage already points at an org that is not in the list yet, wait for the query to
+    // refresh (e.g. after creating an org on another route). Do not fall back to orgs[0] or we
+    // briefly show the wrong active org.
+    if (stored && !orgs.some((o) => o.id === stored)) {
+      return;
+    }
+
     const validStored = stored && orgs.some((o) => o.id === stored) ? stored : null;
     const targetId = validStored ?? orgs[0]!.id;
 
-    setActiveOrgId(targetId);
-    try {
-      window.localStorage.setItem(storageKey, targetId);
-    } catch {
-      /* ignore quota / private mode */
-    }
-    client.organization.setActive({ organizationId: targetId }).catch(() => {});
+    setActiveOrgId((prev) => {
+      if (prev === targetId) return prev;
+      try {
+        window.localStorage.setItem(storageKey, targetId);
+      } catch {
+        /* ignore quota / private mode */
+      }
+      client.organization.setActive({ organizationId: targetId }).catch(() => {});
+      return targetId;
+    });
   }, [isPending, orgs, client, storageKey]);
 
   const switchOrg = useCallback(
