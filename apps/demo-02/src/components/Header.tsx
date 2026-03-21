@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import FalconHeaderUser from '#/components/falcon-header-user'
+import { demoEnv } from '#/lib/demo-env'
 import ThemeToggle from './ThemeToggle'
 
 export default function Header() {
@@ -59,12 +60,27 @@ export default function Header() {
             Home
           </Link>
           <Link
+            to="/connections"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Connections
+          </Link>
+          <Link
             to="/sign-in"
             className="nav-link"
             activeProps={{ className: 'nav-link is-active' }}
           >
             Sign in
           </Link>
+          <a
+            href={demoEnv.VITE_FALCON_CONSOLE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link"
+          >
+            Manage account and apps
+          </a>
         </div>
       </nav>
     </header>

@@ -5,6 +5,7 @@ export default defineConfig({
     index: "src/index.ts",
     react: "src/react.ts",
     server: "src/server.ts",
+    connect: "src/connect.ts",
   },
   format: "esm",
   platform: "neutral",

@@ -17,8 +17,14 @@ function HomePage() {
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
-            to="/sign-in"
+            to="/connections"
             className="rounded-full border border-[rgba(176,58,66,0.3)] bg-[rgba(224,93,77,0.14)] px-5 py-2.5 text-sm font-semibold text-[var(--lagoon-deep)] no-underline transition hover:-translate-y-0.5 hover:bg-[rgba(224,93,77,0.24)]"
+          >
+            View connections
+          </Link>
+          <Link
+            to="/sign-in"
+            className="rounded-full border border-[var(--line)] bg-[var(--chip-bg)] px-5 py-2.5 text-sm font-semibold text-[var(--sea-ink)] no-underline transition hover:-translate-y-0.5 hover:bg-[var(--link-bg-hover)]"
           >
             Sign in
           </Link>

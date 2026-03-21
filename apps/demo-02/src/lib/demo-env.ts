@@ -26,6 +26,12 @@ export const demoEnv = {
   get VITE_PEER_APP_ORIGIN() {
     return req('VITE_PEER_APP_ORIGIN').replace(/\/$/, '')
   },
+  get VITE_APP_PUBLIC_ORIGIN() {
+    return req('VITE_APP_PUBLIC_ORIGIN').replace(/\/$/, '')
+  },
+  get VITE_FALCON_CONSOLE_URL() {
+    return req('VITE_FALCON_CONSOLE_URL').replace(/\/$/, '')
+  },
 }
 
 export const falconAuthConfig = {
