@@ -18,6 +18,7 @@ npm install @falcon-framework/sdk better-auth react react-dom
 | Document | Description |
 | -------- | ----------- |
 | [React integration](react-integration.md) | `FalconAuthProvider`, hooks, `SignIn` / `SignUp` / `UserButton` |
+| [Organizations](organizations.md) | Active org provider, `OrganizationSwitcher`, Connect headers, session fields |
 | [Centralized sign-in URLs](hosted-sign-in-urls.md) | `buildSignInUrl` / `buildSignUpUrl`, `redirectToSignIn` / `redirectToSignUp` (auth server `/auth/*` routes) |
 | [Auth callback and session](auth-callback-and-session.md) | `completeAuthCallback`, `exchangeCodeForSession`, `fetchFalconSession`, sign-out, cookies |
 | [Server session verification](server-verification.md) | `verifySession` for APIs and middleware |
@@ -27,8 +28,8 @@ npm install @falcon-framework/sdk better-auth react react-dom
 
 | Import path | Purpose |
 | ----------- | ------- |
-| `@falcon-framework/sdk` | `createFalconAuth`, session helpers, redirect URL builders, `exchangeCodeForSession`, `completeAuthCallback`, `sessionCookieName` |
-| `@falcon-framework/sdk/react` | `FalconAuthProvider`, `useFalconAuth` / `useUser` / `useSession`, `SignIn`, `SignUp`, `UserButton`; re-exports `createFalconAuth` and core types |
+| `@falcon-framework/sdk` | `createFalconAuth`, session helpers, redirect URL builders, `exchangeCodeForSession`, `completeAuthCallback`, `sessionCookieName`, `buildFalconConnectHeaders`, `organizationClient` re-export |
+| `@falcon-framework/sdk/react` | `FalconAuthProvider`, `useFalconAuth` / `useUser` / `useSession`, `ActiveOrganizationProvider`, `useActiveOrganization`, `OrganizationSwitcher`, `SignIn`, `SignUp`, `UserButton`; re-exports `createFalconAuth` and core types |
 | `@falcon-framework/sdk/server` | `verifySession` |
 | `@falcon-framework/sdk/connect` | Connect app map and connection labeling helpers (no HTTP) |
 

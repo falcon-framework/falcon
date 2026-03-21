@@ -15,6 +15,19 @@ export interface FalconUser {
   updatedAt: Date;
 }
 
+/**
+ * Organization row shape from Better Auth’s organization plugin (session payloads and list endpoints).
+ * Dates may be ISO strings over the wire.
+ */
+export interface FalconOrganizationSummary {
+  id: string;
+  name: string;
+  slug: string;
+  logo?: string | null;
+  metadata?: string | null;
+  createdAt: Date | string;
+}
+
 export interface FalconSession {
   id: string;
   token: string;
@@ -24,6 +37,8 @@ export interface FalconSession {
   updatedAt: Date;
   ipAddress?: string | null;
   userAgent?: string | null;
+  /** Set when the organization plugin is enabled and an active org is selected. */
+  activeOrganizationId?: string | null;
 }
 
 export interface FalconAuthState {
@@ -31,4 +46,14 @@ export interface FalconAuthState {
   session: FalconSession | null;
   isLoaded: boolean;
   isSignedIn: boolean;
+}
+
+/** Full payload from `GET /api/auth/get-session` when signed in (includes optional org plugin fields). */
+export interface FalconSessionResponse {
+  user: FalconUser;
+  session: FalconSession;
+  /** Expanded active organization when the server includes it on the session response. */
+  activeOrganization?: FalconOrganizationSummary | null;
+  /** Optional list of organizations the user belongs to (when returned by the auth server). */
+  organizations?: FalconOrganizationSummary[];
 }

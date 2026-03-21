@@ -66,6 +66,7 @@ This guide explains Falcon for people who **use**, **integrate**, or **operate**
 | [Auth callback and session](sdk/auth-callback-and-session.md) | `completeAuthCallback`, session helpers    |
 | [Server session verification](sdk/server-verification.md)      | `verifySession` for backends               |
 | [Connect display helpers](sdk/connect-helpers.md)              | Labeling helpers for Connect API responses |
+| [SDK: organizations](sdk/organizations.md)                    | Active org, switcher UI, Connect headers   |
 
 ### Reference
 

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@falcon-framework/env": "workspace:*",
+    "@falcon-framework/sdk": "workspace:*",
     "@falcon-framework/ui": "workspace:*",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-form": "^1.28.0",

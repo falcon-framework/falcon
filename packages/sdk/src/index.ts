@@ -1,7 +1,16 @@
 export { createFalconAuthClient as createFalconAuth } from "./core/client";
 export type { FalconAuthClient } from "./core/client";
-export type { FalconAuthConfig, FalconAuthState, FalconSession, FalconUser } from "./core/types";
+export type {
+  FalconAuthConfig,
+  FalconAuthState,
+  FalconOrganizationSummary,
+  FalconSession,
+  FalconSessionResponse,
+  FalconUser,
+} from "./core/types";
+export { organizationClient } from "better-auth/client/plugins";
 export { fetchFalconSession, signOutFalconSession } from "./core/session";
+export { buildFalconConnectHeaders } from "./core/connect-headers";
 export {
   buildSignInUrl,
   buildSignUpUrl,

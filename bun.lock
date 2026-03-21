@@ -84,6 +84,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@falcon-framework/env": "workspace:*",
+        "@falcon-framework/sdk": "workspace:*",
         "@falcon-framework/ui": "workspace:*",
         "@tailwindcss/vite": "^4.1.18",
         "@tanstack/react-form": "^1.28.0",
@@ -332,10 +333,12 @@
     },
     "packages/sdk": {
       "name": "@falcon-framework/sdk",
-      "version": "0.2.2",
+      "version": "0.3.0",
       "devDependencies": {
+        "@testing-library/react": "^16.3.0",
         "@types/react": "^19.2.10",
         "@types/react-dom": "^19.2.3",
+        "jsdom": "^26.1.0",
         "publint": "^0.3.18",
         "tsdown": "^0.21.4",
         "typescript": "^5.9.3",

@@ -26,6 +26,8 @@ const session = await verifySession(config, incomingRequest);
 - **`null`** if there is no cookie, the auth server responds with an error, or the payload has no **user** / **session**.
 - Otherwise **`VerifiedSession`** with **user** and **session** fields (dates may arrive as strings from JSON depending on runtime—parse if you need **`Date`** instances).
 
+When the Falcon Auth server runs the **organization** plugin, the JSON may also include **`session.activeOrganizationId`** and optional **`activeOrganization`** / **`organizations`** on the root object. Those fields are preserved on **`VerifiedSession`** so your API can read active-org context without an extra round trip. Use **`FalconOrganizationSummary`** (exported from **`@falcon-framework/sdk`** and **`@falcon-framework/sdk/server`**) when typing those objects.
+
 ## How it works
 
 1. Reads the **`Cookie`** header from the incoming request.

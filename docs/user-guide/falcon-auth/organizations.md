@@ -23,6 +23,10 @@ Connect stores **`organization_id`** on installation requests and connections. T
 
 Users may belong to multiple organizations. The **active org** in the UI (console or your app) determines which Connect data they see and which org id is sent on API requests. Switching org in the console switches this context.
 
+## SDK integration
+
+For React apps, see [Organizations in the JavaScript SDK](../sdk/organizations.md): **`ActiveOrganizationProvider`**, **`buildFalconConnectHeaders`** for **`X-Organization-Id`**, and optional **`OrganizationSwitcher`**.
+
 ## Related topics
 
 - [Organizations in the console](../console/organizations.md)

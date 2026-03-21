@@ -72,6 +72,8 @@ function Header() {
 
 Convenience wrappers: **`useUser`** returns **`{ user, isLoaded }`**; **`useSession`** returns **`{ session, isLoaded }`**.
 
+These are **Falcon SDK** helpers (they call **`fetchFalconSession`**). They are unrelated to Better Auth’s own React **`useSession`** hook on the raw Better Auth client; when you need organization APIs, use **`useFalconAuth().client`** or the org components below.
+
 ## Optional UI components
 
 | Component | Role |
@@ -79,6 +81,8 @@ Convenience wrappers: **`useUser`** returns **`{ user, isLoaded }`**; **`useSess
 | **`SignIn`** | Email + password form posting through the Better Auth client (embedded UX on **your** origin). Props: **`afterSignInUrl`**, **`signUpUrl`**, **`onSignIn`**, **`className`**. |
 | **`SignUp`** | Same idea for registration. |
 | **`UserButton`** | Compact account control with sign-out—suitable for headers. |
+| **`ActiveOrganizationProvider`** / **`useActiveOrganization`** | Persists active org id and syncs **`organization.setActive`** (nested inside **`FalconAuthProvider`**). |
+| **`OrganizationSwitcher`** | Tailwind dropdown to switch organizations; optional create/settings links. |
 
 Components use **Tailwind CSS** utility classes. Many production apps prefer redirecting to the auth server instead; see [Centralized sign-in URLs](hosted-sign-in-urls.md) and [Auth callback and session](auth-callback-and-session.md).
 
@@ -98,7 +102,13 @@ export function LoginPage() {
 
 ## Organizations in your SPA
 
-Session and user come from Falcon Auth; organization **create / list / setActive** flows use Better Auth’s organization plugin on the same **`client`**. The console and demos combine this with Connect API calls.
+Session and user come from Falcon Auth; organization **create / list / setActive** flows use Better Auth’s organization plugin on the same **`client`**.
+
+- Use **`ActiveOrganizationProvider`** and **`useActiveOrganization`** for a shared “active org” pattern (see [Organizations](organizations.md)).
+- Use **`OrganizationSwitcher`** for a minimal org switcher, or build your own with **`client.useListOrganizations()`** and **`switchOrg`** from the provider context.
+- For Falcon Connect **`fetch`** calls, combine **`buildFalconConnectHeaders`** (main SDK entry) with your **`X-Organization-Id`**.
+
+The console and demos use the same provider from the SDK with app-specific **`storageKey`** values.
 
 ## Related topics
 
