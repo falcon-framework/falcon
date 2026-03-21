@@ -75,7 +75,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.0",
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.30.0",
     "@cloudflare/workers-types": "catalog:",
@@ -83,6 +82,7 @@
     "@effect/tsgo": "0.0.15",
     "@effect/vitest": "catalog:",
     "@falcon-framework/config": "workspace:*",
+    "@playwright/test": "^1.55.0",
     "@types/node": "catalog:",
     "@typescript/native-preview": "^7.0.0-dev.20260320.1",
     "lefthook": "^2.0.13",

@@ -185,9 +185,10 @@ async function waitForIncomingStep(
           return "org-create";
         }
         if (
-          await page.getByRole("button", { name: "Continue to Falcon Auth" }).isVisible().catch(
-            () => false,
-          )
+          await page
+            .getByRole("button", { name: "Continue to Falcon Auth" })
+            .isVisible()
+            .catch(() => false)
         ) {
           return "hosted-sign-in";
         }
@@ -206,9 +207,10 @@ async function waitForIncomingStep(
   } else if (page.url().includes("/org/create")) {
     state = "org-create";
   } else if (
-    await page.getByRole("button", { name: "Continue to Falcon Auth" }).isVisible().catch(
-      () => false,
-    )
+    await page
+      .getByRole("button", { name: "Continue to Falcon Auth" })
+      .isVisible()
+      .catch(() => false)
   ) {
     state = "hosted-sign-in";
   } else {
@@ -219,5 +221,12 @@ async function waitForIncomingStep(
 }
 
 async function readMainText(page: Page): Promise<string> {
-  return (await page.locator("main").textContent().catch(() => ""))?.toLowerCase() ?? "";
+  return (
+    (
+      await page
+        .locator("main")
+        .textContent()
+        .catch(() => "")
+    )?.toLowerCase() ?? ""
+  );
 }

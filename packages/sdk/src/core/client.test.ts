@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
 
-const createAuthClient = vi.fn(() => ({ mocked: true }));
+const createAuthClient = vi.fn(
+  (_config: {
+    baseURL: string;
+    plugins: unknown[];
+    fetchOptions: { customFetchImpl: typeof fetch };
+  }) => ({ mocked: true }),
+);
 const organizationClient = vi.fn(() => ({ name: "organization-plugin" }));
 
 vi.mock("better-auth/react", () => ({
@@ -32,8 +38,8 @@ describe("createFalconAuthClient", () => {
     const firstCall = createAuthClient.mock.calls[0];
     expect(firstCall).toBeDefined();
 
-    const customFetch = (firstCall![0] as { fetchOptions: { customFetchImpl: typeof fetch } })
-      .fetchOptions.customFetchImpl;
+    const firstArg = firstCall![0];
+    const customFetch = firstArg.fetchOptions.customFetchImpl;
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(null));
 
     await customFetch("https://auth.example.com/api/auth/get-session", {
