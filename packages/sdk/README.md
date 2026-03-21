@@ -5,21 +5,19 @@ This package contains the FALCON SDK to let third-party apps integrate with the 
 ## Installation
 
 ```sh
-npm install @falcon-framework/sdk
+npm install @falcon-framework/sdk better-auth react react-dom
 # or
-bun add @falcon-framework/sdk
+bun add @falcon-framework/sdk better-auth react react-dom
 # or
-pnpm add @falcon-framework/sdk
+pnpm add @falcon-framework/sdk better-auth react react-dom
 ```
+
+`better-auth` is required: the SDK’s auth client wraps Better Auth’s React client (`better-auth/react`).
 
 ### Peer dependencies
 
-For React helpers and UI (`@falcon-framework/sdk/react`), install compatible versions of:
-
-- `react` (>= 18)
-- `react-dom` (>= 18)
-
-The core client and server helpers do not require React at runtime.
+- **`better-auth`** (`^1.5.0`) — required peer. Install it next to the SDK and keep it aligned with the version your Falcon Auth server uses.
+- **`react`** / **`react-dom`** (`>=18`) — used by `createFalconAuth` (via `better-auth/react`) and by `@falcon-framework/sdk/react`. They are marked **optional** in `package.json` so projects that only import `@falcon-framework/sdk/server` or `@falcon-framework/sdk/connect` are not forced to install React; if you use the main package or the React subpath, add `react` and `react-dom` yourself.
 
 ### Entry points
 
@@ -28,6 +26,7 @@ The core client and server helpers do not require React at runtime.
 | `@falcon-framework/sdk`        | `createFalconAuth` client                           |
 | `@falcon-framework/sdk/react`  | Provider, hooks, `SignIn` / `SignUp` / `UserButton` |
 | `@falcon-framework/sdk/server` | `verifySession` for backend route protection        |
+| `@falcon-framework/sdk/connect` | Connect app directory / labeling helpers           |
 
 ## Development (in this monorepo)
 

@@ -21,6 +21,6 @@ VERSION="$(node -p "JSON.parse(require('fs').readFileSync('$ROOT/packages/sdk/pa
 if EXISTING="$(npm view "@falcon-framework/sdk@${VERSION}" version --registry=https://npm.pkg.github.com 2>/dev/null)" && [ -n "$EXISTING" ]; then
   echo "GitHub Packages already has @falcon-framework/sdk@${VERSION}; skipping (avoids 409 on retries)."
 else
-  (cd "$ROOT/packages/sdk" && npm publish --registry=https://npm.pkg.github.com --no-provenance)
+  (cd "$ROOT/packages/sdk" && bun publish --registry=https://npm.pkg.github.com --access public)
 fi
 unset NPM_CONFIG_USERCONFIG

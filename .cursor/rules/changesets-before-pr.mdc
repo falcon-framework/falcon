@@ -1,0 +1,30 @@
+---
+description: Require a Changeset with sensible semver and full notes before any PR
+alwaysApply: true
+---
+
+# Changeset before pull request
+
+Before you open or finalize a **pull request** (including when the user asks you to prepare one), **add a Changeset** for every user-visible or release-affecting change.
+
+## When to add a changeset
+
+- **Add**: Any change that should appear in release notes or affect published packages (features, fixes, breaking changes, dependency or API surface changes for published packages such as `@falcon-framework/sdk`).
+- **Skip only if**: The PR is truly internal (docs-only typo in non-published paths, CI-only with no release impact) — state that briefly in the PR description if you skip.
+
+## How
+
+1. From the repo root, run **`bun run changeset`** (or `npx changeset` / `pnpm changeset` if the project standard differs) and follow the prompts, **or** hand-author a new file under [`.changeset/`](.changeset/) using the same format as existing changesets.
+2. Choose a **reasonable semver bump**:
+   - **patch**: bug fixes, docs that affect consumers, small non-breaking tweaks.
+   - **minor**: new features or additions, backward compatible.
+   - **major**: breaking API or behavior changes.
+3. Write a **thorough summary** in the changeset body: **what** changed, **why** it matters, and **migration notes** if anything breaks or requires action.
+
+## PR checklist
+
+- [ ] At least one `.changeset/*.md` (or equivalent) is included **before** the PR is considered ready.
+- [ ] Version bump level matches the nature of the change.
+- [ ] Description is clear enough for changelog readers and downstream consumers.
+
+Do not edit [`.changeset/config.json`](.changeset/config.json) unless the user explicitly asks.

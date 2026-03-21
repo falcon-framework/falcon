@@ -66,21 +66,22 @@
     "build": "tsdown",
     "check-types": "tsc --noEmit",
     "publint": "publint",
+    "test": "vitest run",
     "prepublishOnly": "tsdown"
   },
-  "dependencies": {
-    "better-auth": "catalog:"
+  "engines": {
+    "node": ">=22"
   },
   "devDependencies": {
-    "@falcon-framework/config": "workspace:*",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
     "publint": "^0.3.18",
     "tsdown": "^0.21.4",
-    "typescript": "catalog:",
+    "typescript": "^5.9.3",
     "vitest": "^3.0.5"
   },
   "peerDependencies": {
+    "better-auth": "^1.5.0",
     "react": ">=18",
     "react-dom": ">=18"
   },
