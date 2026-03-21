@@ -57,7 +57,7 @@ function ConnectDonePage() {
                 key={c.id}
                 className="rounded-lg border border-[var(--line)] bg-[var(--chip-bg)] px-3 py-2 font-mono text-xs"
               >
-                {c.id} — {c.status}
+                {c.targetAppId} — {c.status}
               </li>
             ))}
           </ul>
