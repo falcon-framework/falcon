@@ -57,7 +57,5 @@ If one of the following is true, you should use the FALCON SDK:
 
 Then, you should use the FALCON SDK.
 
-> [!IMPORTANT]
+> [!WARNING]
 > The FALCON SDK is not yet fully available, nor does FALCON provide any documentation, access, support, or any other resources. This is a work in progress.
-
-More context: [falcon-framework.com](https://falcon-framework.com).

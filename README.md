@@ -189,5 +189,3 @@ falcon/
 | `cd apps/console-app && bun run desktop:build` | Build Tauri desktop app                                 |
 
 Desktop builds expect a static/export web build where applicable; align TanStack Start output with Tauri’s asset layout before shipping desktop artifacts.
-
-More context: [falcon-framework.com](https://falcon-framework.com).
