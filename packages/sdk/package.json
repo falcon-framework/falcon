@@ -67,7 +67,7 @@
     "check-types": "tsc --noEmit",
     "publint": "publint",
     "test": "vitest run",
-    "prepublishOnly": "tsdown"
+    "prepublishOnly": "npm run build"
   },
   "engines": {
     "node": ">=22"
