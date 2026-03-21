@@ -76,7 +76,8 @@
     "@types/react-dom": "catalog:",
     "publint": "^0.3.18",
     "tsdown": "^0.21.4",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^3.0.5"
   },
   "peerDependencies": {
     "react": ">=18",

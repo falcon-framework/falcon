@@ -341,6 +341,7 @@
         "publint": "^0.3.18",
         "tsdown": "^0.21.4",
         "typescript": "catalog:",
+        "vitest": "^3.0.5",
       },
       "peerDependencies": {
         "react": ">=18",
