@@ -1,6 +1,6 @@
 import { createContext } from "@falcon-framework/api/context";
 import { appRouter } from "@falcon-framework/api/routers/index";
-import { auth, resolveAuthApp, sessionAllowedForApp } from "@falcon-framework/auth";
+import { auth, resolveAuthApp } from "@falcon-framework/auth";
 import { closeDb, makeDb } from "@falcon-framework/db";
 import { appUser, authorizationCode, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
@@ -463,6 +463,19 @@ app.post("/auth/token", async (c) => {
 // ---------------------------------------------------------------------------
 // Auth request options helper
 // ---------------------------------------------------------------------------
+
+async function sessionAllowedForApp(
+  db: ReturnType<typeof makeDb>,
+  userId: string,
+  appId: string,
+): Promise<boolean> {
+  const rows = await db
+    .select({ id: appUser.id })
+    .from(appUser)
+    .where(and(eq(appUser.appId, appId), eq(appUser.userId, userId)))
+    .limit(1);
+  return rows.length > 0;
+}
 
 async function resolveAuthRequestOptions(c: {
   req: { header: (name: string) => string | undefined };
