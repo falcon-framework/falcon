@@ -1,7 +1,7 @@
 import { createContext } from "@falcon-framework/api/context";
 import { appRouter } from "@falcon-framework/api/routers/index";
-import { auth, resolveAuthApp } from "@falcon-framework/auth";
-import { makeDb } from "@falcon-framework/db";
+import { auth, resolveAuthApp, sessionAllowedForApp } from "@falcon-framework/auth";
+import { closeDb, makeDb } from "@falcon-framework/db";
 import { appUser, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
@@ -59,13 +59,9 @@ app.use(
   }),
 );
 
-/**
- * Auth routes — app-aware.
- *
- * When X-Falcon-App-Id is present, the Better-Auth instance is configured
- * with that app's trusted origins and database hooks for linking users to apps.
- */
-app.on(["POST", "GET"], "/api/auth/*", async (c) => {
+async function resolveAuthRequestOptions(c: {
+  req: { header: (name: string) => string | undefined };
+}) {
   const appId = c.req.header("X-Falcon-App-Id");
   let extraTrustedOrigins: string[] | undefined;
 
@@ -79,6 +75,68 @@ app.on(["POST", "GET"], "/api/auth/*", async (c) => {
       console.error("Failed to resolve auth app:", e);
     }
   }
+
+  return { appId, extraTrustedOrigins };
+}
+
+/**
+ * get-session — enforce `app_user` when `X-Falcon-App-Id` is present so Console revoke
+ * invalidates the app session without deleting the Better Auth session row.
+ */
+app.on(["GET", "POST"], "/api/auth/get-session", async (c) => {
+  const { appId, extraTrustedOrigins } = await resolveAuthRequestOptions(c);
+  const response = await auth({ appId, extraTrustedOrigins }).handler(c.req.raw);
+
+  if (!appId) {
+    return response;
+  }
+
+  const clone = response.clone();
+  const text = await clone.text();
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return new Response(text, { status: response.status, headers: response.headers });
+  }
+
+  if (
+    parsed === null ||
+    typeof parsed !== "object" ||
+    !("user" in parsed) ||
+    !parsed.user ||
+    typeof parsed.user !== "object" ||
+    !("id" in parsed.user)
+  ) {
+    return new Response(text, { status: response.status, headers: response.headers });
+  }
+
+  const userId = String((parsed.user as { id: string }).id);
+  const db = makeDb();
+  try {
+    const allowed = await sessionAllowedForApp(db, userId, appId);
+    if (!allowed) {
+      return new Response("null", {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  } finally {
+    await closeDb(db);
+  }
+
+  return new Response(text, { status: response.status, headers: response.headers });
+});
+
+/**
+ * Auth routes — app-aware.
+ *
+ * When X-Falcon-App-Id is present, the Better-Auth instance is configured
+ * with that app's trusted origins and database hooks for linking users to apps.
+ */
+app.on(["POST", "GET"], "/api/auth/*", async (c) => {
+  const { appId, extraTrustedOrigins } = await resolveAuthRequestOptions(c);
 
   return auth({ appId, extraTrustedOrigins }).handler(c.req.raw);
 });

@@ -1,4 +1,4 @@
-import { makeDb } from "@falcon-framework/db";
+import { type Db, makeDb } from "@falcon-framework/db";
 import * as schema from "@falcon-framework/db/schema/auth";
 import { appUser, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
@@ -6,7 +6,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { verifyPassword as verifyLegacyPassword } from "better-auth/crypto";
 import { organization } from "better-auth/plugins";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 type BetterAuthInstance = ReturnType<typeof betterAuth>;
 type PasswordVerifyInput = {
@@ -131,6 +131,37 @@ export interface AuthOptions {
   extraTrustedOrigins?: string[];
 }
 
+/** Stable cookie-safe prefix so each external app gets its own session cookie on the auth origin. */
+function cookiePrefixForPublishableKey(publishableKey: string): string {
+  const safe = publishableKey.replace(/[^a-zA-Z0-9]/g, "_");
+  return `falcon_${safe}`;
+}
+
+/**
+ * Returns true if the user is still linked to the app in `app_user` (e.g. not revoked in Console).
+ */
+export async function sessionAllowedForApp(
+  db: Db,
+  userId: string,
+  publishableKey: string,
+): Promise<boolean> {
+  const appRows = await db
+    .select({ id: falconAuthApp.id })
+    .from(falconAuthApp)
+    .where(eq(falconAuthApp.publishableKey, publishableKey))
+    .limit(1);
+  const app = appRows[0];
+  if (!app) return false;
+
+  const link = await db
+    .select({ id: appUser.id })
+    .from(appUser)
+    .where(and(eq(appUser.appId, app.id), eq(appUser.userId, userId)))
+    .limit(1);
+
+  return !!link[0];
+}
+
 export const auth = (options?: AuthOptions) => {
   const db = makeDb();
   const trustedOrigins = [env.CORS_ORIGIN];
@@ -161,6 +192,7 @@ export const auth = (options?: AuthOptions) => {
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL,
     advanced: {
+      ...(options?.appId ? { cookiePrefix: cookiePrefixForPublishableKey(options.appId) } : {}),
       defaultCookieAttributes: {
         sameSite: "none",
         secure: true,
