@@ -24,7 +24,7 @@ import { getUser } from "@/functions/get-user";
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
     const session = await getUser();
-    if (session) throw redirect({ to: "/dashboard" });
+    if (session) throw redirect({ to: "/account" });
   },
   component: LoginPage,
 });
@@ -103,7 +103,7 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
         return;
       }
       toast.success("Welcome back!");
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/account" });
     },
     validators: {
       onSubmit: z.object({

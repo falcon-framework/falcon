@@ -6,26 +6,19 @@ import {
   CardTitle,
 } from "@falcon-framework/ui/components/card";
 import { Badge } from "@falcon-framework/ui/components/badge";
-import { buttonVariants } from "@falcon-framework/ui/components/button";
 import { Skeleton } from "@falcon-framework/ui/components/skeleton";
-import { Button } from "@falcon-framework/ui/components/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@falcon-framework/ui/components/tabs";
-import { createFileRoute, Link, useRouterState } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  Clock,
-  Loader2,
   Plug,
-  PlusCircle,
   AlertCircle,
   CheckCircle2,
   PauseCircle,
 } from "lucide-react";
-import { toast } from "sonner";
-import { useEffect, useRef, useState } from "react";
 
-import type { AppItem, ConnectionItem, InstallationRequestItem } from "@/lib/connect-client";
+import type { AppItem, ConnectionItem } from "@/lib/connect-client";
 import { useConnectClient } from "@/hooks/use-connect-client";
 import { useActiveOrg } from "@/providers/active-org";
 
@@ -35,30 +28,12 @@ export const Route = createFileRoute("/_authed/connections/")({
 
 function ConnectionsPage() {
   const { activeOrg } = useActiveOrg();
-  const { location } = useRouterState();
   const client = useConnectClient();
-  const qc = useQueryClient();
 
   const appsQuery = useQuery({
     queryKey: ["apps"],
     queryFn: () => client!.apps.list(),
     enabled: !!client,
-  });
-
-  const pendingRequestsQuery = useQuery({
-    queryKey: ["installation-requests", activeOrg?.id],
-    queryFn: () => client!.installationRequests.list(),
-    enabled: !!client,
-  });
-
-  const approveMutation = useMutation({
-    mutationFn: (requestId: string) => client!.installationRequests.approve(requestId),
-    onSuccess: () => {
-      toast.success("Connection created");
-      void qc.invalidateQueries({ queryKey: ["connections"] });
-      void qc.invalidateQueries({ queryKey: ["installation-requests"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
   });
 
   const connectionsQuery = useQuery({
@@ -68,60 +43,23 @@ function ConnectionsPage() {
   });
 
   const appById = new Map((appsQuery.data ?? []).map((a: AppItem) => [a.id, a]));
-  const pending = pendingRequestsQuery.data ?? [];
-  const hasPending = pending.length > 0;
-
-  const [tab, setTab] = useState("active");
-  const initialDefaultRef = useRef(false);
-
-  useEffect(() => {
-    initialDefaultRef.current = false;
-  }, [location.pathname, activeOrg?.id]);
-
-  useEffect(() => {
-    if (!pendingRequestsQuery.isSuccess || initialDefaultRef.current) return;
-    initialDefaultRef.current = true;
-    if (pending.length > 0) setTab("pending");
-  }, [pendingRequestsQuery.isSuccess, pending.length]);
-
-  useEffect(() => {
-    if (!hasPending && tab === "pending") setTab("active");
-  }, [hasPending, tab]);
 
   const connections = connectionsQuery.data ?? [];
   const active = connections.filter((c) => c.status === "active");
   const paused = connections.filter((c) => c.status === "paused");
   const revoked = connections.filter((c) => c.status === "revoked");
 
-  /** Avoid Radix Tabs controlled value pointing at a trigger that is not mounted. */
-  const tabValue = !hasPending && tab === "pending" ? "active" : tab;
-
-  const label = (a: AppItem | undefined, id: string) => (a ? a.name : id.slice(0, 8) + "…");
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage your app integrations</p>
-        </div>
-        <Link to="/connections/new" className={buttonVariants()}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          New connection
-        </Link>
+    <div className="max-w-2xl space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Your app-to-app integrations via FALCON Connect
+        </p>
       </div>
 
-      <Tabs value={tabValue} onValueChange={setTab}>
+      <Tabs defaultValue="active">
         <TabsList className="flex-wrap h-auto gap-1">
-          {hasPending && (
-            <TabsTrigger value="pending">
-              <Clock className="mr-1.5 h-3.5 w-3.5" />
-              Pending
-              <Badge variant="secondary" className="ml-1.5 text-[10px]">
-                {pending.length}
-              </Badge>
-            </TabsTrigger>
-          )}
           <TabsTrigger value="active">
             Active
             {active.length > 0 && (
@@ -149,18 +87,6 @@ function ConnectionsPage() {
           <TabsTrigger value="all">All</TabsTrigger>
         </TabsList>
 
-        {hasPending && (
-          <TabsContent value="pending">
-            <PendingInstallationList
-              pending={pending}
-              appById={appById}
-              label={label}
-              approveMutation={approveMutation}
-              isLoading={pendingRequestsQuery.isLoading}
-            />
-          </TabsContent>
-        )}
-
         {[
           { value: "active", list: active },
           { value: "paused", list: paused },
@@ -176,85 +102,6 @@ function ConnectionsPage() {
           </TabsContent>
         ))}
       </Tabs>
-    </div>
-  );
-}
-
-function PendingInstallationList({
-  pending,
-  appById,
-  label,
-  approveMutation,
-  isLoading,
-}: {
-  pending: InstallationRequestItem[];
-  appById: Map<string, AppItem>;
-  label: (a: AppItem | undefined, id: string) => string;
-  approveMutation: {
-    mutate: (requestId: string) => void;
-    isPending: boolean;
-    variables: string | undefined;
-  };
-  isLoading: boolean;
-}) {
-  if (isLoading) {
-    return (
-      <div className="space-y-3 mt-4">
-        {Array.from({ length: 2 }).map((_, i) => (
-          <Skeleton key={i} className="h-24" />
-        ))}
-      </div>
-    );
-  }
-
-  return (
-    <div className="mt-4 space-y-3">
-      <p className="text-sm text-muted-foreground">
-        Approve a request to create the connection. Until then, only the audit log records the
-        submission.
-      </p>
-      <AnimatePresence>
-        {pending.map((req) => {
-          const source = appById.get(req.sourceAppId);
-          const target = appById.get(req.targetAppId);
-          return (
-            <motion.div
-              key={req.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-            >
-              <Card className="border-amber-500/25 bg-amber-500/[0.04]">
-                <CardHeader className="pb-2">
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="min-w-0 space-y-1">
-                      <CardTitle className="text-sm font-semibold truncate">
-                        {label(source, req.sourceAppId)} → {label(target, req.targetAppId)}
-                      </CardTitle>
-                      <CardDescription className="text-xs">
-                        {req.requestedScopes.length} scope
-                        {req.requestedScopes.length === 1 ? "" : "s"} ·{" "}
-                        {new Date(req.createdAt).toLocaleString()}
-                      </CardDescription>
-                    </div>
-                    <Button
-                      size="sm"
-                      className="shrink-0"
-                      disabled={approveMutation.isPending}
-                      onClick={() => approveMutation.mutate(req.id)}
-                    >
-                      {approveMutation.isPending && approveMutation.variables === req.id ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      ) : null}
-                      Approve
-                    </Button>
-                  </div>
-                </CardHeader>
-              </Card>
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
     </div>
   );
 }
@@ -285,13 +132,10 @@ function ConnectionList({
       <div className="flex flex-col items-center gap-3 py-16 text-center">
         <Plug className="h-12 w-12 text-muted-foreground/40" />
         <h3 className="font-semibold">No connections</h3>
-        <p className="text-sm text-muted-foreground">
-          Create a new connection to integrate your apps
+        <p className="text-sm text-muted-foreground max-w-sm">
+          When your apps are connected via FALCON Connect, they'll appear here.
+          You can manage access at any time.
         </p>
-        <Link to="/connections/new" className={buttonVariants({ variant: "outline" })}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          New connection
-        </Link>
       </div>
     );
   }
@@ -321,9 +165,6 @@ function ConnectionList({
                         <span className="text-muted-foreground shrink-0">→</span>
                         <span className="truncate min-w-0">{appName(conn.targetAppId)}</span>
                       </CardTitle>
-                      <p className="text-[10px] text-muted-foreground font-mono leading-relaxed break-all">
-                        {conn.sourceAppId} → {conn.targetAppId}
-                      </p>
                     </div>
                     <StatusBadge status={conn.status} />
                   </div>

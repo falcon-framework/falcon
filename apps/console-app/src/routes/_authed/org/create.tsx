@@ -52,7 +52,7 @@ function CreateOrgPage() {
       });
       await switchOrg(result.data!.id);
       toast.success(`Organization "${value.name}" created!`);
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/account" });
     },
     validators: {
       onSubmit: z.object({
