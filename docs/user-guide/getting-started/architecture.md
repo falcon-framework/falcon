@@ -24,7 +24,7 @@ flowchart LR
 ### Auth server
 
 - Serves **Better Auth** routes (for example `/api/auth/sign-in/email`, `/api/auth/get-session`, organization APIs used by the console).
-- Serves **hosted** HTML flows at `/hosted/sign-in` and `/hosted/sign-up` for centralized sign-in (see [Centralized sign-in](../falcon-auth/centralized-sign-in.md)).
+- Serves **hosted** HTML flows at `/auth/authorize` and `/auth/sign-up` for centralized sign-in (see [Centralized sign-in](../falcon-auth/centralized-sign-in.md)).
 - Applies **dynamic CORS**: the console origin is always allowed; other origins may be allowed when a valid **`X-Falcon-App-Id`** (publishable key) matches a registered app whose **`allowed_origins`** includes the request `Origin`.
 - Exposes **user app directory** routes (for example listing apps the user has used) for the console.
 
@@ -62,10 +62,10 @@ The auth server and connect service are configured with database access to these
 
 ### Sign-in (centralized)
 
-1. User opens your app; your app redirects to `https://your-auth-server/hosted/sign-in?client_id=…&redirect_uri=…`.
-2. User submits credentials on the auth origin; the auth server sets a **session cookie** for its domain.
-3. Browser navigates to `redirect_uri` on your app’s origin.
-4. Your app’s SDK calls `get-session` on the auth server with `credentials: 'include'` so the cookie is sent; the user appears signed in.
+1. User opens your app; your app redirects to `https://your-auth-server/auth/authorize?client_id=…&redirect_uri=…` (or the sign-up path).
+2. User submits credentials on the auth origin; the auth server sets a **session cookie** for its domain and may redirect back with an authorization **`code`** (OAuth-style).
+3. Browser navigates to `redirect_uri` on your app’s origin (often with `?code=…&state=…`).
+4. Your app exchanges the **`code`** if present, then the SDK calls **`get-session`** on the auth server with `credentials: 'include'` so the cookie is sent; the user appears signed in.
 
 Details: [Centralized sign-in](../falcon-auth/centralized-sign-in.md).
 

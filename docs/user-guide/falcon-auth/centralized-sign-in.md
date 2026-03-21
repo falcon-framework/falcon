@@ -14,8 +14,8 @@ Embedded forms in your own SPA are still possible via the SDK, but many teams pr
 
 1. The user clicks “Sign in” (or similar) in your app.
 2. Your app sends the browser to a URL on the auth server:
-   - Sign-in: `GET /hosted/sign-in`
-   - Sign-up: `GET /hosted/sign-up`
+   - Sign-in: `GET /auth/authorize`
+   - Sign-up: `GET /auth/sign-up`
 3. Query parameters:
    - **`client_id`** — your app’s **publishable key** (for example `pk_demo_source`). This identifies the Falcon Auth client registration.
    - **`redirect_uri`** — a **full URL** (with `http` or `https`) where the user should land after success. Example: `https://app.example.com/dashboard`.
@@ -25,23 +25,24 @@ Embedded forms in your own SPA are still possible via the SDK, but many teams pr
 5. The user enters email and password on the hosted page. The page calls the normal Better Auth endpoints (`/api/auth/sign-in/email` or `/api/auth/sign-up/email`) with:
    - Header **`X-Falcon-App-Id`** with your publishable key as the value, so Falcon can link the user to your app and apply trusted origins.
    - Body field **`callbackURL`** set to `redirect_uri` for sign-in (Better Auth uses this to signal a browser redirect in the JSON response).
-6. After sign-in, the browser navigates to **`redirect_uri`**. Your app loads and the SDK (or your code) calls **`get-session`** on the auth server with **credentials included**; the session cookie was set on the auth domain during login, so the user is recognized.
+6. After sign-in, the browser navigates to **`redirect_uri`**, often with **`code`** and **`state`** query parameters. Exchange the code with the SDK ([Auth callback and session](../sdk/auth-callback-and-session.md)), then call **`get-session`** on the auth server with **credentials included**; the session cookie was set on the auth domain during login, so the user is recognized.
 
 ## Building the hosted URL in your app
 
 Use the SDK helpers (recommended):
 
-- `buildFalconHostedSignInUrl(config, { redirectUri })`
-- `buildFalconHostedSignUpUrl(config, { redirectUri })`
+- `buildSignInUrl(config, { redirectUri, state? })` → `/auth/authorize`
+- `buildSignUpUrl(config, { redirectUri, state? })` → `/auth/sign-up`
+- Or `redirectToSignIn` / `redirectToSignUp` for a full-page navigation
 
-See [Hosted sign-in URLs](../sdk/hosted-sign-in-urls.md).
+See [Centralized sign-in URLs](../sdk/hosted-sign-in-urls.md) and [Auth callback and session](../sdk/auth-callback-and-session.md).
 
 ## Registration requirements
 
 For hosted sign-in to succeed:
 
 1. **`allowed_origins`** on your `falcon_auth_app` must include your app’s **origin** (scheme + host + port), so Better Auth accepts your `callbackURL` as a trusted redirect target.
-2. **`redirect_urls`** must include each **`redirect_uri`** you pass to `/hosted/sign-in` or `/hosted/sign-up`, **character-for-character** (including trailing slashes if used).
+2. **`redirect_urls`** must include each **`redirect_uri`** you pass to `/auth/authorize` or `/auth/sign-up`, **character-for-character** (including trailing slashes if used).
 
 Example: if you redirect to `http://localhost:3010/dashboard`, the database must list exactly `http://localhost:3010/dashboard`, not only `http://localhost:3010`.
 

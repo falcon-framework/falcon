@@ -18,5 +18,6 @@ Connect uses the same user identities. It validates the caller by session cookie
 ## SDK entry points
 
 - React: [React integration](../sdk/react-integration.md)
-- Hosted URL builders: [Hosted sign-in URLs](../sdk/hosted-sign-in-urls.md)
+- Centralized redirect URLs: [Centralized sign-in URLs](../sdk/hosted-sign-in-urls.md)
+- OAuth callback and session: [Auth callback and session](../sdk/auth-callback-and-session.md)
 - Backend: [Server session verification](../sdk/server-verification.md)

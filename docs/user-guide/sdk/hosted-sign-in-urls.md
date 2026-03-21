@@ -1,49 +1,107 @@
-# Hosted sign-in URL helpers
+# Centralized sign-in URLs
 
-When using the **centralized** Falcon Auth experience, your application should send users to the auth server’s hosted pages with the correct query string.
+For **centralized** sign-in, the browser leaves your app, loads HTML on the **Falcon Auth server origin**, then returns to your app (often with an authorization `code` in the query string). The SDK exposes URL builders that match the routes implemented by the auth server.
+
+> **Note on paths:** Falcon Auth serves the hosted sign-in **GET** handler at **`/auth/authorize`** and sign-up at **`/auth/sign-up`**. Import builders from **`@falcon-framework/sdk`** (the React entry does not re-export these).
 
 ## Functions
 
 ```ts
 import {
-  buildFalconHostedSignInUrl,
-  buildFalconHostedSignUpUrl,
-} from "@falcon-framework/sdk/react";
-// or: "@falcon-framework/sdk"
+  buildSignInUrl,
+  buildSignUpUrl,
+  redirectToSignIn,
+  redirectToSignUp,
+} from "@falcon-framework/sdk";
 ```
 
-### `buildFalconHostedSignInUrl(config, { redirectUri })`
+### `buildSignInUrl(config, { redirectUri, state? })`
 
 Returns an absolute URL:
 
-- Path: `/hosted/sign-in`
-- Query: `client_id=<publishableKey>&redirect_uri=<encoded redirectUri>`
+- **Path:** `/auth/authorize`
+- **Query:** `client_id=<publishableKey>`, `redirect_uri=<redirectUri>`, and `state` when provided
 
-### `buildFalconHostedSignUpUrl(config, { redirectUri })`
+### `buildSignUpUrl(config, { redirectUri, state? })`
 
-Same pattern for `/hosted/sign-up`.
+Same pattern for **`/auth/sign-up`**.
+
+### `redirectToSignIn` / `redirectToSignUp`
+
+Assigns `window.location.href` to the corresponding built URL. **Browser only.**
 
 ## Choosing `redirectUri`
 
-- Must be a **full URL** (`http://localhost:3010/dashboard`, `https://app.example.com/onboarding/done`).
-- Must appear **exactly** in your **`falcon_auth_app.redirect_urls`** array.
-- Its **origin** must be allowed in **`allowed_origins`** so Better Auth accepts it as `callbackURL` on sign-in.
+1. Use a **full URL** (`https://app.example.com/auth/callback`, `http://localhost:3010/dashboard`).
+2. Register it **exactly** (character-for-character) in your app’s **`falcon_auth_app.redirect_urls`**.
+3. Ensure the **origin** of that URL appears in **`allowed_origins`** so Better Auth accepts it as a trusted redirect target.
 
-## Typical usage patterns
+## Optional `state` (CSRF)
 
-### Full-page navigation (recommended)
+Before redirecting, generate an opaque value (for example `crypto.randomUUID()`), store it (for example `sessionStorage`), and pass it as `state`. The auth server returns it on the callback query string; validate it before exchanging the `code` (or use [`completeAuthCallback`](auth-callback-and-session.md)).
+
+## Examples
+
+### Full-page navigation to sign-in
 
 ```ts
-window.location.href = buildFalconHostedSignInUrl(config, {
-  redirectUri: `${appPublicOrigin}/dashboard`,
+import { redirectToSignIn } from "@falcon-framework/sdk";
+
+const config = {
+  serverUrl: "https://auth.example.com",
+  publishableKey: "pk_live_abc123",
+};
+
+redirectToSignIn(config, {
+  redirectUri: `${window.location.origin}/auth/callback`,
+  state: crypto.randomUUID(),
 });
 ```
 
-### Router-friendly landing route
+Remember to persist `state` before calling `redirectToSignIn` (for example `sessionStorage.setItem("falcon_auth_state", state)`).
 
-A `/sign-in` route in your SPA can immediately redirect to the hosted URL after checking `useFalconAuth().isSignedIn` to skip unnecessary round trips.
+### Build a URL without navigating
+
+```ts
+import { buildSignInUrl } from "@falcon-framework/sdk";
+
+const url = buildSignInUrl(config, {
+  redirectUri: "https://app.example.com/auth/callback",
+});
+// Open in a new tab, pass to a mobile WebView, etc.
+```
+
+### Router-friendly “sign-in” route
+
+A `/sign-in` page can check session first, then redirect once (avoid calling `redirectToSignIn` on every render):
+
+```tsx
+import { useEffect } from "react";
+import { useFalconAuth } from "@falcon-framework/sdk/react";
+import { redirectToSignIn } from "@falcon-framework/sdk";
+import type { FalconAuthConfig } from "@falcon-framework/sdk";
+
+function SignInGate({ config }: { config: FalconAuthConfig }) {
+  const { isLoaded, isSignedIn } = useFalconAuth();
+
+  useEffect(() => {
+    if (!isLoaded || isSignedIn) return;
+    const state = crypto.randomUUID();
+    sessionStorage.setItem("falcon_auth_state", state);
+    redirectToSignIn(config, {
+      redirectUri: `${window.location.origin}/auth/callback`,
+      state,
+    });
+  }, [isLoaded, isSignedIn, config]);
+
+  if (!isLoaded) return <p>Loading…</p>;
+  if (isSignedIn) return <p>Already signed in.</p>;
+  return <p>Redirecting…</p>;
+}
+```
 
 ## Related topics
 
+- [Auth callback and session](auth-callback-and-session.md)
 - [Centralized sign-in](../falcon-auth/centralized-sign-in.md)
 - [App registration](../falcon-auth/app-registration.md)
