@@ -1,3 +1,4 @@
+import { organizationClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 import type { FalconAuthConfig } from "./types";
 
@@ -22,6 +23,7 @@ export type FalconAuthClient = ReturnType<typeof createFalconAuthClient>;
 export function createFalconAuthClient(config: FalconAuthConfig) {
   const client = createAuthClient({
     baseURL: config.serverUrl,
+    plugins: [organizationClient()],
     fetchOptions: {
       headers: {
         "X-Falcon-App-Id": config.publishableKey,
