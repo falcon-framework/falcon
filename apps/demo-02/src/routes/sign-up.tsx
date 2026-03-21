@@ -1,19 +1,19 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { redirectToSignUp } from '@falcon-framework/sdk'
-import { falconAuthConfig } from '#/lib/demo-env'
+import { createFileRoute } from "@tanstack/react-router";
+import { redirectToSignUp } from "@falcon-framework/sdk";
+import { falconAuthConfig } from "#/lib/demo-env";
 
-export const Route = createFileRoute('/sign-up')({
+export const Route = createFileRoute("/sign-up")({
   component: SignUpPage,
-})
+});
 
 function SignUpPage() {
   function handleSignUp() {
-    const state = crypto.randomUUID()
-    sessionStorage.setItem('falcon_auth_state', state)
+    const state = crypto.randomUUID();
+    sessionStorage.setItem("falcon_auth_state", state);
     redirectToSignUp(falconAuthConfig, {
       redirectUri: `${window.location.origin}/auth/callback`,
       state,
-    })
+    });
   }
 
   return (
@@ -23,9 +23,7 @@ function SignUpPage() {
           <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-[var(--lagoon-deep)]">
             Falcon Auth
           </p>
-          <h2 className="text-xl font-semibold tracking-tight text-foreground">
-            Create account
-          </h2>
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">Create account</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             You will be redirected to Falcon Auth to create your account.
           </p>
@@ -39,5 +37,5 @@ function SignUpPage() {
         </button>
       </div>
     </main>
-  )
+  );
 }

@@ -22,57 +22,57 @@ This guide explains Falcon for people who **use**, **integrate**, or **operate**
 
 ### Getting started
 
-| Document | Description |
-| -------- | ----------- |
-| [What is Falcon?](getting-started/what-is-falcon.md) | Products, audiences, and terminology |
-| [Architecture](getting-started/architecture.md) | Services, data stores, and request flows |
+| Document                                             | Description                              |
+| ---------------------------------------------------- | ---------------------------------------- |
+| [What is Falcon?](getting-started/what-is-falcon.md) | Products, audiences, and terminology     |
+| [Architecture](getting-started/architecture.md)      | Services, data stores, and request flows |
 
 ### Falcon Auth
 
-| Document | Description |
-| -------- | ----------- |
-| [Falcon Auth overview](falcon-auth/README.md) | Section index |
-| [Centralized sign-in](falcon-auth/centralized-sign-in.md) | Hosted UI, redirects, and return URLs |
-| [Registering client apps](falcon-auth/app-registration.md) | Database registration, origins, and keys |
-| [Sessions and cookies](falcon-auth/sessions-and-cookies.md) | How sessions work across apps |
-| [Organizations](falcon-auth/organizations.md) | Orgs, members, and Better Auth plugin |
+| Document                                                    | Description                              |
+| ----------------------------------------------------------- | ---------------------------------------- |
+| [Falcon Auth overview](falcon-auth/README.md)               | Section index                            |
+| [Centralized sign-in](falcon-auth/centralized-sign-in.md)   | Hosted UI, redirects, and return URLs    |
+| [Registering client apps](falcon-auth/app-registration.md)  | Database registration, origins, and keys |
+| [Sessions and cookies](falcon-auth/sessions-and-cookies.md) | How sessions work across apps            |
+| [Organizations](falcon-auth/organizations.md)               | Orgs, members, and Better Auth plugin    |
 
 ### Falcon Connect
 
-| Document | Description |
-| -------- | ----------- |
-| [Falcon Connect overview](falcon-connect/README.md) | Section index |
-| [Concepts](falcon-connect/concepts.md) | Apps, capabilities, scopes, org context |
-| [Installation requests and approval](falcon-connect/installation-and-approval.md) | End-to-end connection flow |
-| [Managing connections](falcon-connect/managing-connections.md) | Status, pause, resume, revoke, sync |
-| [Calling the Connect API](falcon-connect/authentication.md) | Headers, session vs JWT, organizations |
+| Document                                                                          | Description                             |
+| --------------------------------------------------------------------------------- | --------------------------------------- |
+| [Falcon Connect overview](falcon-connect/README.md)                               | Section index                           |
+| [Concepts](falcon-connect/concepts.md)                                            | Apps, capabilities, scopes, org context |
+| [Installation requests and approval](falcon-connect/installation-and-approval.md) | End-to-end connection flow              |
+| [Managing connections](falcon-connect/managing-connections.md)                    | Status, pause, resume, revoke, sync     |
+| [Calling the Connect API](falcon-connect/authentication.md)                       | Headers, session vs JWT, organizations  |
 
 ### Console
 
-| Document | Description |
-| -------- | ----------- |
-| [Console overview](console/README.md) | Section index |
-| [Account, profile, and connected apps](console/account-and-apps.md) | User-facing console features |
-| [Organizations in the console](console/organizations.md) | Creating orgs and switching context |
-| [Connections in the console](console/connections.md) | Viewing and managing connections |
+| Document                                                            | Description                         |
+| ------------------------------------------------------------------- | ----------------------------------- |
+| [Console overview](console/README.md)                               | Section index                       |
+| [Account, profile, and connected apps](console/account-and-apps.md) | User-facing console features        |
+| [Organizations in the console](console/organizations.md)            | Creating orgs and switching context |
+| [Connections in the console](console/connections.md)                | Viewing and managing connections    |
 
 ### SDK and integration
 
-| Document | Description |
-| -------- | ----------- |
-| [SDK overview](sdk/README.md) | Section index |
-| [React: provider, hooks, components](sdk/react-integration.md) | `FalconAuthProvider`, hooks, optional UI |
-| [Hosted sign-in URLs](sdk/hosted-sign-in-urls.md) | Building redirect links |
-| [Server session verification](sdk/server-verification.md) | `verifySession` for backends |
-| [Connect display helpers](sdk/connect-helpers.md) | Optional UI utilities for connection lists |
+| Document                                                       | Description                                |
+| -------------------------------------------------------------- | ------------------------------------------ |
+| [SDK overview](sdk/README.md)                                  | Section index                              |
+| [React: provider, hooks, components](sdk/react-integration.md) | `FalconAuthProvider`, hooks, optional UI   |
+| [Hosted sign-in URLs](sdk/hosted-sign-in-urls.md)              | Building redirect links                    |
+| [Server session verification](sdk/server-verification.md)      | `verifySession` for backends               |
+| [Connect display helpers](sdk/connect-helpers.md)              | Optional UI utilities for connection lists |
 
 ### Reference
 
-| Document | Description |
-| -------- | ----------- |
-| [Reference overview](reference/README.md) | Section index |
+| Document                                                    | Description                        |
+| ----------------------------------------------------------- | ---------------------------------- |
+| [Reference overview](reference/README.md)                   | Section index                      |
 | [Environment variables](reference/environment-variables.md) | Typical configuration by component |
-| [Permissions matrix](reference/permissions-matrix.md) | Connect actions by org role |
+| [Permissions matrix](reference/permissions-matrix.md)       | Connect actions by org role        |
 
 ---
 

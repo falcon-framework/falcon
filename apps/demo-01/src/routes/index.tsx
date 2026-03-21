@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/')({ component: HomePage })
+export const Route = createFileRoute("/")({ component: HomePage });
 
 function HomePage() {
   return (
@@ -11,9 +11,9 @@ function HomePage() {
           Falcon Auth + Falcon Connect
         </h1>
         <p className="mb-8 max-w-2xl text-base text-[var(--sea-ink-soft)] sm:text-lg">
-          Sign in with Falcon Auth, create a workspace, then start a Connect
-          installation to the partner app running on port 3011. After approval,
-          you return here to see the new connection.
+          Sign in with Falcon Auth, create a workspace, then start a Connect installation to the
+          partner app running on port 3011. After approval, you return here to see the new
+          connection.
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
@@ -31,5 +31,5 @@ function HomePage() {
         </div>
       </section>
     </main>
-  )
+  );
 }

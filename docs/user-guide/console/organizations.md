@@ -17,10 +17,10 @@ Users with multiple memberships can **switch** the active organization (org swit
 
 ## Roles at a glance
 
-| Role | Typical use |
-| ---- | ----------- |
-| **owner** | Full control; can approve installations; manage connections. |
-| **admin** | Same as owner for Connect permission checks in the stock matrix. |
+| Role       | Typical use                                                             |
+| ---------- | ----------------------------------------------------------------------- |
+| **owner**  | Full control; can approve installations; manage connections.            |
+| **admin**  | Same as owner for Connect permission checks in the stock matrix.        |
 | **member** | May create installation requests; cannot approve or revoke connections. |
 
 Exact strings must match what Better Auth stores and what Connect checks. See [Permissions matrix](../reference/permissions-matrix.md).

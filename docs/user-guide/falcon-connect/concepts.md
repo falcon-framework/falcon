@@ -18,7 +18,7 @@ Each Connect app may declare **capabilities** in **`app_capability`**:
 - **scope_key** — string identifier (for example `customers.read`, `demo.read`).
 - **description** — optional explanation for admins and UIs.
 
-When a **connection** is formed, a subset of these keys is **granted** and stored (for example in **`connection_scope`**). Runtime authorization in *your* services should treat granted scope keys as the contract of what the source app may request.
+When a **connection** is formed, a subset of these keys is **granted** and stored (for example in **`connection_scope`**). Runtime authorization in _your_ services should treat granted scope keys as the contract of what the source app may request.
 
 ## Organization scope
 

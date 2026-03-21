@@ -1,9 +1,9 @@
-import type { FalconConnectConnectionDisplay } from '@falcon-framework/sdk/connect'
-import { connectAppPublicOrigin } from '#/lib/connect-app-origins'
+import type { FalconConnectConnectionDisplay } from "@falcon-framework/sdk/connect";
+import { connectAppPublicOrigin } from "#/lib/connect-app-origins";
 
 export function ConnectionListItem({ c }: { c: FalconConnectConnectionDisplay }) {
-  const sourceOrigin = connectAppPublicOrigin(c.sourceAppId)
-  const targetOrigin = connectAppPublicOrigin(c.targetAppId)
+  const sourceOrigin = connectAppPublicOrigin(c.sourceAppId);
+  const targetOrigin = connectAppPublicOrigin(c.targetAppId);
 
   return (
     <li className="rounded-lg border border-[var(--line)] bg-[var(--chip-bg)] px-4 py-3">
@@ -11,7 +11,7 @@ export function ConnectionListItem({ c }: { c: FalconConnectConnectionDisplay })
       <p className="mt-1 m-0 text-xs text-[var(--sea-ink-soft)]">
         Status: <span className="capitalize">{c.status}</span>
       </p>
-      {(sourceOrigin || targetOrigin) ? (
+      {sourceOrigin || targetOrigin ? (
         <p className="mt-3 m-0 flex flex-wrap gap-x-4 gap-y-2 text-xs">
           {sourceOrigin ? (
             <a
@@ -36,5 +36,5 @@ export function ConnectionListItem({ c }: { c: FalconConnectConnectionDisplay })
         </p>
       ) : null}
     </li>
-  )
+  );
 }

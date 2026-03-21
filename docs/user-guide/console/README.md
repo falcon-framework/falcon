@@ -4,11 +4,11 @@ The **console** is the first-party web application for end users and admins who 
 
 ## Topics
 
-| Document | Description |
-| -------- | ----------- |
-| [Account, profile, and connected apps](account-and-apps.md) | User profile and Auth app directory |
-| [Organizations](organizations.md) | Creating orgs and switching context |
-| [Connections](connections.md) | Viewing and managing Connect relationships |
+| Document                                                    | Description                                |
+| ----------------------------------------------------------- | ------------------------------------------ |
+| [Account, profile, and connected apps](account-and-apps.md) | User profile and Auth app directory        |
+| [Organizations](organizations.md)                           | Creating orgs and switching context        |
+| [Connections](connections.md)                               | Viewing and managing Connect relationships |
 
 ## What the console is not
 

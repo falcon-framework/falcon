@@ -4,12 +4,12 @@ Falcon Connect manages **relationships between registered applications** within 
 
 ## Topics
 
-| Document | Description |
-| -------- | ----------- |
-| [Concepts](concepts.md) | Apps, capabilities, scopes, org scope |
-| [Installation requests and approval](installation-and-approval.md) | Source/target flow and browser handoff |
-| [Managing connections](managing-connections.md) | Pause, resume, revoke, sync, scope check |
-| [Calling the Connect API](authentication.md) | `X-Organization-Id`, cookies, JWT |
+| Document                                                           | Description                              |
+| ------------------------------------------------------------------ | ---------------------------------------- |
+| [Concepts](concepts.md)                                            | Apps, capabilities, scopes, org scope    |
+| [Installation requests and approval](installation-and-approval.md) | Source/target flow and browser handoff   |
+| [Managing connections](managing-connections.md)                    | Pause, resume, revoke, sync, scope check |
+| [Calling the Connect API](authentication.md)                       | `X-Organization-Id`, cookies, JWT        |
 
 ## Who should read this
 

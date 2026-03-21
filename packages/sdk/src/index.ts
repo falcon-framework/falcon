@@ -9,5 +9,9 @@ export {
   redirectToSignUp,
   exchangeCodeForSession,
 } from "./core/redirect";
-export type { RedirectToSignInOptions, ExchangeCodeOptions, ExchangeCodeResult } from "./core/redirect";
+export type {
+  RedirectToSignInOptions,
+  ExchangeCodeOptions,
+  ExchangeCodeResult,
+} from "./core/redirect";
 export { sessionCookieName } from "./core/cookie";

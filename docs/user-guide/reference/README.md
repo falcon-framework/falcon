@@ -2,10 +2,10 @@
 
 Quick-reference material for operators and integrators.
 
-| Document | Description |
-| -------- | ----------- |
-| [Environment variables](environment-variables.md) | Common bindings by service |
-| [Permissions matrix](permissions-matrix.md) | Connect capabilities by org role |
+| Document                                          | Description                      |
+| ------------------------------------------------- | -------------------------------- |
+| [Environment variables](environment-variables.md) | Common bindings by service       |
+| [Permissions matrix](permissions-matrix.md)       | Connect capabilities by org role |
 
 ## Source of truth
 

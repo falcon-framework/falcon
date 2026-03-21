@@ -51,11 +51,11 @@ Sign-up via Better Auth returns a session token in JSON when email verification 
 
 ## Troubleshooting
 
-| Symptom | Things to check |
-| ------- | --------------- |
-| “Unknown client_id” | Publishable key mismatch; row missing in `falcon_auth_app`. |
-| “redirect_uri is not allowed” | Add exact URL to `redirect_urls`; re-run seed or migrate. |
-| “Invalid callbackURL” from API | `allowed_origins` missing the **origin** of `redirect_uri`. |
+| Symptom                                    | Things to check                                                                                                                          |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| “Unknown client_id”                        | Publishable key mismatch; row missing in `falcon_auth_app`.                                                                              |
+| “redirect_uri is not allowed”              | Add exact URL to `redirect_urls`; re-run seed or migrate.                                                                                |
+| “Invalid callbackURL” from API             | `allowed_origins` missing the **origin** of `redirect_uri`.                                                                              |
 | User returns to app but appears signed out | SDK not using `credentials: 'include'`; CORS on auth server blocking your origin; third-party cookie policies in unusual browser setups. |
 
 ## Related topics

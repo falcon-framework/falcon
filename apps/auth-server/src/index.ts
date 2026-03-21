@@ -1,6 +1,11 @@
 import { createContext } from "@falcon-framework/api/context";
 import { appRouter } from "@falcon-framework/api/routers/index";
-import { auth, authCookieAttributes, resolveAuthApp, sessionAllowedForApp } from "@falcon-framework/auth";
+import {
+  auth,
+  authCookieAttributes,
+  resolveAuthApp,
+  sessionAllowedForApp,
+} from "@falcon-framework/auth";
 import { closeDb, makeDb } from "@falcon-framework/db";
 import { appUser, authorizationCode, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
@@ -268,7 +273,12 @@ app.get("/auth/authorize", async (c) => {
     );
   }
   return c.html(
-    renderSignInPage({ appName: authApp.name, clientId: client_id!, redirectUri: redirect_uri!, state }),
+    renderSignInPage({
+      appName: authApp.name,
+      clientId: client_id!,
+      redirectUri: redirect_uri!,
+      state,
+    }),
   );
 });
 
@@ -353,7 +363,12 @@ app.get("/auth/sign-up", async (c) => {
     );
   }
   return c.html(
-    renderSignUpPage({ appName: authApp.name, clientId: client_id!, redirectUri: redirect_uri!, state }),
+    renderSignUpPage({
+      appName: authApp.name,
+      clientId: client_id!,
+      redirectUri: redirect_uri!,
+      state,
+    }),
   );
 });
 
@@ -392,7 +407,13 @@ app.post("/auth/sign-up", async (c) => {
       // ignore
     }
     return c.html(
-      renderSignUpPage({ appName: authApp.name, clientId, redirectUri, state, error: errorMessage }),
+      renderSignUpPage({
+        appName: authApp.name,
+        clientId,
+        redirectUri,
+        state,
+        error: errorMessage,
+      }),
     );
   }
 

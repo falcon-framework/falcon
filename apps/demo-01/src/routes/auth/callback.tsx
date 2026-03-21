@@ -1,27 +1,27 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { exchangeCodeForSession, fetchFalconSession } from '@falcon-framework/sdk'
-import { falconAuthConfig } from '#/lib/demo-env'
-import { completeAuthCallback } from '#/lib/auth-callback'
-import { useEffect, useState } from 'react'
-import { z } from 'zod'
+import { createFileRoute } from "@tanstack/react-router";
+import { exchangeCodeForSession, fetchFalconSession } from "@falcon-framework/sdk";
+import { falconAuthConfig } from "#/lib/demo-env";
+import { completeAuthCallback } from "#/lib/auth-callback";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 
 const callbackSearchSchema = z.object({
   code: z.string().optional(),
   state: z.string().optional(),
-})
+});
 
-export const Route = createFileRoute('/auth/callback')({
+export const Route = createFileRoute("/auth/callback")({
   validateSearch: callbackSearchSchema,
   component: CallbackPage,
-})
+});
 
 function CallbackPage() {
-  const { code, state } = Route.useSearch()
-  const [error, setError] = useState<string | null>(null)
+  const { code, state } = Route.useSearch();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedState = sessionStorage.getItem('falcon_auth_state')
-    sessionStorage.removeItem('falcon_auth_state')
+    const storedState = sessionStorage.getItem("falcon_auth_state");
+    sessionStorage.removeItem("falcon_auth_state");
 
     completeAuthCallback({
       code,
@@ -31,18 +31,16 @@ function CallbackPage() {
       getSession: async () => ({ data: await fetchFalconSession(falconAuthConfig) }),
     })
       .then(() => {
-        window.location.replace('/dashboard')
+        window.location.replace("/dashboard");
       })
       .catch((err: unknown) => {
         setError(
-          err instanceof Error
-            ? err.message
-            : 'Failed to complete sign-in. Please try again.',
-        )
-      })
-  // Run once on mount — code and state are stable URL params
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code, state])
+          err instanceof Error ? err.message : "Failed to complete sign-in. Please try again.",
+        );
+      });
+    // Run once on mount — code and state are stable URL params
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code, state]);
 
   if (error) {
     return (
@@ -60,12 +58,12 @@ function CallbackPage() {
           </a>
         </div>
       </main>
-    )
+    );
   }
 
   return (
     <main className="page-wrap flex items-center justify-center px-4 py-12">
       <p className="text-sm text-muted-foreground">Completing sign-in…</p>
     </main>
-  )
+  );
 }

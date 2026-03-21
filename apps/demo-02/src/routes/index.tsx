@@ -1,6 +1,6 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/')({ component: HomePage })
+export const Route = createFileRoute("/")({ component: HomePage });
 
 function HomePage() {
   return (
@@ -11,9 +11,9 @@ function HomePage() {
           Approve connections here
         </h1>
         <p className="mb-8 max-w-2xl text-base text-[var(--sea-ink-soft)] sm:text-lg">
-          This app runs on port 3011. When the source app (3010) starts a Falcon
-          Connect installation, your browser opens this app to sign in (same
-          Falcon Auth user) and approve the pending request.
+          This app runs on port 3011. When the source app (3010) starts a Falcon Connect
+          installation, your browser opens this app to sign in (same Falcon Auth user) and approve
+          the pending request.
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
@@ -31,5 +31,5 @@ function HomePage() {
         </div>
       </section>
     </main>
-  )
+  );
 }

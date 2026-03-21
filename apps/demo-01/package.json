@@ -13,8 +13,8 @@
     "deploy": "bun run build && wrangler deploy"
   },
   "dependencies": {
-    "@falcon-framework/sdk": "workspace:*",
     "@cloudflare/vite-plugin": "^1.26.0",
+    "@falcon-framework/sdk": "workspace:*",
     "@orpc/client": "^1.13.6",
     "@orpc/json-schema": "^1.13.6",
     "@orpc/openapi": "^1.13.6",

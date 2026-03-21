@@ -96,8 +96,7 @@ export const de = {
     connected: "Verbunden",
     revoke: "Widerrufen",
     revokeTitle: "Zugriff widerrufen?",
-    revokeDescriptionBefore:
-      "Damit wird Ihre Verbindung zu ",
+    revokeDescriptionBefore: "Damit wird Ihre Verbindung zu ",
     revokeDescriptionAfter:
       " entfernt. Die App kann Sie nicht mehr über FALCON Auth identifizieren. Sie können sich erneut anmelden, um die Verbindung wiederherzustellen.",
     cancel: "Abbrechen",
@@ -133,8 +132,7 @@ export const de = {
     cardDescription: "Sie können dies später in den Organisationseinstellungen ändern",
     orgName: "Organisationsname",
     slug: "Slug",
-    slugHint:
-      "Wird in URLs verwendet · Nur Kleinbuchstaben, Zahlen und Bindestriche",
+    slugHint: "Wird in URLs verwendet · Nur Kleinbuchstaben, Zahlen und Bindestriche",
     submit: "Organisation erstellen",
     creating: "Wird erstellt…",
     toastError: "Organisation konnte nicht erstellt werden",

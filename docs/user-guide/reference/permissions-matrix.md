@@ -4,15 +4,15 @@ Falcon Connect enforces **organization-scoped** permissions using the caller’s
 
 ## Matrix
 
-| Action | `owner` | `admin` | `member` |
-| ------ | ------- | ------- | -------- |
-| Create installation request | yes | yes | yes |
-| Approve installation request | yes | yes | no |
-| Revoke connection | yes | yes | no |
-| Pause connection | yes | yes | no |
-| Resume connection | yes | yes | no |
-| Trigger sync | yes | yes | no |
-| Scope check | yes | yes | yes |
+| Action                       | `owner` | `admin` | `member` |
+| ---------------------------- | ------- | ------- | -------- |
+| Create installation request  | yes     | yes     | yes      |
+| Approve installation request | yes     | yes     | no       |
+| Revoke connection            | yes     | yes     | no       |
+| Pause connection             | yes     | yes     | no       |
+| Resume connection            | yes     | yes     | no       |
+| Trigger sync                 | yes     | yes     | no       |
+| Scope check                  | yes     | yes     | yes      |
 
 ## Notes
 

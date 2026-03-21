@@ -4,12 +4,12 @@ Falcon Auth is your deployment’s **identity provider**: users authenticate aga
 
 ## Topics
 
-| Document | Description |
-| -------- | ----------- |
-| [Centralized sign-in](centralized-sign-in.md) | Hosted pages, `client_id`, `redirect_uri`, and return to your app |
-| [Registering client apps](app-registration.md) | `falcon_auth_app`, origins, redirect URLs, publishable keys |
-| [Sessions and cookies](sessions-and-cookies.md) | Cross-origin session behavior and `get-session` |
-| [Organizations](organizations.md) | Better Auth organization plugin and membership |
+| Document                                        | Description                                                       |
+| ----------------------------------------------- | ----------------------------------------------------------------- |
+| [Centralized sign-in](centralized-sign-in.md)   | Hosted pages, `client_id`, `redirect_uri`, and return to your app |
+| [Registering client apps](app-registration.md)  | `falcon_auth_app`, origins, redirect URLs, publishable keys       |
+| [Sessions and cookies](sessions-and-cookies.md) | Cross-origin session behavior and `get-session`                   |
+| [Organizations](organizations.md)               | Better Auth organization plugin and membership                    |
 
 ## Relationship to Falcon Connect
 

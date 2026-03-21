@@ -4,20 +4,20 @@ The package **`@falcon-framework/sdk`** helps React and Node (or compatible) run
 
 ## Topics
 
-| Document | Description |
-| -------- | ----------- |
-| [React integration](react-integration.md) | Provider, hooks, optional components |
-| [Hosted sign-in URLs](hosted-sign-in-urls.md) | `buildFalconHostedSignInUrl` / `buildFalconHostedSignUpUrl` |
-| [Server session verification](server-verification.md) | `verifySession` |
-| [Connect display helpers](connect-helpers.md) | `@falcon-framework/sdk/connect` |
+| Document                                              | Description                                                 |
+| ----------------------------------------------------- | ----------------------------------------------------------- |
+| [React integration](react-integration.md)             | Provider, hooks, optional components                        |
+| [Hosted sign-in URLs](hosted-sign-in-urls.md)         | `buildFalconHostedSignInUrl` / `buildFalconHostedSignUpUrl` |
+| [Server session verification](server-verification.md) | `verifySession`                                             |
+| [Connect display helpers](connect-helpers.md)         | `@falcon-framework/sdk/connect`                             |
 
 ## Package entry points
 
-| Import path | Purpose |
-| ----------- | ------- |
-| `@falcon-framework/sdk` | Core client factory and hosted URL helpers |
-| `@falcon-framework/sdk/react` | React provider, hooks, UI primitives |
-| `@falcon-framework/sdk/server` | Session verification for backends |
+| Import path                     | Purpose                                    |
+| ------------------------------- | ------------------------------------------ |
+| `@falcon-framework/sdk`         | Core client factory and hosted URL helpers |
+| `@falcon-framework/sdk/react`   | React provider, hooks, UI primitives       |
+| `@falcon-framework/sdk/server`  | Session verification for backends          |
 | `@falcon-framework/sdk/connect` | Optional connection list display utilities |
 
 ## Requirements (React UI)

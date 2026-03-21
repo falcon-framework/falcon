@@ -1,13 +1,11 @@
-import { Link } from '@tanstack/react-router'
-import { useFalconAuth, UserButton } from '@falcon-framework/sdk/react'
+import { Link } from "@tanstack/react-router";
+import { useFalconAuth, UserButton } from "@falcon-framework/sdk/react";
 
 export default function FalconHeaderUser() {
-  const { isLoaded, isSignedIn } = useFalconAuth()
+  const { isLoaded, isSignedIn } = useFalconAuth();
 
   if (!isLoaded) {
-    return (
-      <div className="h-8 w-8 animate-pulse rounded-full bg-[var(--muted)]" />
-    )
+    return <div className="h-8 w-8 animate-pulse rounded-full bg-[var(--muted)]" />;
   }
 
   if (!isSignedIn) {
@@ -18,8 +16,8 @@ export default function FalconHeaderUser() {
       >
         Sign in
       </Link>
-    )
+    );
   }
 
-  return <UserButton afterSignOutUrl="/" className="shrink-0" />
+  return <UserButton afterSignOutUrl="/" className="shrink-0" />;
 }

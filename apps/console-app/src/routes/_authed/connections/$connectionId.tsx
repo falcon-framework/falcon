@@ -131,11 +131,7 @@ function ConnectionDetailPage() {
       ) : !conn ? (
         <p className="text-muted-foreground">{de.connectionDetail.notFound}</p>
       ) : (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-6"
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
           {/* Header */}
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
@@ -151,8 +147,7 @@ function ConnectionDetailPage() {
                 {de.connectionDetail.appsPrefix} {conn.sourceAppId} → {conn.targetAppId}
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {de.connectionDetail.connectionId}{" "}
-                <span className="font-mono">{conn.id}</span>
+                {de.connectionDetail.connectionId} <span className="font-mono">{conn.id}</span>
               </p>
             </div>
 
@@ -203,22 +198,12 @@ function ConnectionDetailPage() {
                   />
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Verbindung widerrufen?
-                      </AlertDialogTitle>
+                      <AlertDialogTitle>Verbindung widerrufen?</AlertDialogTitle>
                       <AlertDialogDescription>
                         Dadurch wird die Verbindung zwischen{" "}
-                        <AppNameDisplay
-                          app={sourceApp}
-                          idFallback={conn.sourceAppId}
-                        />{" "}
-                        und{" "}
-                        <AppNameDisplay
-                          app={targetApp}
-                          idFallback={conn.targetAppId}
-                        />{" "}
-                        dauerhaft widerrufen. Diese Aktion kann nicht rückgängig
-                        gemacht werden.
+                        <AppNameDisplay app={sourceApp} idFallback={conn.sourceAppId} /> und{" "}
+                        <AppNameDisplay app={targetApp} idFallback={conn.targetAppId} /> dauerhaft
+                        widerrufen. Diese Aktion kann nicht rückgängig gemacht werden.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -242,10 +227,7 @@ function ConnectionDetailPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <InfoCard label="Organisation" value={conn.organizationId} mono />
             <InfoCard label="Erstellt von" value={conn.createdByUserId} mono />
-            <InfoCard
-              label="Erstellt"
-              value={new Date(conn.createdAt).toLocaleString("de-DE")}
-            />
+            <InfoCard label="Erstellt" value={new Date(conn.createdAt).toLocaleString("de-DE")} />
             <InfoCard
               label="Zuletzt aktualisiert"
               value={new Date(conn.updatedAt).toLocaleString("de-DE")}
@@ -259,15 +241,11 @@ function ConnectionDetailPage() {
                 <Key className="h-4 w-4" />
                 Gewährte Berechtigungen
               </CardTitle>
-              <CardDescription>
-                Aktive Berechtigungen für diese Verbindung
-              </CardDescription>
+              <CardDescription>Aktive Berechtigungen für diese Verbindung</CardDescription>
             </CardHeader>
             <CardContent>
               {conn.scopes.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  Keine Berechtigungen gewährt.
-                </p>
+                <p className="text-sm text-muted-foreground">Keine Berechtigungen gewährt.</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {conn.scopes.map((s) => (
@@ -288,23 +266,11 @@ function ConnectionDetailPage() {
   );
 }
 
-function InfoCard({
-  label,
-  value,
-  mono,
-}: {
-  label: string;
-  value: string;
-  mono?: boolean;
-}) {
+function InfoCard({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div className="rounded-lg border p-3 space-y-1">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p
-        className={`text-sm font-medium truncate ${mono ? "font-mono text-xs" : ""}`}
-      >
-        {value}
-      </p>
+      <p className={`text-sm font-medium truncate ${mono ? "font-mono text-xs" : ""}`}>{value}</p>
     </div>
   );
 }

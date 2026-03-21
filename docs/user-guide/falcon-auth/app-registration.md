@@ -4,15 +4,15 @@ Every application that uses Falcon Auth as its identity provider must be registe
 
 ## What a registration defines
 
-| Field (logical) | Purpose |
-| --------------- | ------- |
-| **id** | Stable primary key for the row (text). |
-| **name** | Human-readable name (shown on hosted sign-in). |
-| **publishable_key** | Public identifier, conventionally `pk_…`. Embedded in frontend config and sent as **`X-Falcon-App-Id`**. |
+| Field (logical)     | Purpose                                                                                                                                                                                                        |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **id**              | Stable primary key for the row (text).                                                                                                                                                                         |
+| **name**            | Human-readable name (shown on hosted sign-in).                                                                                                                                                                 |
+| **publishable_key** | Public identifier, conventionally `pk_…`. Embedded in frontend config and sent as **`X-Falcon-App-Id`**.                                                                                                       |
 | **allowed_origins** | JSON array of origins (for example `["https://app.example.com"]`) that may call the auth API with this key. Used for CORS on the auth server and for Better Auth **trusted origins** when this app is in play. |
-| **redirect_urls** | JSON array of **full URLs** allowed as `redirect_uri` for **hosted** sign-in and sign-up. Matching is **exact**. |
-| **secret_key_hash** | Optional server-side secret storage for future flows (may be null in demos). |
-| **settings** | Optional JSON for future per-app configuration. |
+| **redirect_urls**   | JSON array of **full URLs** allowed as `redirect_uri` for **hosted** sign-in and sign-up. Matching is **exact**.                                                                                               |
+| **secret_key_hash** | Optional server-side secret storage for future flows (may be null in demos).                                                                                                                                   |
+| **settings**        | Optional JSON for future per-app configuration.                                                                                                                                                                |
 
 ## Linking users to apps
 

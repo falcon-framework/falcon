@@ -67,8 +67,7 @@ function AccountPage() {
                 <CardTitle>{user.name}</CardTitle>
                 <CardDescription>{user.email}</CardDescription>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {de.account.memberSince}{" "}
-                  {new Date(user.createdAt).toLocaleDateString("de-DE")}
+                  {de.account.memberSince} {new Date(user.createdAt).toLocaleDateString("de-DE")}
                 </p>
               </div>
             </div>

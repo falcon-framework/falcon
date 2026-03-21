@@ -8,7 +8,7 @@ The Falcon SDK’s React client calls endpoints such as **`/api/auth/get-session
 
 That means:
 
-- The user does **not** need a session cookie on *your* app’s domain for the default SDK flow.
+- The user does **not** need a session cookie on _your_ app’s domain for the default SDK flow.
 - Your app’s origin must be listed in the Auth app’s **`allowed_origins`** and the auth server’s CORS rules must reflect that.
 
 ## Centralized sign-in and cookies

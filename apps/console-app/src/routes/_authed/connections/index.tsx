@@ -162,8 +162,8 @@ function ConnectionList({
                 </CardHeader>
                 <CardContent className="pt-0">
                   <CardDescription className="text-xs">
-                    {de.connections.created}{" "}
-                    {new Date(conn.createdAt).toLocaleDateString("de-DE")} · {de.connections.updated}{" "}
+                    {de.connections.created} {new Date(conn.createdAt).toLocaleDateString("de-DE")}{" "}
+                    · {de.connections.updated}{" "}
                     {new Date(conn.updatedAt).toLocaleDateString("de-DE")}
                   </CardDescription>
                 </CardContent>
@@ -179,7 +179,11 @@ function ConnectionList({
 function StatusBadge({ status }: { status: "active" | "paused" | "revoked" }) {
   const map = {
     active: { variant: "default" as const, icon: CheckCircle2, label: de.connections.statusActive },
-    paused: { variant: "secondary" as const, icon: PauseCircle, label: de.connections.statusPaused },
+    paused: {
+      variant: "secondary" as const,
+      icon: PauseCircle,
+      label: de.connections.statusPaused,
+    },
     revoked: {
       variant: "destructive" as const,
       icon: AlertCircle,
