@@ -143,6 +143,7 @@ async function buildHostedAuthUrl(
       sessionStorage.setItem("falcon_auth_state", state);
       const url = new URL(`${authServerUrl}${authPath}`);
       url.searchParams.set("client_id", publishableKey);
+      // @ts-expect-error window is available in the evaluate context
       url.searchParams.set("redirect_uri", `${window.location.origin}/auth/callback`);
       url.searchParams.set("state", state);
       return url.toString();
