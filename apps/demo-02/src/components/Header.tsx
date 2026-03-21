@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import FalconHeaderUser from '#/components/falcon-header-user'
+import { demoEnv } from '#/lib/demo-env'
 import ThemeToggle from './ThemeToggle'
 
 export default function Header() {
@@ -9,9 +10,9 @@ export default function Header() {
         <h2 className="m-0 flex-shrink-0 text-base font-semibold tracking-tight">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-1.5 text-sm text-[var(--sea-ink)] no-underline shadow-[0_8px_24px_rgba(30,90,72,0.08)] sm:px-4 sm:py-2"
+            className="inline-flex items-center gap-2 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-1.5 text-sm text-[var(--sea-ink)] no-underline shadow-[0_8px_24px_rgba(120,48,58,0.08)] sm:px-4 sm:py-2"
           >
-            <span className="h-2 w-2 rounded-full bg-[linear-gradient(90deg,#56c6be,#7ed3bf)]" />
+            <span className="h-2 w-2 rounded-full bg-[linear-gradient(90deg,#e05d4d,#f4a090)]" />
             Falcon Connect — Target
           </Link>
         </h2>
@@ -59,12 +60,27 @@ export default function Header() {
             Home
           </Link>
           <Link
+            to="/connections"
+            className="nav-link"
+            activeProps={{ className: 'nav-link is-active' }}
+          >
+            Connections
+          </Link>
+          <Link
             to="/sign-in"
             className="nav-link"
             activeProps={{ className: 'nav-link is-active' }}
           >
             Sign in
           </Link>
+          <a
+            href={demoEnv.VITE_FALCON_CONSOLE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link"
+          >
+            Manage account and apps
+          </a>
         </div>
       </nav>
     </header>

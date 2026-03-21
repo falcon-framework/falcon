@@ -19,6 +19,10 @@ app.use(
   "/*",
   cors({
     origin: (origin) => {
+      // Allow the demo apps
+      if (origin === "http://localhost:3010" || origin === "http://localhost:3011") {
+        return origin;
+      }
       if (!origin) return env.CORS_ORIGIN.split(",")[0]?.trim() ?? "";
       const allowed = parseCorsOrigins(env.CORS_ORIGIN);
       return allowed.includes(origin) ? origin : null;

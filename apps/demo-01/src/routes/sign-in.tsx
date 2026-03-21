@@ -1,25 +1,25 @@
-import { createFileRoute, Navigate } from '@tanstack/react-router'
-import { redirectToSignIn } from '@falcon-framework/sdk'
-import { useFalconAuth } from '@falcon-framework/sdk/react'
-import { falconAuthConfig } from '#/lib/demo-env'
+import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { redirectToSignIn } from "@falcon-framework/sdk";
+import { useFalconAuth } from "@falcon-framework/sdk/react";
+import { falconAuthConfig } from "#/lib/demo-env";
 
-export const Route = createFileRoute('/sign-in')({
+export const Route = createFileRoute("/sign-in")({
   component: SignInPage,
-})
+});
 
 function SignInPage() {
-  const { isSignedIn } = useFalconAuth()
+  const { isSignedIn } = useFalconAuth();
   if (isSignedIn) {
-    return <Navigate to="/dashboard" />
+    return <Navigate to="/dashboard" />;
   }
 
   function handleSignIn() {
-    const state = crypto.randomUUID()
-    sessionStorage.setItem('falcon_auth_state', state)
+    const state = crypto.randomUUID();
+    sessionStorage.setItem("falcon_auth_state", state);
     redirectToSignIn(falconAuthConfig, {
       redirectUri: `${window.location.origin}/auth/callback`,
       state,
-    })
+    });
   }
 
   return (
@@ -29,9 +29,7 @@ function SignInPage() {
           <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-[var(--lagoon-deep)]">
             Falcon Auth
           </p>
-          <h2 className="text-xl font-semibold tracking-tight text-foreground">
-            Sign in
-          </h2>
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">Sign in</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             You will be redirected to Falcon Auth to sign in securely.
           </p>
@@ -45,5 +43,5 @@ function SignInPage() {
         </button>
       </div>
     </main>
-  )
+  );
 }

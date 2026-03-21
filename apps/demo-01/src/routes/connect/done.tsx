@@ -1,8 +1,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useFalconAuth } from '@falcon-framework/sdk/react'
+import {
+  resolveFalconConnectionsDisplay,
+  type FalconConnectConnectionDisplay,
+} from '@falcon-framework/sdk/connect'
 import { useConnectClient } from '#/hooks/use-connect-client'
+import { ConnectionListItem } from '#/components/connection-list-item'
 import { useEffect, useState } from 'react'
-import type { ConnectionItem } from '#/lib/connect-client'
 
 export const Route = createFileRoute('/connect/done')({
   component: ConnectDonePage,
@@ -11,13 +15,15 @@ export const Route = createFileRoute('/connect/done')({
 function ConnectDonePage() {
   const { isSignedIn, isLoaded } = useFalconAuth()
   const connect = useConnectClient()
-  const [list, setList] = useState<ConnectionItem[] | null>(null)
+  const [list, setList] = useState<FalconConnectConnectionDisplay[] | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!connect) return
-    connect.connections
-      .list()
+    resolveFalconConnectionsDisplay(
+      () => connect.apps.list(),
+      () => connect.connections.list(),
+    )
       .then(setList)
       .catch((e: Error) => setLoadError(e.message))
   }, [connect])
@@ -51,14 +57,9 @@ function ConnectDonePage() {
             No connections yet. Try the flow again from the dashboard.
           </p>
         ) : (
-          <ul className="space-y-2 text-sm">
+          <ul className="space-y-3 text-sm">
             {list.map((c) => (
-              <li
-                key={c.id}
-                className="rounded-lg border border-[var(--line)] bg-[var(--chip-bg)] px-3 py-2 font-mono text-xs"
-              >
-                {c.id} — {c.status}
-              </li>
+              <ConnectionListItem key={c.id} c={c} />
             ))}
           </ul>
         )}
