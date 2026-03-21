@@ -1,5 +1,11 @@
 # @falcon-framework/sdk
 
+## 0.2.2
+
+### Patch Changes
+
+- [#3](https://github.com/falcon-framework/falcon/pull/3) [`a4c1775`](https://github.com/falcon-framework/falcon/commit/a4c1775881a12e9c2f29b131ac4165068370ef2a) Thanks [@benjamin-kraatz](https://github.com/benjamin-kraatz)! - Move `better-auth` to a **peer dependency** (with version range `^1.5.0`) so consumers control the installed version and avoid duplicate installs. Pin SDK dev tooling (`typescript`, `@types/react`, `@types/react-dom`), add `engines.node` (`>=22`), and document peer requirements in the README. Demos declare `better-auth` explicitly.
+
 ## 0.2.1
 
 ### Patch Changes
