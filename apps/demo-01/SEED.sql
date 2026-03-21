@@ -7,10 +7,18 @@
 --    origins and your console origin, e.g.:
 --      http://localhost:3002,http://localhost:3010,http://localhost:3011
 -- 3. Register two falcon_auth_app rows (below) with publishable keys matching .env.example.
--- 4. Sign up through demo-01 (or console), create an organization in the UI so `member`
---    exists with role `owner` or `admin` (required to create + approve installations).
---    Use the SAME user on demo-02 so SSO cookies apply; use the SAME organization so
+-- 4. Visit demo-01 or demo-02, click "Sign in", and you will be redirected to the Falcon Auth
+--    server to sign in (or create an account). After successful auth you are redirected back.
+--    Create an organization from the dashboard prompt so `member` exists with role `owner` or
+--    `admin` (required to create + approve Falcon Connect installations).
+--    Use the SAME user on demo-02 so the session cookie applies; use the SAME organization so
 --    X-Organization-Id resolves for Connect on both apps.
+--
+-- Auth flow overview (OAuth-like redirect):
+--   Demo app → GET /auth/authorize?client_id=...&redirect_uri=...&state=...
+--   User signs in on Falcon Auth server
+--   Auth server → redirect to <redirect_uri>?code=...&state=...
+--   Demo app /auth/callback → POST /auth/token (code exchange) → sets session cookie
 
 -- ─── falcon_app (Connect identities) ─────────────────────────────────────────
 
@@ -67,7 +75,7 @@ VALUES
     'falcon-auth-demo-01',
     'Demo 01 Source',
     '["http://localhost:3010"]'::jsonb,
-    '[]'::jsonb,
+    '["http://localhost:3010/auth/callback"]'::jsonb,
     'pk_demo_source',
     NULL,
     NULL,
@@ -78,7 +86,7 @@ VALUES
     'falcon-auth-demo-02',
     'Demo 02 Target',
     '["http://localhost:3011"]'::jsonb,
-    '[]'::jsonb,
+    '["http://localhost:3011/auth/callback"]'::jsonb,
     'pk_demo_target',
     NULL,
     NULL,
