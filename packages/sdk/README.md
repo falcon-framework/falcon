@@ -21,12 +21,12 @@ pnpm add @falcon-framework/sdk better-auth react react-dom
 
 ### Entry points
 
-| Import path                    | Use case                                            |
-| ------------------------------ | --------------------------------------------------- |
-| `@falcon-framework/sdk`        | `createFalconAuth` client                           |
-| `@falcon-framework/sdk/react`  | Provider, hooks, `SignIn` / `SignUp` / `UserButton` |
-| `@falcon-framework/sdk/server` | `verifySession` for backend route protection        |
-| `@falcon-framework/sdk/connect` | Connect app directory / labeling helpers           |
+| Import path                     | Use case                                            |
+| ------------------------------- | --------------------------------------------------- |
+| `@falcon-framework/sdk`         | `createFalconAuth` client                           |
+| `@falcon-framework/sdk/react`   | Provider, hooks, `SignIn` / `SignUp` / `UserButton` |
+| `@falcon-framework/sdk/server`  | `verifySession` for backend route protection        |
+| `@falcon-framework/sdk/connect` | Connect app directory / labeling helpers            |
 
 ## Development (in this monorepo)
 

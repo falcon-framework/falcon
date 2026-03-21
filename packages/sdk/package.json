@@ -69,9 +69,6 @@
     "test": "vitest run",
     "prepublishOnly": "npm run build"
   },
-  "engines": {
-    "node": ">=22"
-  },
   "devDependencies": {
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
@@ -92,5 +89,8 @@
     "react-dom": {
       "optional": true
     }
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
