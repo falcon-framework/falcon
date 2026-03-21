@@ -1,0 +1,176 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@falcon-framework/ui/components/card";
+import { Button } from "@falcon-framework/ui/components/button";
+import { Input } from "@falcon-framework/ui/components/input";
+import { Label } from "@falcon-framework/ui/components/label";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useForm } from "@tanstack/react-form";
+import { useRef } from "react";
+import slugify from "slugify";
+import { motion } from "motion/react";
+import { Building2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { z } from "zod";
+
+import { de } from "@/i18n/de";
+import { authClient } from "@/lib/auth-client";
+import { useActiveOrg } from "@/providers/active-org";
+
+export const Route = createFileRoute("/_authed/org/create")({
+  component: CreateOrgPage,
+});
+
+const SLUGIFY_OPTS = { lower: true, strict: true } as const;
+
+function toOrgSlug(input: string): string {
+  return slugify(input.trim(), SLUGIFY_OPTS);
+}
+
+function CreateOrgPage() {
+  const navigate = useNavigate();
+  const { switchOrg } = useActiveOrg();
+  /** When false, slug stays in sync with name; set true when the user edits the slug field. */
+  const slugManuallyEdited = useRef(false);
+
+  const form = useForm({
+    defaultValues: { name: "", slug: "" },
+    onSubmit: async ({ value }) => {
+      const result = await authClient.organization.create({
+        name: value.name,
+        slug: value.slug,
+      });
+      if (result.error) {
+        toast.error(result.error.message ?? de.orgCreate.toastError);
+        return;
+      }
+      await authClient.organization.setActive({
+        organizationId: result.data!.id,
+      });
+      await switchOrg(result.data!.id);
+      toast.success(de.orgCreate.toastSuccess(value.name));
+      navigate({ to: "/account" });
+    },
+    validators: {
+      onSubmit: z.object({
+        name: z.string().min(2, de.orgCreate.validationMin),
+        slug: z
+          .string()
+          .min(2, de.orgCreate.validationMin)
+          .regex(/^[a-z0-9-]+$/, de.orgCreate.validationSlug),
+      }),
+    },
+  });
+
+  return (
+    <div className="flex items-center justify-center min-h-[60vh]">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25 }}
+        className="w-full max-w-md"
+      >
+        <div className="mb-6 flex flex-col items-center gap-2 text-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <Building2 className="h-6 w-6" />
+          </div>
+          <h1 className="text-2xl font-bold">{de.orgCreate.title}</h1>
+          <p className="text-sm text-muted-foreground">{de.orgCreate.subtitle}</p>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">{de.orgCreate.cardTitle}</CardTitle>
+            <CardDescription>{de.orgCreate.cardDescription}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                form.handleSubmit();
+              }}
+              className="space-y-4"
+            >
+              <form.Field name="name">
+                {(field) => (
+                  <div className="space-y-1.5">
+                    <Label htmlFor={field.name}>{de.orgCreate.orgName}</Label>
+                    <Input
+                      id={field.name}
+                      placeholder="Acme Corp"
+                      value={field.state.value}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => {
+                        const name = e.target.value;
+                        field.handleChange(name);
+                        if (!slugManuallyEdited.current) {
+                          form.setFieldValue("slug", toOrgSlug(name));
+                        }
+                      }}
+                    />
+                    {field.state.meta.errors.map((err) => (
+                      <p key={err?.message} className="text-xs text-destructive">
+                        {err?.message}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </form.Field>
+
+              <form.Field name="slug">
+                {(field) => (
+                  <div className="space-y-1.5">
+                    <Label htmlFor={field.name}>{de.orgCreate.slug}</Label>
+                    <Input
+                      id={field.name}
+                      placeholder="acme-corp"
+                      value={field.state.value}
+                      onBlur={(e) => {
+                        field.handleBlur();
+                        if (!e.currentTarget.value.trim()) {
+                          slugManuallyEdited.current = false;
+                          form.setFieldValue("slug", toOrgSlug(form.getFieldValue("name")));
+                        }
+                      }}
+                      onChange={(e) => {
+                        slugManuallyEdited.current = true;
+                        field.handleChange(toOrgSlug(e.target.value));
+                      }}
+                    />
+                    <p className="text-xs text-muted-foreground">{de.orgCreate.slugHint}</p>
+                    {field.state.meta.errors.map((err) => (
+                      <p key={err?.message} className="text-xs text-destructive">
+                        {err?.message}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </form.Field>
+
+              <form.Subscribe
+                selector={(s) => ({ canSubmit: s.canSubmit, isSubmitting: s.isSubmitting })}
+              >
+                {({ canSubmit, isSubmitting }) => (
+                  <Button type="submit" className="w-full" disabled={!canSubmit || isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {de.orgCreate.creating}
+                      </>
+                    ) : (
+                      de.orgCreate.submit
+                    )}
+                  </Button>
+                )}
+              </form.Subscribe>
+            </form>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
+}

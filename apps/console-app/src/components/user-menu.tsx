@@ -11,6 +11,7 @@ import {
 import { Skeleton } from "@falcon-framework/ui/components/skeleton";
 import { Link, useNavigate } from "@tanstack/react-router";
 
+import { de } from "@/i18n/de";
 import { authClient } from "@/lib/auth-client";
 
 export default function UserMenu() {
@@ -24,7 +25,7 @@ export default function UserMenu() {
   if (!session) {
     return (
       <Link to="/login">
-        <Button variant="outline">Sign In</Button>
+        <Button variant="outline">{de.userMenu.signIn}</Button>
       </Link>
     );
   }
@@ -36,7 +37,7 @@ export default function UserMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="bg-card">
         <DropdownMenuGroup>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>{de.userMenu.myAccount}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>{session.user.email}</DropdownMenuItem>
           <DropdownMenuItem
@@ -53,7 +54,7 @@ export default function UserMenu() {
               });
             }}
           >
-            Sign Out
+            {de.userMenu.signOut}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

@@ -12,6 +12,7 @@ const app = await alchemy("falcon");
 
 export const consoleApp = await TanStackStart("console-app", {
   cwd: "../../apps/console-app",
+  dev: { command: "bun run dev:bare" },
   bindings: {
     VITE_SERVER_URL: alchemy.env.VITE_SERVER_URL!,
     DATABASE_URL: alchemy.secret.env.DATABASE_URL!,
@@ -47,7 +48,7 @@ export const connectService = await Worker("connect-service", {
     BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,
   },
   dev: {
-    port: 3000,
+    port: 3001,
   },
 });
 

@@ -1,117 +1,182 @@
-# falcon
+# FALCON
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Start, Hono, ORPC, and more.
+**FALCON** is a self-hosted identity and app-connectivity platform: **Falcon Auth** (unified sign-in and sessions across your apps), **FALCON Connect** (“install” and link apps to each other), and a published **[`@falcon-framework/sdk`](https://www.npmjs.com/package/@falcon-framework/sdk)** so third-party apps can integrate with the same APIs and React building blocks—similar in spirit to hosted identity products, but you run the stack.
 
-## Features
+This repository is a **Bun + Nx** monorepo: Cloudflare Workers services, a TanStack Start console, demo apps, shared packages, and Alchemy-based local development and deployment.
 
-- **TypeScript** - For type safety and improved developer experience
-- **TanStack Start** - SSR framework with TanStack Router
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
-- **Hono** - Lightweight, performant server framework
-- **oRPC** - End-to-end type-safe APIs with OpenAPI integration
-- **workers** - Runtime environment
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Authentication** - Better-Auth
-- **Nx** - Smart monorepo task orchestration and caching
-- **Oxlint** - Oxlint + Oxfmt (linting & formatting)
-- **Tauri** - Build native desktop applications
+## What lives here
 
-## Getting Started
+| Area            | Role                                                                       |
+| --------------- | -------------------------------------------------------------------------- |
+| **Falcon Auth** | Better Auth–backed auth API and HTML flows (`apps/auth-server`).           |
+| **Connect**     | Connection / “install apps” API (`apps/connect-service`).                  |
+| **Console**     | Org and settings UI for operators (`apps/console-app`).                    |
+| **Demos**       | Sample Vite apps wired to Auth + Connect (`apps/demo-01`, `apps/demo-02`). |
+| **SDK**         | Publishable client, React UI, and server helpers (`packages/sdk`).         |
 
-First, install the dependencies:
+Details for consumers of the npm package are in [`packages/sdk/README.md`](packages/sdk/README.md).
+
+## Stack (high level)
+
+- **TypeScript** throughout
+- **Hono** + **oRPC** on Workers for APIs
+- **Better Auth** for authentication
+- **Drizzle ORM** + **PostgreSQL** for persistence
+- **TanStack Start** + **Vite** for the console (and demos)
+- **Tailwind CSS** and shared **shadcn/ui** primitives in `packages/ui`
+- **Alchemy** for Cloudflare dev/deploy orchestration (`packages/infra`)
+- **Nx** for task graph and caching; **Oxlint** / **Oxfmt** for lint and format
+
+The repo was originally scaffolded from [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack); layout and app names have evolved with FALCON.
+
+## Getting started
+
+Install dependencies:
 
 ```bash
 bun install
 ```
 
-## Database Setup
+### Database
 
-This project uses PostgreSQL with Drizzle ORM.
+1. Run **PostgreSQL** locally or point at a hosted instance.
+2. Create `apps/auth-server/.env` and set at least:
 
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details.
+   ```bash
+   DATABASE_URL=postgresql://...
+   ```
 
-3. Apply the schema to your database:
+   (Drizzle CLI reads this path; see `packages/db/drizzle.config.ts`.)
+
+3. Apply the schema:
+
+   ```bash
+   bun run db:push
+   ```
+
+4. For the Connect demos, seed fixture rows (expects `DATABASE_URL` as above):
+
+   ```bash
+   bun run e2e:seed
+   ```
+
+### Local development
+
+**Full stack (recommended):** Auth, Connect, and the console are wired in Alchemy with dev ports **3000** (auth), **3001** (connect), and the console on **3002** (see `packages/infra/alchemy.run.ts`).
 
 ```bash
-bun run db:push
+nx run @falcon-framework/infra:dev
 ```
 
-Then, run the development server:
+Copy `apps/demo-01/.env.example` to `apps/demo-01/.env.local` (and the same for `demo-02` if you use it) so `VITE_*` URLs match those services.
+
+**Demos only** (after Auth + Connect are up, or alongside them):
+
+```bash
+nx run demo-01:dev
+nx run demo-02:dev
+```
+
+**Everything with a `dev` target** (infra + both demos):
 
 ```bash
 bun run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
-The API is running at [http://localhost:3000](http://localhost:3000).
+### URLs (typical local setup)
 
-## UI Customization
+| Service                   | URL                                            |
+| ------------------------- | ---------------------------------------------- |
+| Falcon Auth (auth-server) | [http://localhost:3000](http://localhost:3000) |
+| Connect service           | [http://localhost:3001](http://localhost:3001) |
+| Console                   | [http://localhost:3002](http://localhost:3002) |
+| Demo 01                   | [http://localhost:3010](http://localhost:3010) |
+| Demo 02                   | [http://localhost:3011](http://localhost:3011) |
 
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
+## UI customization
 
-- Change design tokens and global styles in `packages/ui/src/styles/globals.css`
-- Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
+Shared primitives live in `packages/ui`.
 
-### Add more shared components
+- Tokens and globals: `packages/ui/src/styles/globals.css`
+- Components: `packages/ui/src/components/*`
+- shadcn config: `packages/ui/components.json` and `apps/console-app/components.json`
 
-Run this from the project root to add more primitives to the shared UI package:
+Add more shared primitives from the repo root:
 
 ```bash
 npx shadcn@latest add accordion dialog popover sheet table -c packages/ui
 ```
 
-Import shared components like this:
+Example import:
 
 ```tsx
 import { Button } from "@falcon-framework/ui/components/button";
 ```
 
-### Add app-specific blocks
-
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
+App-specific blocks can be generated from `apps/console-app` instead of `packages/ui`.
 
 ## Deployment (Cloudflare via Alchemy)
 
-- Dev: bun run dev
-- Deploy: bun run deploy
-- Destroy: bun run destroy
+- Deploy: `bun run deploy`
+- Destroy: `bun run destroy`
 
-For more details, see the guide on [Deploying to Cloudflare with Alchemy](https://www.better-t-stack.dev/docs/guides/cloudflare-alchemy).
+See [Deploying to Cloudflare with Alchemy](https://www.better-t-stack.dev/docs/guides/cloudflare-alchemy) for platform-specific notes.
 
-## Git Hooks and Formatting
+## Quality and tests
 
 - Format and lint fix: `bun run check`
+- Typecheck across projects: `bun run check-types`
+- Unit tests: `bun run test`
+- E2E (Playwright): `bun run test:e2e`
 
-## Project Structure
+## SDK publishing
+
+The public package is built from `packages/sdk`:
+
+```bash
+bun run sdk:build
+bun run sdk:check-types
+```
+
+Releases use [Changesets](https://github.com/changesets/changesets) (`bun run changeset`, etc.).
+
+## Project structure
 
 ```
 falcon/
 ├── apps/
-│   ├── web/         # Frontend application (React + TanStack Start)
-│   └── server/      # Backend API (Hono, ORPC)
+│   ├── auth-server/      # Falcon Auth API (Hono, oRPC, Better Auth)
+│   ├── connect-service/  # FALCON Connect API
+│   ├── console-app/      # Operator console (TanStack Start + Vite; optional Tauri desktop scripts)
+│   ├── demo-01/          # SDK + Connect demo (source app)
+│   └── demo-02/          # SDK + Connect demo (peer app)
 ├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+│   ├── api/              # oRPC routers and shared API code
+│   ├── auth/             # Auth configuration and helpers
+│   ├── connection/       # Connect domain logic
+│   ├── db/               # Drizzle schema, migrations, seeds
+│   ├── env/              # Typed environment variables
+│   ├── infra/            # Alchemy entrypoint (local dev + deploy)
+│   ├── sdk/              # @falcon-framework/sdk (published)
+│   └── ui/               # Shared UI (shadcn/Tailwind)
+└── e2e/                  # Playwright tests and DB seed script
 ```
 
-## Available Scripts
+## Useful scripts
 
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
-- `bun run dev:web`: Start only the web application
-- `bun run dev:server`: Start only the server
-- `bun run check-types`: Check TypeScript types across all apps
-- `bun run db:push`: Push schema changes to database
-- `bun run db:generate`: Generate database client/types
-- `bun run db:migrate`: Run database migrations
-- `bun run db:studio`: Open database studio UI
-- `bun run check`: Run Oxlint and Oxfmt
-- `cd apps/web && bun run desktop:dev`: Start Tauri desktop app in development
-- `cd apps/web && bun run desktop:build`: Build Tauri desktop app
-- Note: Desktop builds package static web assets. TanStack Start needs a static/export build configuration before desktop packaging will work.
+| Script                                         | Purpose                                                 |
+| ---------------------------------------------- | ------------------------------------------------------- |
+| `bun run dev`                                  | Nx `dev` on all projects that define it (infra + demos) |
+| `bun run build`                                | Build all projects                                      |
+| `bun run check-types`                          | Typecheck across the workspace                          |
+| `bun run db:push`                              | Push Drizzle schema to the database                     |
+| `bun run db:generate`                          | Generate migrations                                     |
+| `bun run db:migrate`                           | Run migrations                                          |
+| `bun run db:studio`                            | Open Drizzle Studio                                     |
+| `bun run check`                                | Oxlint + Oxfmt                                          |
+| `cd apps/console-app && bun run desktop:dev`   | Tauri desktop shell for the console                     |
+| `cd apps/console-app && bun run desktop:build` | Build Tauri desktop app                                 |
+
+Desktop builds expect a static/export web build where applicable; align TanStack Start output with Tauri’s asset layout before shipping desktop artifacts.
+
+More context: [falcon-framework.com](https://falcon-framework.com).

@@ -1,0 +1,31 @@
+{
+  "name": "@falcon-framework/connection",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc -b"
+  },
+  "dependencies": {
+    "@effect/platform": "catalog:",
+    "@falcon-framework/auth": "workspace:*",
+    "@falcon-framework/db": "workspace:*",
+    "@falcon-framework/env": "workspace:*",
+    "drizzle-orm": "^0.45.1",
+    "effect": "catalog:",
+    "jose": "^6.0.0"
+  },
+  "devDependencies": {
+    "@falcon-framework/config": "workspace:*",
+    "@types/pg": "^8.0.0",
+    "typescript": "catalog:"
+  }
+}

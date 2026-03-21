@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1774032167042,
+      "tag": "0000_cheerful_adam_destine",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1774032167043,
+      "tag": "0001_falcon_auth_code",
+      "breakpoints": true
+    }
+  ]
+}

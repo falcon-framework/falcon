@@ -1,39 +1,18 @@
-import type { AppRouter } from "@falcon-framework/api/routers/index";
-import { env } from "@falcon-framework/env/web";
-import { createORPCClient } from "@orpc/client";
-import { RPCLink } from "@orpc/client/fetch";
-import type { RouterClient } from "@orpc/server";
-import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { de } from "@/i18n/de";
+
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: (error, query) => {
-      toast.error(`Error: ${error.message}`, {
-        action: {
-          label: "retry",
-          onClick: query.invalidate,
-        },
-      });
+    onError: (error) => {
+      toast.error(`${de.common.errorPrefix}: ${error.message}`);
     },
   }),
-});
-
-const link = new RPCLink({
-  url: `${env.VITE_SERVER_URL}/rpc`,
-  fetch(url, options) {
-    return fetch(url, {
-      ...options,
-      credentials: "include",
-    });
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      retry: 1,
+    },
   },
 });
-
-const getORPCClient = () => {
-  return createORPCClient(link) as RouterClient<AppRouter>;
-};
-
-export const client: RouterClient<AppRouter> = getORPCClient();
-
-export const orpc = createTanstackQueryUtils(client);

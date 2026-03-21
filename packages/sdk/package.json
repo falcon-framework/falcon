@@ -1,15 +1,18 @@
 {
   "name": "@falcon-framework/sdk",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": false,
-  "description": "FALCON SDK to let third-party app integrate with the FALCON platform. It provides all primitives to implement FALCON Connect ('install apps') and FALCON Auth, the unified authentication system for having a single sign-on experience across all apps.",
+  "description": "FALCON SDK — use Falcon Auth as your identity provider. Drop-in React components for sign-in, sign-up, and user management. Like Clerk, but self-hosted.",
   "keywords": [
     "auth",
+    "authentication",
     "connect",
     "falcon",
+    "identity",
+    "react",
     "sdk",
+    "sign-in",
     "single sign-on",
-    "single sign-on across all apps",
     "sso",
     "unified authentication"
   ],
@@ -21,25 +24,71 @@
   "author": "FALCON",
   "repository": {
     "type": "git",
-    "url": "https://github.com/falcon-framework/falcon.git"
+    "url": "git+https://github.com/falcon-framework/falcon.git"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "default": "./src/index.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
-    "./*": {
-      "default": "./src/*.ts"
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "default": "./dist/react.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.js",
+      "default": "./dist/server.js"
+    },
+    "./connect": {
+      "types": "./dist/connect.d.ts",
+      "import": "./dist/connect.js",
+      "default": "./dist/connect.js"
     }
   },
-  "scripts": {},
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check-types": "tsc --noEmit",
+    "publint": "publint",
+    "prepublishOnly": "tsdown"
+  },
   "dependencies": {
-    "@falcon-framework/env": "workspace:*",
-    "dotenv": "catalog:",
-    "zod": "catalog:"
+    "better-auth": "catalog:"
   },
   "devDependencies": {
     "@falcon-framework/config": "workspace:*",
-    "typescript": "catalog:"
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "publint": "^0.3.18",
+    "tsdown": "^0.21.4",
+    "typescript": "catalog:",
+    "vitest": "^3.0.5"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
   }
 }
