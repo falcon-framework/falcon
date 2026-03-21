@@ -1,5 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Navigate } from '@tanstack/react-router'
 import { redirectToSignIn } from '@falcon-framework/sdk'
+import { useFalconAuth } from '@falcon-framework/sdk/react'
 import { falconAuthConfig } from '#/lib/demo-env'
 
 export const Route = createFileRoute('/sign-in')({
@@ -7,6 +8,11 @@ export const Route = createFileRoute('/sign-in')({
 })
 
 function SignInPage() {
+  const { isSignedIn } = useFalconAuth()
+  if (isSignedIn) {
+    return <Navigate to="/" />
+  }
+
   function handleSignIn() {
     const state = crypto.randomUUID()
     sessionStorage.setItem('falcon_auth_state', state)

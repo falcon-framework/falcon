@@ -1,7 +1,7 @@
 import { createContext } from "@falcon-framework/api/context";
 import { appRouter } from "@falcon-framework/api/routers/index";
-import { auth, resolveAuthApp } from "@falcon-framework/auth";
-import { makeDb } from "@falcon-framework/db";
+import { auth, resolveAuthApp, sessionAllowedForApp } from "@falcon-framework/auth";
+import { closeDb, makeDb } from "@falcon-framework/db";
 import { appUser, authorizationCode, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
@@ -29,6 +29,10 @@ app.use(
   "/*",
   cors({
     origin: async (origin, c) => {
+      // Allow the demo apps (needed for token-exchange CORS from callback pages)
+      if (origin === "http://localhost:3010" || origin === "http://localhost:3011") {
+        return origin;
+      }
       // Console app is always allowed
       if (origin === env.CORS_ORIGIN) {
         return origin;
@@ -61,11 +65,24 @@ app.use(
 
 const AUTH_CODE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
-/** Extract the Set-Cookie header's session token value from a Better-Auth response. */
-function extractSessionToken(response: Response): string | null {
+/**
+ * Compute the per-app cookie prefix used by Better-Auth when `cookiePrefix` is set.
+ * Must match the logic in packages/auth/src/index.ts → cookiePrefixForPublishableKey.
+ */
+function cookiePrefixForPublishableKey(publishableKey: string): string {
+  const safe = publishableKey.replace(/[^a-zA-Z0-9]/g, "_");
+  return `falcon_${safe}`;
+}
+
+/**
+ * Extract the per-app session token value from a Better-Auth sign-in/sign-up response.
+ * Better-Auth sets the cookie as `{prefix}.session_token=<value>; ...`
+ */
+function extractSessionToken(response: Response, clientId: string): string | null {
   const raw = response.headers.get("set-cookie") ?? "";
-  // Better-Auth sets: better-auth.session_token=<value>; Path=/; ...
-  const match = raw.match(/better-auth\.session_token=([^;]+)/);
+  const prefix = cookiePrefixForPublishableKey(clientId);
+  const escaped = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = raw.match(new RegExp(`${escaped}\\.session_token=([^;]+)`));
   return match?.[1] ?? null;
 }
 
@@ -276,7 +293,7 @@ app.post("/auth/authorize", async (c) => {
     );
   }
 
-  const sessionToken = extractSessionToken(signInResponse);
+  const sessionToken = extractSessionToken(signInResponse, clientId);
   if (!sessionToken) {
     return c.html(
       renderSignInPage({
@@ -363,7 +380,7 @@ app.post("/auth/sign-up", async (c) => {
     );
   }
 
-  const sessionToken = extractSessionToken(signUpResponse);
+  const sessionToken = extractSessionToken(signUpResponse, clientId);
   if (!sessionToken) {
     return c.html(
       renderSignUpPage({
@@ -443,13 +460,13 @@ app.post("/auth/token", async (c) => {
   return c.json({ sessionToken: row.sessionToken });
 });
 
-/**
- * Auth routes — app-aware.
- *
- * When X-Falcon-App-Id is present, the Better-Auth instance is configured
- * with that app's trusted origins and database hooks for linking users to apps.
- */
-app.on(["POST", "GET"], "/api/auth/*", async (c) => {
+// ---------------------------------------------------------------------------
+// Auth request options helper
+// ---------------------------------------------------------------------------
+
+async function resolveAuthRequestOptions(c: {
+  req: { header: (name: string) => string | undefined };
+}) {
   const appId = c.req.header("X-Falcon-App-Id");
   let extraTrustedOrigins: string[] | undefined;
 
@@ -464,6 +481,67 @@ app.on(["POST", "GET"], "/api/auth/*", async (c) => {
     }
   }
 
+  return { appId, extraTrustedOrigins };
+}
+
+/**
+ * get-session — enforce `app_user` when `X-Falcon-App-Id` is present so Console revoke
+ * invalidates the app session without deleting the Better Auth session row.
+ */
+app.on(["GET", "POST"], "/api/auth/get-session", async (c) => {
+  const { appId, extraTrustedOrigins } = await resolveAuthRequestOptions(c);
+  const response = await auth({ appId, extraTrustedOrigins }).handler(c.req.raw);
+
+  if (!appId) {
+    return response;
+  }
+
+  const clone = response.clone();
+  const text = await clone.text();
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    return new Response(text, { status: response.status, headers: response.headers });
+  }
+
+  if (
+    parsed === null ||
+    typeof parsed !== "object" ||
+    !("user" in parsed) ||
+    !parsed.user ||
+    typeof parsed.user !== "object" ||
+    !("id" in parsed.user)
+  ) {
+    return new Response(text, { status: response.status, headers: response.headers });
+  }
+
+  const userId = String((parsed.user as { id: string }).id);
+  const db = makeDb();
+  try {
+    const allowed = await sessionAllowedForApp(db, userId, appId);
+    if (!allowed) {
+      return new Response("null", {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  } finally {
+    await closeDb(db);
+  }
+
+  return new Response(text, { status: response.status, headers: response.headers });
+});
+
+/**
+ * Auth routes — app-aware.
+ *
+ * When X-Falcon-App-Id is present, the Better-Auth instance is configured
+ * with that app's trusted origins and database hooks for linking users to apps.
+ */
+app.on(["POST", "GET"], "/api/auth/*", async (c) => {
+  const { appId, extraTrustedOrigins } = await resolveAuthRequestOptions(c);
   return auth({ appId, extraTrustedOrigins }).handler(c.req.raw);
 });
 
