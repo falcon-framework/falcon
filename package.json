@@ -60,7 +60,7 @@
     "prepare": "effect-tsgo patch",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release-packages": "changeset publish",
+    "release-packages": "bash scripts/publish-sdk-github.sh && changeset publish",
     "sdk:build": "bun run --cwd packages/sdk build",
     "sdk:check-types": "bun run --cwd packages/sdk check-types",
     "sdk:publint": "bun run --cwd packages/sdk publint"

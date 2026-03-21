@@ -138,7 +138,18 @@ bun run sdk:build
 bun run sdk:check-types
 ```
 
-Releases use [Changesets](https://github.com/changesets/changesets) (`bun run changeset`, etc.).
+Releases use [Changesets](https://github.com/changesets/changesets) (`bun run changeset`, etc.). The [Release workflow](.github/workflows/release.yml) publishes **`@falcon-framework/sdk` to [GitHub Packages](https://github.com/orgs/falcon-framework/packages) first**, then to [npm](https://www.npmjs.com/package/@falcon-framework/sdk). The GitHub step uses `scripts/publish-sdk-github.sh` with an isolated `.npmrc` so the GitHub token does not override npm credentials; GitHub publish uses `--no-provenance` because npm provenance is tied to the npm registry.
+
+### Installing from GitHub Packages
+
+To consume the package from GitHub’s npm registry instead of (or in addition to) npmjs, add a project or user `.npmrc`:
+
+```ini
+@falcon-framework:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=YOUR_GITHUB_TOKEN
+```
+
+Use a token with at least `read:packages` (for private packages in the org) or a fine-grained token scoped to the repository. The scope **`@falcon-framework`** must match the GitHub organization that owns this repository (`falcon-framework`).
 
 ## Project structure
 
