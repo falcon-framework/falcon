@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { exchangeCodeForSession, fetchFalconSession } from "@falcon-framework/sdk";
 import { falconAuthConfig } from "#/lib/demo-env";
 import { completeAuthCallback } from "#/lib/auth-callback";
+import { PENDING_CONNECT_KEY } from "#/lib/connect-resume";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 
@@ -31,6 +32,12 @@ function CallbackPage() {
       getSession: async () => ({ data: await fetchFalconSession(falconAuthConfig) }),
     })
       .then(() => {
+        const pending = sessionStorage.getItem(PENDING_CONNECT_KEY);
+        if (pending) {
+          sessionStorage.removeItem(PENDING_CONNECT_KEY);
+          window.location.replace(pending);
+          return;
+        }
         window.location.replace("/");
       })
       .catch((err: unknown) => {

@@ -13,8 +13,8 @@ const config = defineConfig({
     devtools(),
     cloudflare({
       viteEnvironment: { name: "ssr" },
-      // Avoid clashing with demo-02 when both `vite dev` processes run (default is 9229).
-      inspectorPort: 9229,
+      // Avoid clashing with console-app (default 9229) and demo-02 (9230) when the local stack runs together.
+      inspectorPort: 9232,
     }),
     tsconfigPaths({ projects: ["./tsconfig.json"] }),
     tailwindcss(),

@@ -8,229 +8,230 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as LoginRouteImport } from "./routes/login";
-import { Route as AuthedRouteImport } from "./routes/_authed";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as AuthedDocsRouteImport } from "./routes/_authed/docs";
-import { Route as AuthedAccountRouteImport } from "./routes/_authed/account";
-import { Route as AuthedConnectionsIndexRouteImport } from "./routes/_authed/connections/index";
-import { Route as AuthedAppsIndexRouteImport } from "./routes/_authed/apps/index";
-import { Route as AuthedOrgSettingsRouteImport } from "./routes/_authed/org/settings";
-import { Route as AuthedOrgCreateRouteImport } from "./routes/_authed/org/create";
-import { Route as AuthedConnectionsConnectionIdRouteImport } from "./routes/_authed/connections/$connectionId";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthedRouteImport } from './routes/_authed'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthedDocsRouteImport } from './routes/_authed/docs'
+import { Route as AuthedAccountRouteImport } from './routes/_authed/account'
+import { Route as AuthedConnectionsIndexRouteImport } from './routes/_authed/connections/index'
+import { Route as AuthedAppsIndexRouteImport } from './routes/_authed/apps/index'
+import { Route as AuthedOrgSettingsRouteImport } from './routes/_authed/org/settings'
+import { Route as AuthedOrgCreateRouteImport } from './routes/_authed/org/create'
+import { Route as AuthedConnectionsConnectionIdRouteImport } from './routes/_authed/connections/$connectionId'
 
 const LoginRoute = LoginRouteImport.update({
-  id: "/login",
-  path: "/login",
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthedRoute = AuthedRouteImport.update({
-  id: "/_authed",
+  id: '/_authed',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const AuthedDocsRoute = AuthedDocsRouteImport.update({
-  id: "/docs",
-  path: "/docs",
+  id: '/docs',
+  path: '/docs',
   getParentRoute: () => AuthedRoute,
-} as any);
+} as any)
 const AuthedAccountRoute = AuthedAccountRouteImport.update({
-  id: "/account",
-  path: "/account",
+  id: '/account',
+  path: '/account',
   getParentRoute: () => AuthedRoute,
-} as any);
+} as any)
 const AuthedConnectionsIndexRoute = AuthedConnectionsIndexRouteImport.update({
-  id: "/connections/",
-  path: "/connections/",
+  id: '/connections/',
+  path: '/connections/',
   getParentRoute: () => AuthedRoute,
-} as any);
+} as any)
 const AuthedAppsIndexRoute = AuthedAppsIndexRouteImport.update({
-  id: "/apps/",
-  path: "/apps/",
+  id: '/apps/',
+  path: '/apps/',
   getParentRoute: () => AuthedRoute,
-} as any);
+} as any)
 const AuthedOrgSettingsRoute = AuthedOrgSettingsRouteImport.update({
-  id: "/org/settings",
-  path: "/org/settings",
+  id: '/org/settings',
+  path: '/org/settings',
   getParentRoute: () => AuthedRoute,
-} as any);
+} as any)
 const AuthedOrgCreateRoute = AuthedOrgCreateRouteImport.update({
-  id: "/org/create",
-  path: "/org/create",
+  id: '/org/create',
+  path: '/org/create',
   getParentRoute: () => AuthedRoute,
-} as any);
-const AuthedConnectionsConnectionIdRoute = AuthedConnectionsConnectionIdRouteImport.update({
-  id: "/connections/$connectionId",
-  path: "/connections/$connectionId",
-  getParentRoute: () => AuthedRoute,
-} as any);
+} as any)
+const AuthedConnectionsConnectionIdRoute =
+  AuthedConnectionsConnectionIdRouteImport.update({
+    id: '/connections/$connectionId',
+    path: '/connections/$connectionId',
+    getParentRoute: () => AuthedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/login": typeof LoginRoute;
-  "/account": typeof AuthedAccountRoute;
-  "/docs": typeof AuthedDocsRoute;
-  "/connections/$connectionId": typeof AuthedConnectionsConnectionIdRoute;
-  "/org/create": typeof AuthedOrgCreateRoute;
-  "/org/settings": typeof AuthedOrgSettingsRoute;
-  "/apps/": typeof AuthedAppsIndexRoute;
-  "/connections/": typeof AuthedConnectionsIndexRoute;
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/account': typeof AuthedAccountRoute
+  '/docs': typeof AuthedDocsRoute
+  '/connections/$connectionId': typeof AuthedConnectionsConnectionIdRoute
+  '/org/create': typeof AuthedOrgCreateRoute
+  '/org/settings': typeof AuthedOrgSettingsRoute
+  '/apps/': typeof AuthedAppsIndexRoute
+  '/connections/': typeof AuthedConnectionsIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/login": typeof LoginRoute;
-  "/account": typeof AuthedAccountRoute;
-  "/docs": typeof AuthedDocsRoute;
-  "/connections/$connectionId": typeof AuthedConnectionsConnectionIdRoute;
-  "/org/create": typeof AuthedOrgCreateRoute;
-  "/org/settings": typeof AuthedOrgSettingsRoute;
-  "/apps": typeof AuthedAppsIndexRoute;
-  "/connections": typeof AuthedConnectionsIndexRoute;
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/account': typeof AuthedAccountRoute
+  '/docs': typeof AuthedDocsRoute
+  '/connections/$connectionId': typeof AuthedConnectionsConnectionIdRoute
+  '/org/create': typeof AuthedOrgCreateRoute
+  '/org/settings': typeof AuthedOrgSettingsRoute
+  '/apps': typeof AuthedAppsIndexRoute
+  '/connections': typeof AuthedConnectionsIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/_authed": typeof AuthedRouteWithChildren;
-  "/login": typeof LoginRoute;
-  "/_authed/account": typeof AuthedAccountRoute;
-  "/_authed/docs": typeof AuthedDocsRoute;
-  "/_authed/connections/$connectionId": typeof AuthedConnectionsConnectionIdRoute;
-  "/_authed/org/create": typeof AuthedOrgCreateRoute;
-  "/_authed/org/settings": typeof AuthedOrgSettingsRoute;
-  "/_authed/apps/": typeof AuthedAppsIndexRoute;
-  "/_authed/connections/": typeof AuthedConnectionsIndexRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/_authed': typeof AuthedRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_authed/account': typeof AuthedAccountRoute
+  '/_authed/docs': typeof AuthedDocsRoute
+  '/_authed/connections/$connectionId': typeof AuthedConnectionsConnectionIdRoute
+  '/_authed/org/create': typeof AuthedOrgCreateRoute
+  '/_authed/org/settings': typeof AuthedOrgSettingsRoute
+  '/_authed/apps/': typeof AuthedAppsIndexRoute
+  '/_authed/connections/': typeof AuthedConnectionsIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/login"
-    | "/account"
-    | "/docs"
-    | "/connections/$connectionId"
-    | "/org/create"
-    | "/org/settings"
-    | "/apps/"
-    | "/connections/";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/login'
+    | '/account'
+    | '/docs'
+    | '/connections/$connectionId'
+    | '/org/create'
+    | '/org/settings'
+    | '/apps/'
+    | '/connections/'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/login"
-    | "/account"
-    | "/docs"
-    | "/connections/$connectionId"
-    | "/org/create"
-    | "/org/settings"
-    | "/apps"
-    | "/connections";
+    | '/'
+    | '/login'
+    | '/account'
+    | '/docs'
+    | '/connections/$connectionId'
+    | '/org/create'
+    | '/org/settings'
+    | '/apps'
+    | '/connections'
   id:
-    | "__root__"
-    | "/"
-    | "/_authed"
-    | "/login"
-    | "/_authed/account"
-    | "/_authed/docs"
-    | "/_authed/connections/$connectionId"
-    | "/_authed/org/create"
-    | "/_authed/org/settings"
-    | "/_authed/apps/"
-    | "/_authed/connections/";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/_authed'
+    | '/login'
+    | '/_authed/account'
+    | '/_authed/docs'
+    | '/_authed/connections/$connectionId'
+    | '/_authed/org/create'
+    | '/_authed/org/settings'
+    | '/_authed/apps/'
+    | '/_authed/connections/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  AuthedRoute: typeof AuthedRouteWithChildren;
-  LoginRoute: typeof LoginRoute;
+  IndexRoute: typeof IndexRoute
+  AuthedRoute: typeof AuthedRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/login": {
-      id: "/login";
-      path: "/login";
-      fullPath: "/login";
-      preLoaderRoute: typeof LoginRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_authed": {
-      id: "/_authed";
-      path: "";
-      fullPath: "/";
-      preLoaderRoute: typeof AuthedRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/_authed/docs": {
-      id: "/_authed/docs";
-      path: "/docs";
-      fullPath: "/docs";
-      preLoaderRoute: typeof AuthedDocsRouteImport;
-      parentRoute: typeof AuthedRoute;
-    };
-    "/_authed/account": {
-      id: "/_authed/account";
-      path: "/account";
-      fullPath: "/account";
-      preLoaderRoute: typeof AuthedAccountRouteImport;
-      parentRoute: typeof AuthedRoute;
-    };
-    "/_authed/connections/": {
-      id: "/_authed/connections/";
-      path: "/connections";
-      fullPath: "/connections/";
-      preLoaderRoute: typeof AuthedConnectionsIndexRouteImport;
-      parentRoute: typeof AuthedRoute;
-    };
-    "/_authed/apps/": {
-      id: "/_authed/apps/";
-      path: "/apps";
-      fullPath: "/apps/";
-      preLoaderRoute: typeof AuthedAppsIndexRouteImport;
-      parentRoute: typeof AuthedRoute;
-    };
-    "/_authed/org/settings": {
-      id: "/_authed/org/settings";
-      path: "/org/settings";
-      fullPath: "/org/settings";
-      preLoaderRoute: typeof AuthedOrgSettingsRouteImport;
-      parentRoute: typeof AuthedRoute;
-    };
-    "/_authed/org/create": {
-      id: "/_authed/org/create";
-      path: "/org/create";
-      fullPath: "/org/create";
-      preLoaderRoute: typeof AuthedOrgCreateRouteImport;
-      parentRoute: typeof AuthedRoute;
-    };
-    "/_authed/connections/$connectionId": {
-      id: "/_authed/connections/$connectionId";
-      path: "/connections/$connectionId";
-      fullPath: "/connections/$connectionId";
-      preLoaderRoute: typeof AuthedConnectionsConnectionIdRouteImport;
-      parentRoute: typeof AuthedRoute;
-    };
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authed': {
+      id: '/_authed'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authed/docs': {
+      id: '/_authed/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof AuthedDocsRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/account': {
+      id: '/_authed/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthedAccountRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/connections/': {
+      id: '/_authed/connections/'
+      path: '/connections'
+      fullPath: '/connections/'
+      preLoaderRoute: typeof AuthedConnectionsIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/apps/': {
+      id: '/_authed/apps/'
+      path: '/apps'
+      fullPath: '/apps/'
+      preLoaderRoute: typeof AuthedAppsIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/org/settings': {
+      id: '/_authed/org/settings'
+      path: '/org/settings'
+      fullPath: '/org/settings'
+      preLoaderRoute: typeof AuthedOrgSettingsRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/org/create': {
+      id: '/_authed/org/create'
+      path: '/org/create'
+      fullPath: '/org/create'
+      preLoaderRoute: typeof AuthedOrgCreateRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/connections/$connectionId': {
+      id: '/_authed/connections/$connectionId'
+      path: '/connections/$connectionId'
+      fullPath: '/connections/$connectionId'
+      preLoaderRoute: typeof AuthedConnectionsConnectionIdRouteImport
+      parentRoute: typeof AuthedRoute
+    }
   }
 }
 
 interface AuthedRouteChildren {
-  AuthedAccountRoute: typeof AuthedAccountRoute;
-  AuthedDocsRoute: typeof AuthedDocsRoute;
-  AuthedConnectionsConnectionIdRoute: typeof AuthedConnectionsConnectionIdRoute;
-  AuthedOrgCreateRoute: typeof AuthedOrgCreateRoute;
-  AuthedOrgSettingsRoute: typeof AuthedOrgSettingsRoute;
-  AuthedAppsIndexRoute: typeof AuthedAppsIndexRoute;
-  AuthedConnectionsIndexRoute: typeof AuthedConnectionsIndexRoute;
+  AuthedAccountRoute: typeof AuthedAccountRoute
+  AuthedDocsRoute: typeof AuthedDocsRoute
+  AuthedConnectionsConnectionIdRoute: typeof AuthedConnectionsConnectionIdRoute
+  AuthedOrgCreateRoute: typeof AuthedOrgCreateRoute
+  AuthedOrgSettingsRoute: typeof AuthedOrgSettingsRoute
+  AuthedAppsIndexRoute: typeof AuthedAppsIndexRoute
+  AuthedConnectionsIndexRoute: typeof AuthedConnectionsIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
@@ -241,24 +242,25 @@ const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedOrgSettingsRoute: AuthedOrgSettingsRoute,
   AuthedAppsIndexRoute: AuthedAppsIndexRoute,
   AuthedConnectionsIndexRoute: AuthedConnectionsIndexRoute,
-};
+}
 
-const AuthedRouteWithChildren = AuthedRoute._addFileChildren(AuthedRouteChildren);
+const AuthedRouteWithChildren =
+  AuthedRoute._addFileChildren(AuthedRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
   LoginRoute: LoginRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx";
-import type { createStart } from "@tanstack/react-start";
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }

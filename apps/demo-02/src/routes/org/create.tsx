@@ -1,8 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useFalconAuth } from "@falcon-framework/sdk/react";
+import { PENDING_CONNECT_KEY } from "#/lib/connect-resume";
 import { useState } from "react";
-
-const PENDING_CONNECT_KEY = "falcon-demo02:pendingConnect";
 
 export const Route = createFileRoute("/org/create")({
   component: CreateOrgPage,

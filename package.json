@@ -53,6 +53,10 @@
     "lint": "oxlint",
     "format": "oxfmt --write",
     "test": "vitest run",
+    "e2e:seed": "bun run ./e2e/seed.ts",
+    "e2e:prepare": "bun run sdk:build && bun run e2e:seed",
+    "test:e2e": "bun run e2e:prepare && playwright test",
+    "test:e2e:headed": "bun run e2e:prepare && playwright test --headed",
     "prepare": "effect-tsgo patch",
     "changeset": "changeset",
     "version-packages": "changeset version",
@@ -71,6 +75,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.30.0",
     "@cloudflare/workers-types": "catalog:",
@@ -84,6 +89,7 @@
     "nx": "^21.5.2",
     "oxfmt": "^0.41.0",
     "oxlint": "^1.56.0",
+    "postgres": "^3.4.8",
     "typescript": "catalog:"
   },
   "packageManager": "bun@1.3.9"

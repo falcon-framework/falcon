@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { SignIn, useFalconAuth } from "@falcon-framework/sdk/react";
+import { redirectToSignIn } from "@falcon-framework/sdk";
+import { useFalconAuth } from "@falcon-framework/sdk/react";
 import { useConnectClient } from "#/hooks/use-connect-client";
 import { useActiveOrg } from "#/providers/active-org";
-import { demoEnv } from "#/lib/demo-env";
+import { demoEnv, falconAuthConfig } from "#/lib/demo-env";
+import { PENDING_CONNECT_KEY } from "#/lib/connect-resume";
 import type { InstallationRequestItem } from "#/lib/connect-client";
 import { useEffect, useMemo, useState } from "react";
-
-const PENDING_CONNECT_KEY = "falcon-demo02:pendingConnect";
 
 function isAllowedReturnUrl(url: string, allowedOrigin: string): boolean {
   try {
@@ -89,6 +89,16 @@ function IncomingPage() {
     }
   }
 
+  function onContinueToFalconAuth() {
+    sessionStorage.setItem(PENDING_CONNECT_KEY, resumeUrl);
+    const state = crypto.randomUUID();
+    sessionStorage.setItem("falcon_auth_state", state);
+    redirectToSignIn(falconAuthConfig, {
+      redirectUri: `${window.location.origin}/auth/callback`,
+      state,
+    });
+  }
+
   if (!returnUrl || !requestId) {
     return (
       <main className="page-wrap px-4 py-12">
@@ -122,11 +132,23 @@ function IncomingPage() {
   if (!isSignedIn) {
     return (
       <main className="page-wrap px-4 py-12">
-        <p className="mb-6 text-sm text-[var(--sea-ink-soft)]">
-          Sign in with the same Falcon Auth account you used on the source app, then approve the
-          installation.
-        </p>
-        <SignIn afterSignInUrl={resumeUrl} signUpUrl="/sign-up" />
+        <div className="island-shell mx-auto max-w-lg rounded-2xl p-8">
+          <p className="island-kicker mb-2">Target app</p>
+          <h1 className="mb-3 text-2xl font-bold text-[var(--sea-ink)]">
+            Sign in to approve this connection
+          </h1>
+          <p className="mb-6 text-sm text-[var(--sea-ink-soft)]">
+            Continue with the hosted Falcon Auth flow using the same account you used on the source
+            app. After sign-in, you will return here to approve the installation.
+          </p>
+          <button
+            type="button"
+            onClick={onContinueToFalconAuth}
+            className="rounded-full bg-[var(--lagoon)] px-6 py-3 text-sm font-semibold text-white"
+          >
+            Continue to Falcon Auth
+          </button>
+        </div>
       </main>
     );
   }
