@@ -28,7 +28,7 @@ app.use(
       return allowed.includes(origin) ? origin : null;
     },
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowHeaders: ["Content-Type", "Authorization", "X-Organization-Id"],
+    allowHeaders: ["Content-Type", "Authorization", "X-Falcon-App-Id", "X-Organization-Id"],
     credentials: true,
   }),
 );

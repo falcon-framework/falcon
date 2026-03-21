@@ -1,6 +1,7 @@
 export { createFalconAuthClient as createFalconAuth } from "./core/client";
 export type { FalconAuthClient } from "./core/client";
 export type { FalconAuthConfig, FalconAuthState, FalconSession, FalconUser } from "./core/types";
+export { fetchFalconSession, signOutFalconSession } from "./core/session";
 export {
   buildSignInUrl,
   buildSignUpUrl,

@@ -1,6 +1,7 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { exchangeCodeForSession } from '@falcon-framework/sdk'
+import { createFileRoute } from '@tanstack/react-router'
+import { exchangeCodeForSession, fetchFalconSession } from '@falcon-framework/sdk'
 import { falconAuthConfig } from '#/lib/demo-env'
+import { completeAuthCallback } from '#/lib/auth-callback'
 import { useEffect, useState } from 'react'
 import { z } from 'zod'
 
@@ -16,28 +17,21 @@ export const Route = createFileRoute('/auth/callback')({
 
 function CallbackPage() {
   const { code, state } = Route.useSearch()
-  const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!code) {
-      setError('Missing authorization code in callback URL.')
-      return
-    }
-
-    // Verify the state parameter to guard against CSRF
     const storedState = sessionStorage.getItem('falcon_auth_state')
-    if (state && storedState !== state) {
-      setError('State mismatch — possible CSRF attempt. Please try signing in again.')
-      return
-    }
     sessionStorage.removeItem('falcon_auth_state')
 
-    exchangeCodeForSession(falconAuthConfig, { code })
+    completeAuthCallback({
+      code,
+      state,
+      storedState,
+      exchangeCode: (authCode) => exchangeCodeForSession(falconAuthConfig, { code: authCode }),
+      getSession: async () => ({ data: await fetchFalconSession(falconAuthConfig) }),
+    })
       .then(() => {
-        // The auth server sets the session cookie via Set-Cookie in the token
-        // exchange response; no need to write document.cookie here.
-        void navigate({ to: '/dashboard' })
+        window.location.replace('/dashboard')
       })
       .catch((err: unknown) => {
         setError(
@@ -48,7 +42,7 @@ function CallbackPage() {
       })
   // Run once on mount — code and state are stable URL params
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [code, state])
 
   if (error) {
     return (

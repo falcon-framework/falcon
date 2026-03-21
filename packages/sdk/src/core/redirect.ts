@@ -65,14 +65,15 @@ export interface ExchangeCodeResult {
  * Exchanges a short-lived authorization code for a session token.
  *
  * Call this in your app's auth callback route after receiving the `code` query
- * parameter. The returned `sessionToken` should be stored as the
- * `better-auth.session_token` cookie so that `verifySession()` can forward it
- * to the Falcon Auth server for validation.
+ * parameter. The Falcon auth server will set the per-app session cookie on its
+ * own origin during this exchange. Afterward, use a Falcon auth client with
+ * `credentials: "include"` to verify that the browser can read the session.
  *
  * @example
  * ```ts
- * const { sessionToken } = await exchangeCodeForSession(config, { code });
- * document.cookie = `better-auth.session_token=${sessionToken}; path=/; SameSite=None; Secure`;
+ * await exchangeCodeForSession(config, { code });
+ * const { data } = await falconAuthClient.getSession();
+ * if (!data?.session) throw new Error("Session not visible after callback");
  * ```
  */
 export async function exchangeCodeForSession(

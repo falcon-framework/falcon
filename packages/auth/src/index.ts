@@ -137,6 +137,35 @@ function cookiePrefixForPublishableKey(publishableKey: string): string {
   return `falcon_${safe}`;
 }
 
+function isHttpsUrl(value: string): boolean {
+  try {
+    return new URL(value).protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Localhost development runs over plain HTTP, so browsers will reject
+ * `SameSite=None; Secure` cookies there. In deployed HTTPS environments we
+ * keep the stricter cross-origin cookie attributes.
+ */
+export function authCookieAttributes(baseUrl: string) {
+  if (isHttpsUrl(baseUrl)) {
+    return {
+      sameSite: "none" as const,
+      secure: true,
+      httpOnly: true,
+    };
+  }
+
+  return {
+    sameSite: "lax" as const,
+    secure: false,
+    httpOnly: true,
+  };
+}
+
 /**
  * Returns true if the user is still linked to the app in `app_user` (e.g. not revoked in Console).
  */
@@ -193,11 +222,7 @@ export const auth = (options?: AuthOptions) => {
     baseURL: env.BETTER_AUTH_URL,
     advanced: {
       ...(options?.appId ? { cookiePrefix: cookiePrefixForPublishableKey(options.appId) } : {}),
-      defaultCookieAttributes: {
-        sameSite: "none",
-        secure: true,
-        httpOnly: true,
-      },
+      defaultCookieAttributes: authCookieAttributes(env.BETTER_AUTH_URL),
       // uncomment crossSubDomainCookies setting when ready to deploy and replace <your-workers-subdomain> with your actual workers subdomain
       // https://developers.cloudflare.com/workers/wrangler/configuration/#workersdev
       // crossSubDomainCookies: {
