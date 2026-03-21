@@ -24,7 +24,7 @@ import { getUser } from "@/functions/get-user";
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
     const session = await getUser();
-    if (session) throw redirect({ to: "/dashboard" });
+    if (session) throw redirect({ to: "/account" });
   },
   component: LoginPage,
 });
@@ -56,7 +56,7 @@ function LoginPage() {
               <Zap className="h-6 w-6" />
             </div>
             <h1 className="text-xl font-bold tracking-tight">Falcon Connect</h1>
-            <p className="text-sm text-muted-foreground">Einheitliche App-Integrationsplattform</p>
+            <p className="text-sm text-muted-foreground">Unified app integration platform</p>
           </div>
 
           <AnimatePresence mode="wait">
@@ -99,16 +99,16 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
         password: value.password,
       });
       if (result.error) {
-        toast.error(result.error.message ?? "Anmeldung fehlgeschlagen");
+        toast.error(result.error.message ?? "Sign in failed");
         return;
       }
-      toast.success("Willkommen zurück!");
-      navigate({ to: "/dashboard" });
+      toast.success("Welcome back!");
+      navigate({ to: "/account" });
     },
     validators: {
       onSubmit: z.object({
-        email: z.email("Ungültige E-Mail"),
-        password: z.string().min(1, "Pflichtfeld"),
+        email: z.email("Invalid email"),
+        password: z.string().min(1, "Required"),
       }),
     },
   });
@@ -116,8 +116,8 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Anmelden</CardTitle>
-        <CardDescription>Geben Sie Ihre Zugangsdaten ein</CardDescription>
+        <CardTitle>Sign in</CardTitle>
+        <CardDescription>Enter your credentials to continue</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -130,11 +130,11 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="email">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>E-Mail</Label>
+                <Label htmlFor={field.name}>Email</Label>
                 <Input
                   id={field.name}
                   type="email"
-                  placeholder="sie@beispiel.de"
+                  placeholder="you@example.com"
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -151,7 +151,7 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="password">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>Passwort</Label>
+                <Label htmlFor={field.name}>Password</Label>
                 <Input
                   id={field.name}
                   type="password"
@@ -172,10 +172,10 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Anmeldung läuft…
+                    Signing in…
                   </>
                 ) : (
-                  "Anmelden"
+                  "Sign in"
                 )}
               </Button>
             )}
@@ -185,13 +185,13 @@ function SignInCard({ onSwitch }: { onSwitch: () => void }) {
       <CardFooter className="flex-col gap-2">
         <Separator />
         <p className="text-sm text-muted-foreground">
-          Noch kein Konto?{" "}
+          Don&apos;t have an account?{" "}
           <button
             type="button"
             onClick={onSwitch}
             className="text-primary underline-offset-4 hover:underline"
           >
-            Registrieren
+            Sign up
           </button>
         </p>
       </CardFooter>
@@ -211,17 +211,17 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
         password: value.password,
       });
       if (result.error) {
-        toast.error(result.error.message ?? "Registrierung fehlgeschlagen");
+        toast.error(result.error.message ?? "Sign up failed");
         return;
       }
-      toast.success("Konto erstellt! Willkommen bei Falcon.");
+      toast.success("Account created! Welcome to Falcon.");
       navigate({ to: "/org/create" });
     },
     validators: {
       onSubmit: z.object({
-        name: z.string().min(2, "Name muss mindestens 2 Zeichen haben"),
-        email: z.email("Ungültige E-Mail"),
-        password: z.string().min(8, "Mindestens 8 Zeichen"),
+        name: z.string().min(2, "Name must be at least 2 characters"),
+        email: z.email("Invalid email"),
+        password: z.string().min(8, "At least 8 characters"),
       }),
     },
   });
@@ -229,8 +229,8 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Konto erstellen</CardTitle>
-        <CardDescription>Starten Sie mit Falcon Connect</CardDescription>
+        <CardTitle>Create account</CardTitle>
+        <CardDescription>Get started with Falcon Connect</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -243,10 +243,10 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="name">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>Vollständiger Name</Label>
+                <Label htmlFor={field.name}>Full name</Label>
                 <Input
                   id={field.name}
-                  placeholder="Ada Musterfrau"
+                  placeholder="Ada Lovelace"
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -263,11 +263,11 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="email">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>E-Mail</Label>
+                <Label htmlFor={field.name}>Email</Label>
                 <Input
                   id={field.name}
                   type="email"
-                  placeholder="sie@beispiel.de"
+                  placeholder="you@example.com"
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -284,11 +284,11 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
           <form.Field name="password">
             {(field) => (
               <div className="space-y-1.5">
-                <Label htmlFor={field.name}>Passwort</Label>
+                <Label htmlFor={field.name}>Password</Label>
                 <Input
                   id={field.name}
                   type="password"
-                  placeholder="Min. 8 Zeichen"
+                  placeholder="Min. 8 characters"
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
@@ -310,10 +310,10 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Konto wird erstellt…
+                    Creating account…
                   </>
                 ) : (
-                  "Konto erstellen"
+                  "Create account"
                 )}
               </Button>
             )}
@@ -323,13 +323,13 @@ function SignUpCard({ onSwitch }: { onSwitch: () => void }) {
       <CardFooter className="flex-col gap-2">
         <Separator />
         <p className="text-sm text-muted-foreground">
-          Bereits ein Konto?{" "}
+          Already have an account?{" "}
           <button
             type="button"
             onClick={onSwitch}
             className="text-primary underline-offset-4 hover:underline"
           >
-            Anmelden
+            Sign in
           </button>
         </p>
       </CardFooter>

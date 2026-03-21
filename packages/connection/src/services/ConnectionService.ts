@@ -1,11 +1,6 @@
 import { canRevokeOrPauseConnection } from "@falcon-framework/auth";
 import { Context, Effect, Layer } from "effect";
-import {
-  ForbiddenError,
-  InvalidStateError,
-  NotFoundError,
-  type DatabaseError,
-} from "../errors.js";
+import { ForbiddenError, InvalidStateError, NotFoundError, type DatabaseError } from "../errors.js";
 import {
   ConnectionRepository,
   type ConnectionRow,

@@ -4,7 +4,7 @@ import { getUser } from "@/functions/get-user";
 export const Route = createFileRoute("/")({
   beforeLoad: async () => {
     const session = await getUser();
-    throw redirect({ to: session ? "/dashboard" : "/login" });
+    throw redirect({ to: session ? "/account" : "/login" });
   },
   component: () => null,
 });

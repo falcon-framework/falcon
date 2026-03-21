@@ -12,14 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
+import { Route as AuthedDocsRouteImport } from './routes/_authed/docs'
+import { Route as AuthedAccountRouteImport } from './routes/_authed/account'
 import { Route as AuthedConnectionsIndexRouteImport } from './routes/_authed/connections/index'
 import { Route as AuthedAppsIndexRouteImport } from './routes/_authed/apps/index'
 import { Route as AuthedOrgSettingsRouteImport } from './routes/_authed/org/settings'
 import { Route as AuthedOrgCreateRouteImport } from './routes/_authed/org/create'
-import { Route as AuthedConnectionsNewRouteImport } from './routes/_authed/connections/new'
 import { Route as AuthedConnectionsConnectionIdRouteImport } from './routes/_authed/connections/$connectionId'
-import { Route as AuthedAppsAppIdRouteImport } from './routes/_authed/apps/$appId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -35,9 +34,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const AuthedDocsRoute = AuthedDocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedAccountRoute = AuthedAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedConnectionsIndexRoute = AuthedConnectionsIndexRouteImport.update({
@@ -60,30 +64,19 @@ const AuthedOrgCreateRoute = AuthedOrgCreateRouteImport.update({
   path: '/org/create',
   getParentRoute: () => AuthedRoute,
 } as any)
-const AuthedConnectionsNewRoute = AuthedConnectionsNewRouteImport.update({
-  id: '/connections/new',
-  path: '/connections/new',
-  getParentRoute: () => AuthedRoute,
-} as any)
 const AuthedConnectionsConnectionIdRoute =
   AuthedConnectionsConnectionIdRouteImport.update({
     id: '/connections/$connectionId',
     path: '/connections/$connectionId',
     getParentRoute: () => AuthedRoute,
   } as any)
-const AuthedAppsAppIdRoute = AuthedAppsAppIdRouteImport.update({
-  id: '/apps/$appId',
-  path: '/apps/$appId',
-  getParentRoute: () => AuthedRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/dashboard': typeof AuthedDashboardRoute
-  '/apps/$appId': typeof AuthedAppsAppIdRoute
+  '/account': typeof AuthedAccountRoute
+  '/docs': typeof AuthedDocsRoute
   '/connections/$connectionId': typeof AuthedConnectionsConnectionIdRoute
-  '/connections/new': typeof AuthedConnectionsNewRoute
   '/org/create': typeof AuthedOrgCreateRoute
   '/org/settings': typeof AuthedOrgSettingsRoute
   '/apps/': typeof AuthedAppsIndexRoute
@@ -92,10 +85,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/dashboard': typeof AuthedDashboardRoute
-  '/apps/$appId': typeof AuthedAppsAppIdRoute
+  '/account': typeof AuthedAccountRoute
+  '/docs': typeof AuthedDocsRoute
   '/connections/$connectionId': typeof AuthedConnectionsConnectionIdRoute
-  '/connections/new': typeof AuthedConnectionsNewRoute
   '/org/create': typeof AuthedOrgCreateRoute
   '/org/settings': typeof AuthedOrgSettingsRoute
   '/apps': typeof AuthedAppsIndexRoute
@@ -106,10 +98,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
   '/login': typeof LoginRoute
-  '/_authed/dashboard': typeof AuthedDashboardRoute
-  '/_authed/apps/$appId': typeof AuthedAppsAppIdRoute
+  '/_authed/account': typeof AuthedAccountRoute
+  '/_authed/docs': typeof AuthedDocsRoute
   '/_authed/connections/$connectionId': typeof AuthedConnectionsConnectionIdRoute
-  '/_authed/connections/new': typeof AuthedConnectionsNewRoute
   '/_authed/org/create': typeof AuthedOrgCreateRoute
   '/_authed/org/settings': typeof AuthedOrgSettingsRoute
   '/_authed/apps/': typeof AuthedAppsIndexRoute
@@ -120,10 +111,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
-    | '/dashboard'
-    | '/apps/$appId'
+    | '/account'
+    | '/docs'
     | '/connections/$connectionId'
-    | '/connections/new'
     | '/org/create'
     | '/org/settings'
     | '/apps/'
@@ -132,10 +122,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
-    | '/dashboard'
-    | '/apps/$appId'
+    | '/account'
+    | '/docs'
     | '/connections/$connectionId'
-    | '/connections/new'
     | '/org/create'
     | '/org/settings'
     | '/apps'
@@ -145,10 +134,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_authed'
     | '/login'
-    | '/_authed/dashboard'
-    | '/_authed/apps/$appId'
+    | '/_authed/account'
+    | '/_authed/docs'
     | '/_authed/connections/$connectionId'
-    | '/_authed/connections/new'
     | '/_authed/org/create'
     | '/_authed/org/settings'
     | '/_authed/apps/'
@@ -184,11 +172,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authed/dashboard': {
-      id: '/_authed/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthedDashboardRouteImport
+    '/_authed/docs': {
+      id: '/_authed/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof AuthedDocsRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/account': {
+      id: '/_authed/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthedAccountRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/_authed/connections/': {
@@ -219,13 +214,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedOrgCreateRouteImport
       parentRoute: typeof AuthedRoute
     }
-    '/_authed/connections/new': {
-      id: '/_authed/connections/new'
-      path: '/connections/new'
-      fullPath: '/connections/new'
-      preLoaderRoute: typeof AuthedConnectionsNewRouteImport
-      parentRoute: typeof AuthedRoute
-    }
     '/_authed/connections/$connectionId': {
       id: '/_authed/connections/$connectionId'
       path: '/connections/$connectionId'
@@ -233,21 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedConnectionsConnectionIdRouteImport
       parentRoute: typeof AuthedRoute
     }
-    '/_authed/apps/$appId': {
-      id: '/_authed/apps/$appId'
-      path: '/apps/$appId'
-      fullPath: '/apps/$appId'
-      preLoaderRoute: typeof AuthedAppsAppIdRouteImport
-      parentRoute: typeof AuthedRoute
-    }
   }
 }
 
 interface AuthedRouteChildren {
-  AuthedDashboardRoute: typeof AuthedDashboardRoute
-  AuthedAppsAppIdRoute: typeof AuthedAppsAppIdRoute
+  AuthedAccountRoute: typeof AuthedAccountRoute
+  AuthedDocsRoute: typeof AuthedDocsRoute
   AuthedConnectionsConnectionIdRoute: typeof AuthedConnectionsConnectionIdRoute
-  AuthedConnectionsNewRoute: typeof AuthedConnectionsNewRoute
   AuthedOrgCreateRoute: typeof AuthedOrgCreateRoute
   AuthedOrgSettingsRoute: typeof AuthedOrgSettingsRoute
   AuthedAppsIndexRoute: typeof AuthedAppsIndexRoute
@@ -255,10 +235,9 @@ interface AuthedRouteChildren {
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
-  AuthedDashboardRoute: AuthedDashboardRoute,
-  AuthedAppsAppIdRoute: AuthedAppsAppIdRoute,
+  AuthedAccountRoute: AuthedAccountRoute,
+  AuthedDocsRoute: AuthedDocsRoute,
   AuthedConnectionsConnectionIdRoute: AuthedConnectionsConnectionIdRoute,
-  AuthedConnectionsNewRoute: AuthedConnectionsNewRoute,
   AuthedOrgCreateRoute: AuthedOrgCreateRoute,
   AuthedOrgSettingsRoute: AuthedOrgSettingsRoute,
   AuthedAppsIndexRoute: AuthedAppsIndexRoute,

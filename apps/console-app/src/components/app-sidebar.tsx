@@ -11,25 +11,25 @@ import {
   SidebarMenuItem,
 } from "@falcon-framework/ui/components/sidebar";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Plug, Store, Settings, ChevronRight } from "lucide-react";
+import { UserCircle, Shield, Plug, BookOpen, ChevronRight } from "lucide-react";
 
 import UserNav from "./user-nav";
 
 const navItems = [
   {
-    label: "Übersicht",
+    label: "Account",
+    items: [{ title: "Account", url: "/account", icon: UserCircle }],
+  },
+  {
+    label: "My Apps",
     items: [
-      { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-      { title: "Verbindungen", url: "/connections", icon: Plug },
+      { title: "Auth Apps", url: "/apps", icon: Shield },
+      { title: "Connections", url: "/connections", icon: Plug },
     ],
   },
   {
-    label: "Marktplatz",
-    items: [{ title: "Apps", url: "/apps", icon: Store }],
-  },
-  {
-    label: "Organisation",
-    items: [{ title: "Einstellungen", url: "/org/settings", icon: Settings }],
+    label: "Developer",
+    items: [{ title: "Docs", url: "/docs", icon: BookOpen }],
   },
 ];
 
@@ -44,7 +44,7 @@ export default function AppSidebar() {
             F
           </div>
           <span className="truncate font-semibold text-sm group-data-[collapsible=icon]:hidden">
-            Falcon Connect
+            Falcon Auth
           </span>
         </div>
       </SidebarHeader>

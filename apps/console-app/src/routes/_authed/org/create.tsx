@@ -44,23 +44,23 @@ function CreateOrgPage() {
         slug: value.slug,
       });
       if (result.error) {
-        toast.error(result.error.message ?? "Organisation konnte nicht erstellt werden");
+        toast.error(result.error.message ?? "Failed to create organization");
         return;
       }
       await authClient.organization.setActive({
         organizationId: result.data!.id,
       });
       await switchOrg(result.data!.id);
-      toast.success(`Organisation „${value.name}" erstellt!`);
-      navigate({ to: "/dashboard" });
+      toast.success(`Organization "${value.name}" created!`);
+      navigate({ to: "/account" });
     },
     validators: {
       onSubmit: z.object({
-        name: z.string().min(2, "Mindestens 2 Zeichen"),
+        name: z.string().min(2, "At least 2 characters"),
         slug: z
           .string()
-          .min(2, "Mindestens 2 Zeichen")
-          .regex(/^[a-z0-9-]+$/, "Nur Kleinbuchstaben, Zahlen und Bindestriche"),
+          .min(2, "At least 2 characters")
+          .regex(/^[a-z0-9-]+$/, "Only lowercase letters, numbers and hyphens"),
       }),
     },
   });
@@ -77,16 +77,16 @@ function CreateOrgPage() {
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <Building2 className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-bold">Organisation erstellen</h1>
+          <h1 className="text-2xl font-bold">Create Organization</h1>
           <p className="text-sm text-muted-foreground">
-            Organisationen gruppieren Ihre Verbindungen und Apps
+            Organizations group your connections and apps
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Organisationsdetails</CardTitle>
-            <CardDescription>Diese können Sie später in den Organisationseinstellungen ändern</CardDescription>
+            <CardTitle className="text-base">Organization details</CardTitle>
+            <CardDescription>You can change these later in organization settings</CardDescription>
           </CardHeader>
           <CardContent>
             <form
@@ -99,10 +99,10 @@ function CreateOrgPage() {
               <form.Field name="name">
                 {(field) => (
                   <div className="space-y-1.5">
-                    <Label htmlFor={field.name}>Organisationsname</Label>
+                    <Label htmlFor={field.name}>Organization name</Label>
                     <Input
                       id={field.name}
-                      placeholder="Muster GmbH"
+                      placeholder="Acme Corp"
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) => {
@@ -128,7 +128,7 @@ function CreateOrgPage() {
                     <Label htmlFor={field.name}>Slug</Label>
                     <Input
                       id={field.name}
-                      placeholder="muster-gmbh"
+                      placeholder="acme-corp"
                       value={field.state.value}
                       onBlur={(e) => {
                         field.handleBlur();
@@ -143,7 +143,7 @@ function CreateOrgPage() {
                       }}
                     />
                     <p className="text-xs text-muted-foreground">
-                      Wird in URLs verwendet · Nur Kleinbuchstaben, Zahlen und Bindestriche
+                      Used in URLs · Only lowercase letters, numbers, and hyphens
                     </p>
                     {field.state.meta.errors.map((err) => (
                       <p key={err?.message} className="text-xs text-destructive">
@@ -162,10 +162,10 @@ function CreateOrgPage() {
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Wird erstellt…
+                        Creating…
                       </>
                     ) : (
-                      "Organisation erstellen"
+                      "Create organization"
                     )}
                   </Button>
                 )}
