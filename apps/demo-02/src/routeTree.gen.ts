@@ -16,6 +16,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrgCreateRouteImport } from './routes/org/create'
 import { Route as ConnectIncomingRouteImport } from './routes/connect/incoming'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as ApiSplatRouteImport } from './routes/api.$'
 import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
 
@@ -54,6 +55,11 @@ const ConnectIncomingRoute = ConnectIncomingRouteImport.update({
   path: '/connect/incoming',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/connect/incoming': typeof ConnectIncomingRoute
   '/org/create': typeof OrgCreateRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/connect/incoming': typeof ConnectIncomingRoute
   '/org/create': typeof OrgCreateRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/api/$': typeof ApiSplatRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/connect/incoming': typeof ConnectIncomingRoute
   '/org/create': typeof OrgCreateRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/api/$'
+    | '/auth/callback'
     | '/connect/incoming'
     | '/org/create'
     | '/api/rpc/$'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/api/$'
+    | '/auth/callback'
     | '/connect/incoming'
     | '/org/create'
     | '/api/rpc/$'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/api/$'
+    | '/auth/callback'
     | '/connect/incoming'
     | '/org/create'
     | '/api/rpc/$'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   ConnectIncomingRoute: typeof ConnectIncomingRoute
   OrgCreateRoute: typeof OrgCreateRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConnectIncomingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/$': {
       id: '/api/$'
       path: '/api/$'
@@ -222,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   ApiSplatRoute: ApiSplatRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   ConnectIncomingRoute: ConnectIncomingRoute,
   OrgCreateRoute: OrgCreateRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,

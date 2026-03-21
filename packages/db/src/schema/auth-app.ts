@@ -52,8 +52,35 @@ export const appUser = pgTable(
   ],
 );
 
+/**
+ * Short-lived authorization codes issued after a user signs in on the Falcon Auth
+ * server as part of the OAuth-like redirect flow. The client app exchanges the code
+ * for a session token via POST /auth/token.
+ */
+export const authorizationCode = pgTable("authorization_code", {
+  id: text("id").primaryKey(),
+  /** Opaque random code sent to the client app in the redirect URI. */
+  code: text("code").notNull().unique(),
+  /** The app that initiated the authorization request. */
+  appId: text("app_id")
+    .notNull()
+    .references(() => falconAuthApp.id, { onDelete: "cascade" }),
+  /** The Better-Auth session token that was created when the user signed in. */
+  sessionToken: text("session_token").notNull(),
+  /** The redirect URI the code will be delivered to (must match the original request). */
+  redirectUri: text("redirect_uri").notNull(),
+  /** Optional opaque value supplied by the client for CSRF protection. */
+  state: text("state"),
+  /** Code expires 5 minutes after issuance. */
+  expiresAt: timestamp("expires_at").notNull(),
+  /** Set when the code has been successfully exchanged. Codes are single-use. */
+  usedAt: timestamp("used_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const falconAuthAppRelations = relations(falconAuthApp, ({ many }) => ({
   appUsers: many(appUser),
+  authorizationCodes: many(authorizationCode),
 }));
 
 export const appUserRelations = relations(appUser, ({ one }) => ({
@@ -64,5 +91,12 @@ export const appUserRelations = relations(appUser, ({ one }) => ({
   user: one(user, {
     fields: [appUser.userId],
     references: [user.id],
+  }),
+}));
+
+export const authorizationCodeRelations = relations(authorizationCode, ({ one }) => ({
+  app: one(falconAuthApp, {
+    fields: [authorizationCode.appId],
+    references: [falconAuthApp.id],
   }),
 }));
