@@ -62,9 +62,7 @@ export function SignIn({ afterSignInUrl, signUpUrl, onSignIn, className }: SignI
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-6 text-center">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">Sign in</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Enter your credentials to continue
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Enter your credentials to continue</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -98,9 +96,7 @@ export function SignIn({ afterSignInUrl, signUpUrl, onSignIn, className }: SignI
             />
           </div>
 
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
-          )}
+          {error && <p className="text-sm text-destructive">{error}</p>}
 
           <button
             type="submit"
@@ -115,10 +111,7 @@ export function SignIn({ afterSignInUrl, signUpUrl, onSignIn, className }: SignI
           <div className="mt-4 border-t border-border pt-4 text-center">
             <p className="text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
-              <a
-                href={signUpUrl}
-                className="text-primary underline-offset-4 hover:underline"
-              >
+              <a href={signUpUrl} className="text-primary underline-offset-4 hover:underline">
                 Sign up
               </a>
             </p>

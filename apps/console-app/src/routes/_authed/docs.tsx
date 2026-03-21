@@ -29,7 +29,15 @@ function CodeBlock({ children, title }: { children: string; title?: string }) {
   );
 }
 
-function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+function Section({
+  id,
+  title,
+  children,
+}: {
+  id: string;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <section id={id} className="scroll-mt-20">
       <h2 className="text-lg font-semibold tracking-tight mb-4">{title}</h2>
@@ -73,8 +81,8 @@ function DocsPage() {
       <Section id="getting-started" title="Getting Started">
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Install the SDK in your React app and configure it with your Falcon auth server URL
-            and publishable key.
+            Install the SDK in your React app and configure it with your Falcon auth server URL and
+            publishable key.
           </p>
 
           <CodeBlock title="Install">
@@ -114,8 +122,21 @@ function App() {
               <CardTitle className="text-sm">Requirements</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-1">
-              <p>Your app needs <Badge variant="secondary" className="text-[10px]">React 18+</Badge> and <Badge variant="secondary" className="text-[10px]">Tailwind CSS</Badge> for the pre-built components to render correctly.</p>
-              <p>The SDK components use Tailwind utility classes and expect the standard shadcn/ui CSS variables to be defined.</p>
+              <p>
+                Your app needs{" "}
+                <Badge variant="secondary" className="text-[10px]">
+                  React 18+
+                </Badge>{" "}
+                and{" "}
+                <Badge variant="secondary" className="text-[10px]">
+                  Tailwind CSS
+                </Badge>{" "}
+                for the pre-built components to render correctly.
+              </p>
+              <p>
+                The SDK components use Tailwind utility classes and expect the standard shadcn/ui
+                CSS variables to be defined.
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -127,8 +148,11 @@ function App() {
       <Section id="provider" title="FalconAuthProvider">
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Wrap your app with <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{"<FalconAuthProvider>"}</code> to
-            provide auth context to all child components and hooks.
+            Wrap your app with{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+              {"<FalconAuthProvider>"}
+            </code>{" "}
+            to provide auth context to all child components and hooks.
           </p>
 
           <CodeBlock title="Props">
@@ -265,9 +289,7 @@ function Dashboard() {
 
           <div className="space-y-3">
             <h3 className="text-sm font-medium">useUser()</h3>
-            <p className="text-sm text-muted-foreground">
-              Convenience hook for just the user.
-            </p>
+            <p className="text-sm text-muted-foreground">Convenience hook for just the user.</p>
             <CodeBlock>
               {`import { useUser } from "@falcon-framework/sdk/react";
 
@@ -282,9 +304,7 @@ function Profile() {
 
           <div className="space-y-3">
             <h3 className="text-sm font-medium">useSession()</h3>
-            <p className="text-sm text-muted-foreground">
-              Convenience hook for just the session.
-            </p>
+            <p className="text-sm text-muted-foreground">Convenience hook for just the session.</p>
             <CodeBlock>
               {`import { useSession } from "@falcon-framework/sdk/react";
 
@@ -304,8 +324,9 @@ function SessionInfo() {
       <Section id="server-side" title="Server-Side Verification">
         <div className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Use <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">verifySession</code> in
-            your backend to protect API routes. It forwards the session cookie to the Falcon auth
+            Use{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">verifySession</code>{" "}
+            in your backend to protect API routes. It forwards the session cookie to the Falcon auth
             server and returns the user if valid.
           </p>
 
@@ -359,8 +380,11 @@ app.get("/api/protected", async (c) => {
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               <p className="mb-3">
-                Each app needs a row in the <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">falcon_auth_app</code> table
-                with a unique publishable key and its allowed origins.
+                Each app needs a row in the{" "}
+                <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">
+                  falcon_auth_app
+                </code>{" "}
+                table with a unique publishable key and its allowed origins.
               </p>
             </CardContent>
           </Card>
@@ -389,10 +413,22 @@ WHERE name = 'My App';`}
               <CardTitle className="text-sm">Configuration</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground space-y-2">
-              <p><strong>publishable_key</strong> — Embed this in your frontend code. It identifies your app to the auth server.</p>
-              <p><strong>allowed_origins</strong> — JSON array of origins allowed to make cross-origin requests (CORS). Include both local dev and production URLs.</p>
-              <p><strong>redirect_urls</strong> — JSON array of allowed post-authentication redirect URLs.</p>
-              <p><strong>secret_key_hash</strong> — Optional. PBKDF2-hashed secret for server-side API verification.</p>
+              <p>
+                <strong>publishable_key</strong> — Embed this in your frontend code. It identifies
+                your app to the auth server.
+              </p>
+              <p>
+                <strong>allowed_origins</strong> — JSON array of origins allowed to make
+                cross-origin requests (CORS). Include both local dev and production URLs.
+              </p>
+              <p>
+                <strong>redirect_urls</strong> — JSON array of allowed post-authentication redirect
+                URLs.
+              </p>
+              <p>
+                <strong>secret_key_hash</strong> — Optional. PBKDF2-hashed secret for server-side
+                API verification.
+              </p>
             </CardContent>
           </Card>
         </div>

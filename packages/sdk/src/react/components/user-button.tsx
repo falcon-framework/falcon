@@ -45,9 +45,7 @@ export function UserButton({ afterSignOutUrl, className }: UserButtonProps) {
   }, []);
 
   if (!isLoaded) {
-    return (
-      <div className={`h-8 w-8 animate-pulse rounded-full bg-muted ${className ?? ""}`} />
-    );
+    return <div className={`h-8 w-8 animate-pulse rounded-full bg-muted ${className ?? ""}`} />;
   }
 
   if (!isSignedIn || !user) {
@@ -78,11 +76,7 @@ export function UserButton({ afterSignOutUrl, className }: UserButtonProps) {
         aria-label="User menu"
       >
         {user.image ? (
-          <img
-            src={user.image}
-            alt={user.name}
-            className="h-8 w-8 rounded-full object-cover"
-          />
+          <img src={user.image} alt={user.name} className="h-8 w-8 rounded-full object-cover" />
         ) : (
           initials
         )}

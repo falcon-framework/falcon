@@ -73,9 +73,7 @@ export function SignUp({ afterSignUpUrl, signInUrl, onSignUp, className }: SignU
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-6 text-center">
           <h2 className="text-xl font-semibold tracking-tight text-foreground">Create account</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Get started with your new account
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Get started with your new account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -124,9 +122,7 @@ export function SignUp({ afterSignUpUrl, signInUrl, onSignUp, className }: SignU
             />
           </div>
 
-          {error && (
-            <p className="text-sm text-destructive">{error}</p>
-          )}
+          {error && <p className="text-sm text-destructive">{error}</p>}
 
           <button
             type="submit"
@@ -141,10 +137,7 @@ export function SignUp({ afterSignUpUrl, signInUrl, onSignUp, className }: SignU
           <div className="mt-4 border-t border-border pt-4 text-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{" "}
-              <a
-                href={signInUrl}
-                className="text-primary underline-offset-4 hover:underline"
-              >
+              <a href={signInUrl} className="text-primary underline-offset-4 hover:underline">
                 Sign in
               </a>
             </p>

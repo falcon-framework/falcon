@@ -104,8 +104,8 @@ function ConnectionDetailPage() {
   });
 
   const conn = connQuery.data;
-  const sourceName = conn ? appById.get(conn.sourceAppId)?.name ?? conn.sourceAppId : "";
-  const targetName = conn ? appById.get(conn.targetAppId)?.name ?? conn.targetAppId : "";
+  const sourceName = conn ? (appById.get(conn.sourceAppId)?.name ?? conn.sourceAppId) : "";
+  const targetName = conn ? (appById.get(conn.targetAppId)?.name ?? conn.targetAppId) : "";
 
   return (
     <div className="space-y-6 max-w-2xl">

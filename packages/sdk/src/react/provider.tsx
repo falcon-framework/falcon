@@ -37,11 +37,7 @@ export function FalconAuthProvider({ config, children }: FalconAuthProviderProps
     return { client, config };
   }, [config.serverUrl, config.publishableKey]);
 
-  return (
-    <FalconAuthContext.Provider value={value}>
-      {children}
-    </FalconAuthContext.Provider>
-  );
+  return <FalconAuthContext.Provider value={value}>{children}</FalconAuthContext.Provider>;
 }
 
 export function useFalconAuthContext(): FalconAuthContextValue {
@@ -49,7 +45,7 @@ export function useFalconAuthContext(): FalconAuthContextValue {
   if (!ctx) {
     throw new Error(
       "useFalconAuth must be used within a <FalconAuthProvider>. " +
-      "Wrap your app with <FalconAuthProvider config={...}>."
+        "Wrap your app with <FalconAuthProvider config={...}>.",
     );
   }
   return ctx;

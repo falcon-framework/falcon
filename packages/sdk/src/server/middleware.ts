@@ -79,7 +79,7 @@ export async function verifySession(
       cookieHeader = request.headers.get("cookie") ?? undefined;
     } else {
       const raw = request.headers["cookie"];
-      cookieHeader = Array.isArray(raw) ? raw.join("; ") : raw ?? undefined;
+      cookieHeader = Array.isArray(raw) ? raw.join("; ") : (raw ?? undefined);
     }
 
     if (!cookieHeader) {
