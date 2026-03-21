@@ -10,7 +10,7 @@ import {
 } from "@falcon-framework/ui/components/dropdown-menu";
 import { Button } from "@falcon-framework/ui/components/button";
 import { useNavigate } from "@tanstack/react-router";
-import { Building2, ChevronDown, PlusCircle } from "lucide-react";
+import { Building2, ChevronDown, PlusCircle, Settings } from "lucide-react";
 import { toast } from "sonner";
 
 import { useActiveOrg } from "@/providers/active-org";
@@ -60,6 +60,12 @@ export default function OrgSwitcher() {
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />
+          {activeOrg && (
+            <DropdownMenuItem onClick={() => navigate({ to: "/org/settings" })}>
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => navigate({ to: "/org/create" })}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Create organization

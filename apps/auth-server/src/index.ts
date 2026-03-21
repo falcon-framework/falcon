@@ -1,12 +1,15 @@
 import { createContext } from "@falcon-framework/api/context";
 import { appRouter } from "@falcon-framework/api/routers/index";
 import { auth, resolveAuthApp } from "@falcon-framework/auth";
+import { makeDb } from "@falcon-framework/db";
+import { appUser, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
+import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
@@ -46,7 +49,7 @@ app.use(
 
       return env.CORS_ORIGIN;
     },
-    allowMethods: ["GET", "POST", "OPTIONS"],
+    allowMethods: ["GET", "POST", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type", "Authorization", "X-Falcon-App-Id"],
     credentials: true,
   }),
@@ -74,6 +77,45 @@ app.on(["POST", "GET"], "/api/auth/*", async (c) => {
   }
 
   return auth({ appId, extraTrustedOrigins }).handler(c.req.raw);
+});
+
+/**
+ * User apps routes — list and revoke auth app access for the current user.
+ * Requires a valid session cookie (console app user).
+ */
+app.get("/api/user/apps", async (c) => {
+  const session = await auth().api.getSession({ headers: c.req.raw.headers });
+  if (!session?.user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  const db = makeDb();
+  const rows = await db
+    .select({
+      appId: falconAuthApp.id,
+      name: falconAuthApp.name,
+      connectedAt: appUser.createdAt,
+    })
+    .from(appUser)
+    .innerJoin(falconAuthApp, eq(appUser.appId, falconAuthApp.id))
+    .where(eq(appUser.userId, session.user.id));
+
+  return c.json(rows);
+});
+
+app.delete("/api/user/apps/:appId", async (c) => {
+  const session = await auth().api.getSession({ headers: c.req.raw.headers });
+  if (!session?.user) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  const { appId } = c.req.param();
+  const db = makeDb();
+  await db
+    .delete(appUser)
+    .where(and(eq(appUser.appId, appId), eq(appUser.userId, session.user.id)));
+
+  return c.body(null, 204);
 });
 
 export const apiHandler = new OpenAPIHandler(appRouter, {
