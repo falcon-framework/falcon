@@ -21,10 +21,5 @@ export {
 } from "./react/components/organization-switcher";
 
 // Re-export core types for convenience
-export type {
-  FalconAuthConfig,
-  FalconAuthState,
-  FalconSession,
-  FalconUser,
-} from "./core/types";
+export type { FalconAuthConfig, FalconAuthState, FalconSession, FalconUser } from "./core/types";
 export { createFalconAuthClient as createFalconAuth } from "./core/client";

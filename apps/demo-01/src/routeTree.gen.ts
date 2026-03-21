@@ -8,230 +8,230 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignUpRouteImport } from './routes/sign-up'
-import { Route as SignInRouteImport } from './routes/sign-in'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as OrgCreateRouteImport } from './routes/org/create'
-import { Route as ConnectDoneRouteImport } from './routes/connect/done'
-import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
-import { Route as ApiSplatRouteImport } from './routes/api.$'
-import { Route as ApiRpcSplatRouteImport } from './routes/api.rpc.$'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as SignUpRouteImport } from "./routes/sign-up";
+import { Route as SignInRouteImport } from "./routes/sign-in";
+import { Route as DashboardRouteImport } from "./routes/dashboard";
+import { Route as AboutRouteImport } from "./routes/about";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as OrgCreateRouteImport } from "./routes/org/create";
+import { Route as ConnectDoneRouteImport } from "./routes/connect/done";
+import { Route as AuthCallbackRouteImport } from "./routes/auth/callback";
+import { Route as ApiSplatRouteImport } from "./routes/api.$";
+import { Route as ApiRpcSplatRouteImport } from "./routes/api.rpc.$";
 
 const SignUpRoute = SignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
+  id: "/sign-up",
+  path: "/sign-up",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SignInRoute = SignInRouteImport.update({
-  id: '/sign-in',
-  path: '/sign-in',
+  id: "/sign-in",
+  path: "/sign-in",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+  id: "/dashboard",
+  path: "/dashboard",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+  id: "/about",
+  path: "/about",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const OrgCreateRoute = OrgCreateRouteImport.update({
-  id: '/org/create',
-  path: '/org/create',
+  id: "/org/create",
+  path: "/org/create",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ConnectDoneRoute = ConnectDoneRouteImport.update({
-  id: '/connect/done',
-  path: '/connect/done',
+  id: "/connect/done",
+  path: "/connect/done",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
-  id: '/auth/callback',
-  path: '/auth/callback',
+  id: "/auth/callback",
+  path: "/auth/callback",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiSplatRoute = ApiSplatRouteImport.update({
-  id: '/api/$',
-  path: '/api/$',
+  id: "/api/$",
+  path: "/api/$",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
-  id: '/api/rpc/$',
-  path: '/api/rpc/$',
+  id: "/api/rpc/$",
+  path: "/api/rpc/$",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
-  '/api/$': typeof ApiSplatRoute
-  '/auth/callback': typeof AuthCallbackRoute
-  '/connect/done': typeof ConnectDoneRoute
-  '/org/create': typeof OrgCreateRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/dashboard": typeof DashboardRoute;
+  "/sign-in": typeof SignInRoute;
+  "/sign-up": typeof SignUpRoute;
+  "/api/$": typeof ApiSplatRoute;
+  "/auth/callback": typeof AuthCallbackRoute;
+  "/connect/done": typeof ConnectDoneRoute;
+  "/org/create": typeof OrgCreateRoute;
+  "/api/rpc/$": typeof ApiRpcSplatRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
-  '/api/$': typeof ApiSplatRoute
-  '/auth/callback': typeof AuthCallbackRoute
-  '/connect/done': typeof ConnectDoneRoute
-  '/org/create': typeof OrgCreateRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/dashboard": typeof DashboardRoute;
+  "/sign-in": typeof SignInRoute;
+  "/sign-up": typeof SignUpRoute;
+  "/api/$": typeof ApiSplatRoute;
+  "/auth/callback": typeof AuthCallbackRoute;
+  "/connect/done": typeof ConnectDoneRoute;
+  "/org/create": typeof OrgCreateRoute;
+  "/api/rpc/$": typeof ApiRpcSplatRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/dashboard': typeof DashboardRoute
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
-  '/api/$': typeof ApiSplatRoute
-  '/auth/callback': typeof AuthCallbackRoute
-  '/connect/done': typeof ConnectDoneRoute
-  '/org/create': typeof OrgCreateRoute
-  '/api/rpc/$': typeof ApiRpcSplatRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/about": typeof AboutRoute;
+  "/dashboard": typeof DashboardRoute;
+  "/sign-in": typeof SignInRoute;
+  "/sign-up": typeof SignUpRoute;
+  "/api/$": typeof ApiSplatRoute;
+  "/auth/callback": typeof AuthCallbackRoute;
+  "/connect/done": typeof ConnectDoneRoute;
+  "/org/create": typeof OrgCreateRoute;
+  "/api/rpc/$": typeof ApiRpcSplatRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/about'
-    | '/dashboard'
-    | '/sign-in'
-    | '/sign-up'
-    | '/api/$'
-    | '/auth/callback'
-    | '/connect/done'
-    | '/org/create'
-    | '/api/rpc/$'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/about"
+    | "/dashboard"
+    | "/sign-in"
+    | "/sign-up"
+    | "/api/$"
+    | "/auth/callback"
+    | "/connect/done"
+    | "/org/create"
+    | "/api/rpc/$";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/about'
-    | '/dashboard'
-    | '/sign-in'
-    | '/sign-up'
-    | '/api/$'
-    | '/auth/callback'
-    | '/connect/done'
-    | '/org/create'
-    | '/api/rpc/$'
+    | "/"
+    | "/about"
+    | "/dashboard"
+    | "/sign-in"
+    | "/sign-up"
+    | "/api/$"
+    | "/auth/callback"
+    | "/connect/done"
+    | "/org/create"
+    | "/api/rpc/$";
   id:
-    | '__root__'
-    | '/'
-    | '/about'
-    | '/dashboard'
-    | '/sign-in'
-    | '/sign-up'
-    | '/api/$'
-    | '/auth/callback'
-    | '/connect/done'
-    | '/org/create'
-    | '/api/rpc/$'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/about"
+    | "/dashboard"
+    | "/sign-in"
+    | "/sign-up"
+    | "/api/$"
+    | "/auth/callback"
+    | "/connect/done"
+    | "/org/create"
+    | "/api/rpc/$";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  DashboardRoute: typeof DashboardRoute
-  SignInRoute: typeof SignInRoute
-  SignUpRoute: typeof SignUpRoute
-  ApiSplatRoute: typeof ApiSplatRoute
-  AuthCallbackRoute: typeof AuthCallbackRoute
-  ConnectDoneRoute: typeof ConnectDoneRoute
-  OrgCreateRoute: typeof OrgCreateRoute
-  ApiRpcSplatRoute: typeof ApiRpcSplatRoute
+  IndexRoute: typeof IndexRoute;
+  AboutRoute: typeof AboutRoute;
+  DashboardRoute: typeof DashboardRoute;
+  SignInRoute: typeof SignInRoute;
+  SignUpRoute: typeof SignUpRoute;
+  ApiSplatRoute: typeof ApiSplatRoute;
+  AuthCallbackRoute: typeof AuthCallbackRoute;
+  ConnectDoneRoute: typeof ConnectDoneRoute;
+  OrgCreateRoute: typeof OrgCreateRoute;
+  ApiRpcSplatRoute: typeof ApiRpcSplatRoute;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/sign-up': {
-      id: '/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof SignUpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sign-in': {
-      id: '/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof SignInRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/org/create': {
-      id: '/org/create'
-      path: '/org/create'
-      fullPath: '/org/create'
-      preLoaderRoute: typeof OrgCreateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/connect/done': {
-      id: '/connect/done'
-      path: '/connect/done'
-      fullPath: '/connect/done'
-      preLoaderRoute: typeof ConnectDoneRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/callback': {
-      id: '/auth/callback'
-      path: '/auth/callback'
-      fullPath: '/auth/callback'
-      preLoaderRoute: typeof AuthCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/$': {
-      id: '/api/$'
-      path: '/api/$'
-      fullPath: '/api/$'
-      preLoaderRoute: typeof ApiSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/rpc/$': {
-      id: '/api/rpc/$'
-      path: '/api/rpc/$'
-      fullPath: '/api/rpc/$'
-      preLoaderRoute: typeof ApiRpcSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    "/sign-up": {
+      id: "/sign-up";
+      path: "/sign-up";
+      fullPath: "/sign-up";
+      preLoaderRoute: typeof SignUpRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/sign-in": {
+      id: "/sign-in";
+      path: "/sign-in";
+      fullPath: "/sign-in";
+      preLoaderRoute: typeof SignInRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/dashboard": {
+      id: "/dashboard";
+      path: "/dashboard";
+      fullPath: "/dashboard";
+      preLoaderRoute: typeof DashboardRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/about": {
+      id: "/about";
+      path: "/about";
+      fullPath: "/about";
+      preLoaderRoute: typeof AboutRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/org/create": {
+      id: "/org/create";
+      path: "/org/create";
+      fullPath: "/org/create";
+      preLoaderRoute: typeof OrgCreateRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/connect/done": {
+      id: "/connect/done";
+      path: "/connect/done";
+      fullPath: "/connect/done";
+      preLoaderRoute: typeof ConnectDoneRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/auth/callback": {
+      id: "/auth/callback";
+      path: "/auth/callback";
+      fullPath: "/auth/callback";
+      preLoaderRoute: typeof AuthCallbackRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/$": {
+      id: "/api/$";
+      path: "/api/$";
+      fullPath: "/api/$";
+      preLoaderRoute: typeof ApiSplatRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/rpc/$": {
+      id: "/api/rpc/$";
+      path: "/api/rpc/$";
+      fullPath: "/api/rpc/$";
+      preLoaderRoute: typeof ApiRpcSplatRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
@@ -246,16 +246,16 @@ const rootRouteChildren: RootRouteChildren = {
   ConnectDoneRoute: ConnectDoneRoute,
   OrgCreateRoute: OrgCreateRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { createStart } from "@tanstack/react-start";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
   }
 }

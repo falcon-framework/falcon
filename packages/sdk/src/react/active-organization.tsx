@@ -11,10 +11,7 @@ import type { FalconAuthClient } from "../core/client";
 import type { FalconOrganizationSummary } from "../core/types";
 import { useFalconAuthContextOptional } from "./provider";
 
-export type FalconActiveOrganizationItem = Pick<
-  FalconOrganizationSummary,
-  "id" | "name" | "slug"
->;
+export type FalconActiveOrganizationItem = Pick<FalconOrganizationSummary, "id" | "name" | "slug">;
 
 export interface ActiveOrganizationContextValue {
   activeOrg: FalconActiveOrganizationItem | null;
@@ -152,7 +149,9 @@ export function ActiveOrganizationProvider({
   );
 
   return (
-    <ActiveOrganizationContext.Provider value={value}>{children}</ActiveOrganizationContext.Provider>
+    <ActiveOrganizationContext.Provider value={value}>
+      {children}
+    </ActiveOrganizationContext.Provider>
   );
 }
 

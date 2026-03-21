@@ -16,12 +16,19 @@ test("demo-01 OrganizationSwitcher lists workspaces and switches active org", as
   await createWorkspace(page, identity);
   await expect(page).toHaveURL(/\/dashboard$/);
 
-  await createAdditionalWorkspace(page, identity.secondOrgName, identity.secondOrgSlug, /\/dashboard$/);
+  await createAdditionalWorkspace(
+    page,
+    identity.secondOrgName,
+    identity.secondOrgSlug,
+    /\/dashboard$/,
+  );
 
   const shell = page.getByTestId("demo-org-switcher");
   await expect(shell).toBeVisible();
 
-  await expect(shell.getByRole("button")).toContainText(identity.secondOrgName, { timeout: 15_000 });
+  await expect(shell.getByRole("button")).toContainText(identity.secondOrgName, {
+    timeout: 15_000,
+  });
 
   await shell.getByRole("button").click();
   await expect(page.getByRole("menu")).toBeVisible();

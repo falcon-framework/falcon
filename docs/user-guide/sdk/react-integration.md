@@ -40,13 +40,13 @@ The provider memoizes the client on **`serverUrl`** and **`publishableKey`**. Ch
 
 Returns:
 
-| Field | Description |
-| ----- | ----------- |
-| **`user`** / **`session`** | Loaded from **`fetchFalconSession(config)`** on mount and when config changes. |
-| **`isLoaded`** | `false` until the first session read finishes. |
-| **`isSignedIn`** | `isLoaded && !!user`. |
-| **`signOut`** | Calls **`signOutFalconSession`**, then clears hook state. |
-| **`client`** | Better Auth React client from **`createFalconAuth`**, with **`organizationClient`** plugin—use for advanced API calls. |
+| Field                      | Description                                                                                                            |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **`user`** / **`session`** | Loaded from **`fetchFalconSession(config)`** on mount and when config changes.                                         |
+| **`isLoaded`**             | `false` until the first session read finishes.                                                                         |
+| **`isSignedIn`**           | `isLoaded && !!user`.                                                                                                  |
+| **`signOut`**              | Calls **`signOutFalconSession`**, then clears hook state.                                                              |
+| **`client`**               | Better Auth React client from **`createFalconAuth`**, with **`organizationClient`** plugin—use for advanced API calls. |
 
 ```tsx
 import { useFalconAuth } from "@falcon-framework/sdk/react";
@@ -76,13 +76,13 @@ These are **Falcon SDK** helpers (they call **`fetchFalconSession`**). They are 
 
 ## Optional UI components
 
-| Component | Role |
-| --------- | ---- |
-| **`SignIn`** | Email + password form posting through the Better Auth client (embedded UX on **your** origin). Props: **`afterSignInUrl`**, **`signUpUrl`**, **`onSignIn`**, **`className`**. |
-| **`SignUp`** | Same idea for registration. |
-| **`UserButton`** | Compact account control with sign-out—suitable for headers. |
-| **`ActiveOrganizationProvider`** / **`useActiveOrganization`** | Persists active org id and syncs **`organization.setActive`** (nested inside **`FalconAuthProvider`**). |
-| **`OrganizationSwitcher`** | Tailwind dropdown to switch organizations; optional create/settings links. |
+| Component                                                      | Role                                                                                                                                                                          |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`SignIn`**                                                   | Email + password form posting through the Better Auth client (embedded UX on **your** origin). Props: **`afterSignInUrl`**, **`signUpUrl`**, **`onSignIn`**, **`className`**. |
+| **`SignUp`**                                                   | Same idea for registration.                                                                                                                                                   |
+| **`UserButton`**                                               | Compact account control with sign-out—suitable for headers.                                                                                                                   |
+| **`ActiveOrganizationProvider`** / **`useActiveOrganization`** | Persists active org id and syncs **`organization.setActive`** (nested inside **`FalconAuthProvider`**).                                                                       |
+| **`OrganizationSwitcher`**                                     | Tailwind dropdown to switch organizations; optional create/settings links.                                                                                                    |
 
 Components use **Tailwind CSS** utility classes. Many production apps prefer redirecting to the auth server instead; see [Centralized sign-in URLs](hosted-sign-in-urls.md) and [Auth callback and session](auth-callback-and-session.md).
 

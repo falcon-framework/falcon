@@ -4,15 +4,15 @@ Falcon Auth runs Better Auth’s **organization** plugin. The SDK turns it on by
 
 ## What you get out of the box
 
-| API | Purpose |
-| --- | ------- |
-| **`organizationClient`** (re-exported from `better-auth/client/plugins`) | Already registered on the Falcon client—you rarely import this directly. |
-| **`client.organization.*`** on the React client | Create/update orgs, invite members, **`setActive`**, etc. (Better Auth API). |
-| **`client.useListOrganizations()`** and related hooks | Reactive org lists and active-org state from Better Auth. |
-| **`ActiveOrganizationProvider`** / **`useActiveOrganization`** | Opinionated **active org** selection synced to **`localStorage`** and **`organization.setActive`**. |
-| **`OrganizationSwitcher`** | Tailwind dropdown to switch orgs (optional links to settings / create). |
-| **`buildFalconConnectHeaders`** | Pure helper for **`X-Falcon-App-Id`** + **`X-Organization-Id`** on Connect `fetch` calls. |
-| Session types | **`FalconSession.activeOrganizationId`**, optional **`activeOrganization`** / **`organizations`** on **`fetchFalconSession`** and **`verifySession`** when the auth server returns them. |
+| API                                                                      | Purpose                                                                                                                                                                                  |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`organizationClient`** (re-exported from `better-auth/client/plugins`) | Already registered on the Falcon client—you rarely import this directly.                                                                                                                 |
+| **`client.organization.*`** on the React client                          | Create/update orgs, invite members, **`setActive`**, etc. (Better Auth API).                                                                                                             |
+| **`client.useListOrganizations()`** and related hooks                    | Reactive org lists and active-org state from Better Auth.                                                                                                                                |
+| **`ActiveOrganizationProvider`** / **`useActiveOrganization`**           | Opinionated **active org** selection synced to **`localStorage`** and **`organization.setActive`**.                                                                                      |
+| **`OrganizationSwitcher`**                                               | Tailwind dropdown to switch orgs (optional links to settings / create).                                                                                                                  |
+| **`buildFalconConnectHeaders`**                                          | Pure helper for **`X-Falcon-App-Id`** + **`X-Organization-Id`** on Connect `fetch` calls.                                                                                                |
+| Session types                                                            | **`FalconSession.activeOrganizationId`**, optional **`activeOrganization`** / **`organizations`** on **`fetchFalconSession`** and **`verifySession`** when the auth server returns them. |
 
 The monorepo **demo-01** and **demo-02** apps render **`OrganizationSwitcher`** in the header (via `DemoOrgSwitcher`) whenever you are signed in and have at least one organization—use them as a live reference when running the stack locally.
 
@@ -81,10 +81,7 @@ Drop-in UI (Tailwind) for switching orgs; optional **`settingsHref`** / **`creat
 ```tsx
 import { OrganizationSwitcher } from "@falcon-framework/sdk/react";
 
-<OrganizationSwitcher
-  createOrganizationHref="/org/create"
-  settingsHref="/org/settings"
-/>;
+<OrganizationSwitcher createOrganizationHref="/org/create" settingsHref="/org/settings" />;
 ```
 
 ## Session and server verification

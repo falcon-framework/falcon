@@ -16,22 +16,22 @@ pnpm add @falcon-framework/sdk better-auth react react-dom
 
 ### Peer dependencies
 
-| Package        | Range    | When you need it |
-| -------------- | -------- | ---------------- |
-| `better-auth`  | `^1.5.0` | Always for `createFalconAuth` / `@falcon-framework/sdk/react`. Match the version your Falcon Auth server uses. |
-| `react`        | `>=18`   | Main entry (`createFalconAuth`) and `@falcon-framework/sdk/react`. |
-| `react-dom`    | `>=18`   | Same as above. |
+| Package       | Range    | When you need it                                                                                               |
+| ------------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| `better-auth` | `^1.5.0` | Always for `createFalconAuth` / `@falcon-framework/sdk/react`. Match the version your Falcon Auth server uses. |
+| `react`       | `>=18`   | Main entry (`createFalconAuth`) and `@falcon-framework/sdk/react`.                                             |
+| `react-dom`   | `>=18`   | Same as above.                                                                                                 |
 
 `react` and `react-dom` are **optional** in `package.json` so apps that only import `@falcon-framework/sdk/server` or `@falcon-framework/sdk/connect` are not forced to install React.
 
 ### Entry points
 
-| Import path | Purpose |
-| ----------- | ------- |
-| `@falcon-framework/sdk` | Auth client (`createFalconAuth`), session helpers, redirects, OAuth callback helper (`completeAuthCallback`), cookie name, **`buildFalconConnectHeaders`**, **`organizationClient`** re-export. |
-| `@falcon-framework/sdk/react` | `FalconAuthProvider`, hooks (`useFalconAuth`, `useUser`, `useSession`), **`ActiveOrganizationProvider`**, **`useActiveOrganization`**, **`OrganizationSwitcher`**, `SignIn` / `SignUp` / `UserButton`. |
-| `@falcon-framework/sdk/server` | `verifySession` for protecting backend routes. |
-| `@falcon-framework/sdk/connect` | Connect app map / connection display helpers. |
+| Import path                     | Purpose                                                                                                                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@falcon-framework/sdk`         | Auth client (`createFalconAuth`), session helpers, redirects, OAuth callback helper (`completeAuthCallback`), cookie name, **`buildFalconConnectHeaders`**, **`organizationClient`** re-export.        |
+| `@falcon-framework/sdk/react`   | `FalconAuthProvider`, hooks (`useFalconAuth`, `useUser`, `useSession`), **`ActiveOrganizationProvider`**, **`useActiveOrganization`**, **`OrganizationSwitcher`**, `SignIn` / `SignUp` / `UserButton`. |
+| `@falcon-framework/sdk/server`  | `verifySession` for protecting backend routes.                                                                                                                                                         |
+| `@falcon-framework/sdk/connect` | Connect app map / connection display helpers.                                                                                                                                                          |
 
 ## Falcon Auth (browser)
 

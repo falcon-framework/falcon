@@ -11,10 +11,7 @@ const STORAGE_KEY = "falcon:activeOrgId";
 
 export function ActiveOrgProvider({ children }: { children: ReactNode }) {
   return (
-    <ActiveOrganizationProvider
-      client={authClient as FalconAuthClient}
-      storageKey={STORAGE_KEY}
-    >
+    <ActiveOrganizationProvider client={authClient as FalconAuthClient} storageKey={STORAGE_KEY}>
       {children}
     </ActiveOrganizationProvider>
   );

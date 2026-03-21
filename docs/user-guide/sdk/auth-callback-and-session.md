@@ -4,13 +4,13 @@ After the user finishes on the auth server, the browser returns to your **`redir
 
 ## Overview
 
-| Step | What happens |
-| ---- | ------------ |
-| 1 | User lands on your callback route with `?code=…&state=…`. |
-| 2 | Optionally verify **`state`** against the value you stored before redirect. |
-| 3 | Call **`exchangeCodeForSession`** so the auth server can set the per-app session cookie on its origin. |
-| 4 | Poll **`fetchFalconSession`** (or your Better Auth client’s `getSession`) until **user** and **session** are visible—browsers can be slightly asynchronous here. |
-| 5 | Navigate to your post-login destination (full page navigation is recommended so all UI picks up the new session). |
+| Step | What happens                                                                                                                                                     |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1    | User lands on your callback route with `?code=…&state=…`.                                                                                                        |
+| 2    | Optionally verify **`state`** against the value you stored before redirect.                                                                                      |
+| 3    | Call **`exchangeCodeForSession`** so the auth server can set the per-app session cookie on its origin.                                                           |
+| 4    | Poll **`fetchFalconSession`** (or your Better Auth client’s `getSession`) until **user** and **session** are visible—browsers can be slightly asynchronous here. |
+| 5    | Navigate to your post-login destination (full page navigation is recommended so all UI picks up the new session).                                                |
 
 **`completeAuthCallback`** bundles steps 2–4 with sensible defaults.
 
@@ -51,8 +51,7 @@ await completeAuthCallback({
   code,
   state,
   storedState,
-  exchangeCode: (authCode) =>
-    exchangeCodeForSession(config, { code: authCode }),
+  exchangeCode: (authCode) => exchangeCodeForSession(config, { code: authCode }),
   getSession: async () => ({ data: await fetchFalconSession(config) }),
 });
 
