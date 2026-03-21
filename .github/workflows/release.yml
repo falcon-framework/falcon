@@ -27,6 +27,23 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - name: Build SDK (Bun)
+        run: bun run sdk:build
+
+      - name: Build SDK (Node, tsdown-supported runtime)
+        working-directory: packages/sdk
+        run: node ./node_modules/tsdown/dist/run.mjs
+
+      - name: Typecheck SDK
+        run: bun run sdk:check-types
+
+      - name: Publint SDK
+        run: bun run sdk:publint
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
