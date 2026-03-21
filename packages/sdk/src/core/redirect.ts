@@ -75,6 +75,9 @@ export interface ExchangeCodeResult {
  * const { data } = await falconAuthClient.getSession();
  * if (!data?.session) throw new Error("Session not visible after callback");
  * ```
+ *
+ * For a single helper that validates `code`/`state`, exchanges the code, and retries until
+ * the session is visible to your app, use {@link import("./auth-callback").completeAuthCallback}.
  */
 export async function exchangeCodeForSession(
   config: FalconAuthConfig,

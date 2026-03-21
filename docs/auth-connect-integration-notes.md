@@ -171,14 +171,13 @@ Important detail:
 
 Files:
 
-- [`apps/demo-01/src/lib/auth-callback.ts`](/Users/benn/Documents/Projects/dzwei/falcon/apps/demo-01/src/lib/auth-callback.ts)
-- [`apps/demo-02/src/lib/auth-callback.ts`](/Users/benn/Documents/Projects/dzwei/falcon/apps/demo-02/src/lib/auth-callback.ts)
+- [`packages/sdk/src/core/auth-callback.ts`](/Users/benn/Documents/Projects/dzwei/falcon/packages/sdk/src/core/auth-callback.ts) — `completeAuthCallback` (shared SDK helper)
 - [`apps/demo-01/src/routes/auth/callback.tsx`](/Users/benn/Documents/Projects/dzwei/falcon/apps/demo-01/src/routes/auth/callback.tsx)
 - [`apps/demo-02/src/routes/auth/callback.tsx`](/Users/benn/Documents/Projects/dzwei/falcon/apps/demo-02/src/routes/auth/callback.tsx)
 
 Changes:
 
-- extracted callback completion into a testable helper
+- extracted callback completion into a testable helper in `@falcon-framework/sdk`
 - validated `code`
 - validated `state`
 - exchanged the authorization code
