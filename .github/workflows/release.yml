@@ -46,6 +46,14 @@ jobs:
       - name: Publint SDK
         run: bun run sdk:publint
 
+      # changeset publish runs npm; NPM_TOKEN in env alone is not enough — npm needs ~/.npmrc.
+      - name: Configure npm for publishing
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
