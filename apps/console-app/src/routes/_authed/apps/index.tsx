@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@falcon-framework/ui/components/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@falcon-framework/ui/components/card";
 import { Button } from "@falcon-framework/ui/components/button";
 import { Skeleton } from "@falcon-framework/ui/components/skeleton";
 import {
@@ -68,8 +63,8 @@ function AuthAppsPage() {
           <Shield className="h-12 w-12 text-muted-foreground/40" />
           <h3 className="font-semibold">No connected apps</h3>
           <p className="text-sm text-muted-foreground max-w-sm">
-            When you sign in to apps that use Falcon Auth, they'll appear here.
-            You can revoke access at any time.
+            When you sign in to apps that use Falcon Auth, they'll appear here. You can revoke
+            access at any time.
           </p>
         </div>
       ) : (
@@ -113,9 +108,8 @@ function AuthAppsPage() {
                         <AlertDialogHeader>
                           <AlertDialogTitle>Revoke access?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This will remove your connection to{" "}
-                            <strong>{app.name}</strong>. The app will no longer
-                            be able to identify you through Falcon Auth. You can
+                            This will remove your connection to <strong>{app.name}</strong>. The app
+                            will no longer be able to identify you through Falcon Auth. You can
                             reconnect by signing in again.
                           </AlertDialogDescription>
                         </AlertDialogHeader>

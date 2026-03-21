@@ -135,7 +135,9 @@ function GeneralSettings({ org }: { org: { id: string; name: string; slug: strin
           <div className="space-y-1.5">
             <Label>Slug</Label>
             <Input value={org.slug} disabled className="text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">Der Slug kann nach der Erstellung nicht mehr geändert werden</p>
+            <p className="text-xs text-muted-foreground">
+              Der Slug kann nach der Erstellung nicht mehr geändert werden
+            </p>
           </div>
 
           <Button type="submit" size="sm" disabled={saving}>
@@ -179,7 +181,9 @@ function MembersSection(_: { org: { id: string } }) {
       </CardHeader>
       <CardContent className="space-y-2">
         {members.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">Mitglieder werden geladen…</p>
+          <p className="text-sm text-muted-foreground text-center py-4">
+            Mitglieder werden geladen…
+          </p>
         ) : (
           members.map((m: any) => {
             const RoleIcon = ROLE_ICONS[m.role as keyof typeof ROLE_ICONS] ?? User;

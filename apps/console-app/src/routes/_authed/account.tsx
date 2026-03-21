@@ -86,14 +86,11 @@ function AccountPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">{activeOrg.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {(activeOrg as any).slug ?? ""}
-                  </p>
+                  <p className="text-xs text-muted-foreground">{(activeOrg as any).slug ?? ""}</p>
                 </div>
                 <Badge variant="secondary" className="text-[10px]">
-                  {(activeOrg as any).members?.find?.(
-                    (m: any) => m.userId === user.id,
-                  )?.role ?? "member"}
+                  {(activeOrg as any).members?.find?.((m: any) => m.userId === user.id)?.role ??
+                    "member"}
                 </Badge>
               </div>
             </CardContent>

@@ -52,10 +52,9 @@ function DocsPage() {
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Falcon Auth SDK</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          This console is your account portal — manage your profile, see which
-          apps you've signed in to, and control your connections. Below is the
-          SDK reference for using Falcon as your authentication provider in any
-          React app.
+          This console is your account portal — manage your profile, see which apps you've signed in
+          to, and control your connections. Below is the SDK reference for using Falcon as your
+          authentication provider in any React app.
         </p>
       </div>
 

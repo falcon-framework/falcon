@@ -194,10 +194,11 @@ function ConnectionDetailPage() {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Verbindung widerrufen?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Dadurch wird die Verbindung zwischen{" "}
-                        <strong>{sourceName}</strong> und <strong>{targetName}</strong> (
+                        Dadurch wird die Verbindung zwischen <strong>{sourceName}</strong> und{" "}
+                        <strong>{targetName}</strong> (
                         <span className="font-mono text-xs">{conn.sourceAppId}</span> →{" "}
-                        <span className="font-mono text-xs">{conn.targetAppId}</span>) dauerhaft widerrufen. Diese Aktion kann nicht rückgängig gemacht werden.
+                        <span className="font-mono text-xs">{conn.targetAppId}</span>) dauerhaft
+                        widerrufen. Diese Aktion kann nicht rückgängig gemacht werden.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -222,7 +223,10 @@ function ConnectionDetailPage() {
             <InfoCard label="Organisation" value={conn.organizationId} mono />
             <InfoCard label="Erstellt von" value={conn.createdByUserId} mono />
             <InfoCard label="Erstellt" value={new Date(conn.createdAt).toLocaleString("de-DE")} />
-            <InfoCard label="Zuletzt aktualisiert" value={new Date(conn.updatedAt).toLocaleString("de-DE")} />
+            <InfoCard
+              label="Zuletzt aktualisiert"
+              value={new Date(conn.updatedAt).toLocaleString("de-DE")}
+            />
           </div>
 
           {/* Scopes */}

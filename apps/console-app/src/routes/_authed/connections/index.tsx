@@ -11,12 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@falcon-framework/ui/c
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  Plug,
-  AlertCircle,
-  CheckCircle2,
-  PauseCircle,
-} from "lucide-react";
+import { Plug, AlertCircle, CheckCircle2, PauseCircle } from "lucide-react";
 
 import type { AppItem, ConnectionItem } from "@/lib/connect-client";
 import { useConnectClient } from "@/hooks/use-connect-client";
@@ -133,8 +128,8 @@ function ConnectionList({
         <Plug className="h-12 w-12 text-muted-foreground/40" />
         <h3 className="font-semibold">No connections</h3>
         <p className="text-sm text-muted-foreground max-w-sm">
-          When your apps are connected via FALCON Connect, they'll appear here.
-          You can manage access at any time.
+          When your apps are connected via FALCON Connect, they'll appear here. You can manage
+          access at any time.
         </p>
       </div>
     );
