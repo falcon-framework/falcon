@@ -1,11 +1,23 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
-  "changelog": ["@changesets/changelog-github", { "repo": "falcon-framework/falcon" }],
+  "changelog": ["@changesets/changelog-github", { "repo": "benjamin-kraatz/falcon" }],
   "commit": false,
   "fixed": [],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [
+    "@falcon-framework/api",
+    "@falcon-framework/auth",
+    "@falcon-framework/auth-server",
+    "@falcon-framework/config",
+    "@falcon-framework/connect-service",
+    "@falcon-framework/connection",
+    "@falcon-framework/console-app",
+    "@falcon-framework/db",
+    "@falcon-framework/env",
+    "@falcon-framework/infra",
+    "@falcon-framework/ui"
+  ]
 }
