@@ -29,6 +29,10 @@ app.use(
   "/*",
   cors({
     origin: async (origin, c) => {
+      // Allow the demo apps
+      if (origin === "http://localhost:3010" || origin === "http://localhost:3011") {
+        return origin;
+      }
       // Console app is always allowed
       if (origin === env.CORS_ORIGIN) {
         return origin;
