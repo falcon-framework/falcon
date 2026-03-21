@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { fetchFalconSession, signOutFalconSession } from "../core/session";
+import type { FalconSession, FalconUser } from "../core/types";
 import { useFalconAuthContext } from "./provider";
 
 /**
@@ -9,12 +12,35 @@ import { useFalconAuthContext } from "./provider";
  * ```
  */
 export function useFalconAuth() {
-  const { client } = useFalconAuthContext();
-  const sessionQuery = client.useSession();
+  const { client, config } = useFalconAuthContext();
+  const [user, setUser] = useState<FalconUser | null>(null);
+  const [session, setSession] = useState<FalconSession | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const user = sessionQuery.data?.user ?? null;
-  const session = sessionQuery.data?.session ?? null;
-  const isLoaded = !sessionQuery.isPending;
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSession() {
+      try {
+        const data = await fetchFalconSession(config);
+        if (cancelled) return;
+        setUser(data?.user ?? null);
+        setSession(data?.session ?? null);
+      } finally {
+        if (!cancelled) {
+          setIsLoaded(true);
+        }
+      }
+    }
+
+    setIsLoaded(false);
+    void loadSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [config.publishableKey, config.serverUrl]);
+
   const isSignedIn = isLoaded && !!user;
 
   return {
@@ -22,7 +48,11 @@ export function useFalconAuth() {
     session,
     isLoaded,
     isSignedIn,
-    signOut: client.signOut,
+    signOut: async () => {
+      await signOutFalconSession(config);
+      setUser(null);
+      setSession(null);
+    },
     client,
   };
 }

@@ -1,6 +1,7 @@
 export { createFalconAuthClient as createFalconAuth } from "./core/client";
 export type { FalconAuthClient } from "./core/client";
 export type { FalconAuthConfig, FalconAuthState, FalconSession, FalconUser } from "./core/types";
+export { fetchFalconSession, signOutFalconSession } from "./core/session";
 export {
   buildSignInUrl,
   buildSignUpUrl,
@@ -9,3 +10,4 @@ export {
   exchangeCodeForSession,
 } from "./core/redirect";
 export type { RedirectToSignInOptions, ExchangeCodeOptions, ExchangeCodeResult } from "./core/redirect";
+export { sessionCookieName } from "./core/cookie";

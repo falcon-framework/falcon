@@ -56,10 +56,14 @@ export async function resolvePrincipal(
 
   // 1. Try Better Auth session via cookie
   const cookie = headers.get("cookie");
+  const appId = headers.get("x-falcon-app-id")?.trim();
   if (cookie) {
     try {
       const response = await fetch(`${betterAuthUrl}/api/auth/get-session`, {
-        headers: { cookie },
+        headers: {
+          cookie,
+          ...(appId ? { "X-Falcon-App-Id": appId } : {}),
+        },
       });
       if (response.ok) {
         const session = (await response.json()) as {

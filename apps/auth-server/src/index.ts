@@ -1,6 +1,6 @@
 import { createContext } from "@falcon-framework/api/context";
 import { appRouter } from "@falcon-framework/api/routers/index";
-import { auth, resolveAuthApp, sessionAllowedForApp } from "@falcon-framework/auth";
+import { auth, authCookieAttributes, resolveAuthApp, sessionAllowedForApp } from "@falcon-framework/auth";
 import { closeDb, makeDb } from "@falcon-framework/db";
 import { appUser, authorizationCode, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
@@ -84,6 +84,22 @@ function extractSessionToken(response: Response, clientId: string): string | nul
   const escaped = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = raw.match(new RegExp(`${escaped}\\.session_token=([^;]+)`));
   return match?.[1] ?? null;
+}
+
+function sessionCookieHeader(cookieName: string, sessionToken: string): string {
+  const attributes = authCookieAttributes(env.BETTER_AUTH_URL);
+  const parts = [
+    `${cookieName}=${sessionToken}`,
+    "Path=/",
+    "HttpOnly",
+    `SameSite=${attributes.sameSite === "none" ? "None" : "Lax"}`,
+  ];
+
+  if (attributes.secure) {
+    parts.push("Secure");
+  }
+
+  return parts.join("; ");
 }
 
 /** Shared CSS for auth pages — minimal, consistent with the Falcon teal palette. */
@@ -456,6 +472,11 @@ app.post("/auth/token", async (c) => {
     .update(authorizationCode)
     .set({ usedAt: new Date() })
     .where(eq(authorizationCode.id, row.id));
+
+  // Set the session cookie on the auth server's origin so the Better-Auth client
+  // can read it when it calls /api/auth/get-session directly from the browser.
+  const cookieName = `${cookiePrefixForPublishableKey(client_id)}.session_token`;
+  c.header("Set-Cookie", sessionCookieHeader(cookieName, row.sessionToken));
 
   return c.json({ sessionToken: row.sessionToken });
 });

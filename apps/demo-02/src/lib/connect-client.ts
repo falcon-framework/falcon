@@ -63,6 +63,7 @@ async function request<T>(
     credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
+      'X-Falcon-App-Id': demoEnv.VITE_FALCON_PUBLISHABLE_KEY,
       'X-Organization-Id': organizationId.trim(),
       ...(init.headers as Record<string, string>),
     },

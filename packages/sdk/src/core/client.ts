@@ -21,13 +21,22 @@ export type FalconAuthClient = ReturnType<typeof createFalconAuthClient>;
  * ```
  */
 export function createFalconAuthClient(config: FalconAuthConfig) {
+  const authFetch: typeof fetch = (input, init) => {
+    const headers = new Headers(init?.headers);
+    headers.set("X-Falcon-App-Id", config.publishableKey);
+
+    return fetch(input, {
+      ...init,
+      credentials: init?.credentials ?? "include",
+      headers,
+    });
+  };
+
   const client = createAuthClient({
     baseURL: config.serverUrl,
     plugins: [organizationClient()],
     fetchOptions: {
-      headers: {
-        "X-Falcon-App-Id": config.publishableKey,
-      },
+      customFetchImpl: authFetch,
     },
   });
 
