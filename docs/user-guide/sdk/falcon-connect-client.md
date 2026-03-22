@@ -4,10 +4,10 @@ The **`@falcon-framework/sdk/connect`** entry exports **`createFalconConnectClie
 
 ## Installation
 
-The SDK lists **`zod`** as a runtime dependency; you do not need to add Zod yourself unless you want to compose the exported schemas.
+**`@falcon-framework/sdk/connect`** uses **Zod** as an **optional peer dependency**. Install **`zod`** in your app alongside the SDK (required when you import this entry).
 
 ```sh
-bun add @falcon-framework/sdk
+bun add @falcon-framework/sdk zod
 ```
 
 ## Creating a client
