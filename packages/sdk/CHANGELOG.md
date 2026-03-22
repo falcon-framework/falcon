@@ -1,5 +1,11 @@
 # @falcon-framework/sdk
 
+## 0.4.0
+
+### Minor Changes
+
+- [#9](https://github.com/falcon-framework/falcon/pull/9) [`4f612ac`](https://github.com/falcon-framework/falcon/commit/4f612ac35240f1ab79ba56d422f6b28e82e9ff47) Thanks [@benjamin-kraatz](https://github.com/benjamin-kraatz)! - Add first-class organization support: optional organization fields on session types, `buildFalconConnectHeaders` for Connect, `ActiveOrganizationProvider` / `useActiveOrganization`, Tailwind `OrganizationSwitcher`, re-export of `organizationClient`, and expanded `verifySession` typing. Documentation updates cover SDK user-guide organizations and related topics.
+
 ## 0.3.0
 
 ### Minor Changes
