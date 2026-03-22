@@ -17,6 +17,7 @@ Falcon Connect manages **relationships between registered applications** within 
 - **Frontend developers** driving installation UIs.
 - **Backend operators** securing Connect behind the same identity stack as Falcon Auth.
 
-## SDK helpers
+## SDK
 
-Optional display utilities live in `@falcon-framework/sdk/connect`. See [Connect display helpers](../sdk/connect-helpers.md).
+- **HTTP client** — [`createFalconConnectClient`](../sdk/falcon-connect-client.md) (Zod-validated fetch wrapper for all v1 endpoints).
+- **Display helpers** — [Connect display helpers](../sdk/connect-helpers.md) (pure label / line builders).

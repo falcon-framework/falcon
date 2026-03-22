@@ -5,7 +5,7 @@ import { useConnectClient } from "#/hooks/use-connect-client";
 import { useActiveOrg } from "#/providers/active-org";
 import { demoEnv, falconAuthConfig } from "#/lib/demo-env";
 import { PENDING_CONNECT_KEY } from "#/lib/connect-resume";
-import type { InstallationRequestItem } from "#/lib/connect-client";
+import type { FalconConnectInstallationRequest } from "@falcon-framework/sdk/connect";
 import { useEffect, useMemo, useState } from "react";
 
 function isAllowedReturnUrl(url: string, allowedOrigin: string): boolean {
@@ -32,7 +32,7 @@ function IncomingPage() {
   const connect = useConnectClient();
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [pendingRow, setPendingRow] = useState<InstallationRequestItem | null>(null);
+  const [pendingRow, setPendingRow] = useState<FalconConnectInstallationRequest | null>(null);
   const [loadState, setLoadState] = useState<"idle" | "loading" | "done">("idle");
 
   const resumeUrl = useMemo(() => {

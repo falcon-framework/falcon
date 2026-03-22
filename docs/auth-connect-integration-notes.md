@@ -189,8 +189,9 @@ Changes:
 
 Files:
 
-- [`apps/demo-01/src/lib/connect-client.ts`](/Users/benn/Documents/Projects/dzwei/falcon/apps/demo-01/src/lib/connect-client.ts)
-- [`apps/demo-02/src/lib/connect-client.ts`](/Users/benn/Documents/Projects/dzwei/falcon/apps/demo-02/src/lib/connect-client.ts)
+- [`packages/sdk/src/connect/client.ts`](/Users/benn/Documents/Projects/dzwei/falcon/packages/sdk/src/connect/client.ts) (`createFalconConnectClient`)
+- [`apps/demo-01/src/hooks/use-connect-client.ts`](/Users/benn/Documents/Projects/dzwei/falcon/apps/demo-01/src/hooks/use-connect-client.ts)
+- [`apps/demo-02/src/hooks/use-connect-client.ts`](/Users/benn/Documents/Projects/dzwei/falcon/apps/demo-02/src/hooks/use-connect-client.ts)
 - [`apps/connect-service/src/index.ts`](/Users/benn/Documents/Projects/dzwei/falcon/apps/connect-service/src/index.ts)
 - [`packages/connection/src/principal.ts`](/Users/benn/Documents/Projects/dzwei/falcon/packages/connection/src/principal.ts)
 

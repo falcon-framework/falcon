@@ -37,7 +37,7 @@ import { toast } from "sonner";
 import { useMemo } from "react";
 
 import { useConnectClient } from "@/hooks/use-connect-client";
-import type { AppItem } from "@/lib/connect-client";
+import type { FalconConnectApp } from "@falcon-framework/sdk/connect";
 import { useActiveOrg } from "@/providers/active-org";
 import AppNameDisplay from "@/components/app-name-display";
 import { de } from "@/i18n/de";
@@ -67,7 +67,7 @@ function ConnectionDetailPage() {
   });
 
   const appById = useMemo(
-    () => new Map((appsQuery.data ?? []).map((a: AppItem) => [a.id, a])),
+    () => new Map((appsQuery.data ?? []).map((a: FalconConnectApp) => [a.id, a])),
     [appsQuery.data],
   );
 
