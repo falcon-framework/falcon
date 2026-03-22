@@ -5,6 +5,7 @@ export {
   type FalconAuthProviderProps,
 } from "./react/provider";
 export { useFalconAuth, useUser, useSession } from "./react/hooks";
+export { useOrganizations, type UseOrganizationsResult } from "./react/use-organizations";
 export {
   ActiveOrganizationProvider,
   useActiveOrganization,
