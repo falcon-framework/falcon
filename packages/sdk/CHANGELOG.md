@@ -1,5 +1,13 @@
 # @falcon-framework/sdk
 
+## 0.6.1
+
+### Patch Changes
+
+- [#16](https://github.com/falcon-framework/falcon/pull/16) [`c117c21`](https://github.com/falcon-framework/falcon/commit/c117c2184c9efda782e16e3685da79581284ed4a) Thanks [@benjamin-kraatz](https://github.com/benjamin-kraatz)! - Declare **zod** as an **optional peer dependency** (`^4.1.0`) instead of a `catalog:` runtime dependency, so the published `package.json` uses explicit semver ranges suitable for npm consumers.
+
+  **Migration:** when using `@falcon-framework/sdk/connect`, install **zod** in your application (for example `bun add zod`). The Connect entry imports Zod at runtime for validation.
+
 ## 0.6.0
 
 ### Minor Changes
