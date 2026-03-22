@@ -9,6 +9,7 @@ Falcon Auth runs Better Auth’s **organization** plugin. The SDK turns it on by
 | **`organizationClient`** (re-exported from `better-auth/client/plugins`) | Already registered on the Falcon client—you rarely import this directly.                                                                                                                 |
 | **`client.organization.*`** on the React client                          | Create/update orgs, invite members, **`setActive`**, etc. (Better Auth API).                                                                                                             |
 | **`client.useListOrganizations()`** and related hooks                    | Reactive org lists and active-org state from Better Auth.                                                                                                                                |
+| **`useOrganizations`**                                                   | Lists orgs plus **`create`**, **`setActive`**, and **`refetch`** helpers on the Falcon client (requires **`FalconAuthProvider`** only).                                                  |
 | **`ActiveOrganizationProvider`** / **`useActiveOrganization`**           | Opinionated **active org** selection synced to **`localStorage`** and **`organization.setActive`**.                                                                                      |
 | **`OrganizationSwitcher`**                                               | Tailwind dropdown to switch orgs (optional links to settings / create).                                                                                                                  |
 | **`buildFalconConnectHeaders`**                                          | Pure helper for **`X-Falcon-App-Id`** + **`X-Organization-Id`** on Connect `fetch` calls.                                                                                                |
@@ -33,6 +34,45 @@ export function App() {
 ```
 
 **`ActiveOrganizationProvider`** needs a Better Auth client with the organization plugin: wrap with **`FalconAuthProvider`**, **or** pass **`client={yourAuthClient}`** when you use `createAuthClient` from `better-auth/react` directly (for example the FALCON console). It uses **`localStorage`** (browser-only); use it in client-rendered routes.
+
+## Creating an organization
+
+Use the Better Auth client from **`useFalconAuth()`**. The auth server identifies the signed-in user from the session (cookies and **`X-Falcon-App-Id`**); pass at least **`name`** and **`slug`**. Further options (invites, metadata, etc.) are defined by [Better Auth’s organization plugin](https://www.better-auth.com/docs/plugins/organization).
+
+```tsx
+import { useFalconAuth } from "@falcon-framework/sdk/react";
+
+function CreateOrgForm() {
+  const { client } = useFalconAuth();
+
+  async function handleCreate() {
+    const result = await client.organization.create({
+      name: "My team",
+      slug: "my-team",
+    });
+    if (result.error) {
+      console.error(result.error.message);
+      return;
+    }
+    const id = result.data?.id;
+    if (id) {
+      await client.organization.setActive({ organizationId: id });
+      // If you use ActiveOrganizationProvider, also persist the same id under your storageKey
+      // (e.g. localStorage) so the provider and Better Auth stay aligned.
+    }
+  }
+
+  return (
+    <button type="button" onClick={() => void handleCreate()}>
+      Create
+    </button>
+  );
+}
+```
+
+Alternatively, use **`useOrganizations()`** for a single hook that exposes list state, **`create`**, **`setActive`**, and **`refetch`** (see table above).
+
+**`useActiveOrganization`** vs **`client.organization.create` / `useOrganizations`**: **`useActiveOrganization`** only works under **`ActiveOrganizationProvider`** and manages the **currently selected** org (list + **`switchOrg`** + **`localStorage`**). Creating an org only requires **`FalconAuthProvider`**; call **`create`** from any signed-in route, then optionally **`setActive`** and update your **`storageKey`** if you use the active-org provider.
 
 ## Using the active organization hook
 

@@ -8,10 +8,10 @@ import {
   type ReactNode,
 } from "react";
 import type { FalconAuthClient } from "../core/client";
-import type { FalconOrganizationSummary } from "../core/types";
+import { normalizeOrgListRow, type FalconOrgListItem } from "./org-normalize";
 import { useFalconAuthContextOptional } from "./provider";
 
-export type FalconActiveOrganizationItem = Pick<FalconOrganizationSummary, "id" | "name" | "slug">;
+export type FalconActiveOrganizationItem = FalconOrgListItem;
 
 export interface ActiveOrganizationContextValue {
   activeOrg: FalconActiveOrganizationItem | null;
@@ -34,16 +34,6 @@ export interface ActiveOrganizationProviderProps {
    * Pass this when the tree is not wrapped with `FalconAuthProvider`.
    */
   client?: FalconAuthClient;
-}
-
-function toOrgItem(row: unknown): FalconActiveOrganizationItem | null {
-  if (!row || typeof row !== "object") return null;
-  const o = row as Record<string, unknown>;
-  const id = typeof o.id === "string" ? o.id : null;
-  const name = typeof o.name === "string" ? o.name : null;
-  const slug = typeof o.slug === "string" ? o.slug : null;
-  if (!id || !name || !slug) return null;
-  return { id, name, slug };
 }
 
 /**
@@ -69,7 +59,7 @@ export function ActiveOrganizationProvider({
     const list = Array.isArray(raw) ? raw : [];
     const out: FalconActiveOrganizationItem[] = [];
     for (const row of list) {
-      const item = toOrgItem(row);
+      const item = normalizeOrgListRow(row);
       if (item) out.push(item);
     }
     return out;

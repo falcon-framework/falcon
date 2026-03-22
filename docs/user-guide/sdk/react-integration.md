@@ -40,13 +40,13 @@ The provider memoizes the client on **`serverUrl`** and **`publishableKey`**. Ch
 
 Returns:
 
-| Field                      | Description                                                                                                            |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| **`user`** / **`session`** | Loaded from **`fetchFalconSession(config)`** on mount and when config changes.                                         |
-| **`isLoaded`**             | `false` until the first session read finishes.                                                                         |
-| **`isSignedIn`**           | `isLoaded && !!user`.                                                                                                  |
-| **`signOut`**              | Calls **`signOutFalconSession`**, then clears hook state.                                                              |
-| **`client`**               | Better Auth React client from **`createFalconAuth`**, with **`organizationClient`** plugin—use for advanced API calls. |
+| Field                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`user`** / **`session`** | Loaded from **`fetchFalconSession(config)`** on mount and when config changes.                                                                                                                                                                                                                                                                                                                                                  |
+| **`isLoaded`**             | `false` until the first session read finishes.                                                                                                                                                                                                                                                                                                                                                                                  |
+| **`isSignedIn`**           | `isLoaded && !!user`.                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **`signOut`**              | Calls **`signOutFalconSession`**, then clears hook state.                                                                                                                                                                                                                                                                                                                                                                       |
+| **`client`**               | Better Auth React client from **`createFalconAuth`** with **`organizationClient`**. Exposes **`client.organization.create`**, **`setActive`**, member invites, and other [organization plugin](https://www.better-auth.com/docs/plugins/organization) methods; use **`client.useListOrganizations()`** for reactive lists. See [Organizations](organizations.md) for **`useOrganizations`**, create flows, and Connect headers. |
 
 ```tsx
 import { useFalconAuth } from "@falcon-framework/sdk/react";
@@ -72,7 +72,11 @@ function Header() {
 
 Convenience wrappers: **`useUser`** returns **`{ user, isLoaded }`**; **`useSession`** returns **`{ session, isLoaded }`**.
 
-These are **Falcon SDK** helpers (they call **`fetchFalconSession`**). They are unrelated to Better Auth’s own React **`useSession`** hook on the raw Better Auth client; when you need organization APIs, use **`useFalconAuth().client`** or the org components below.
+These are **Falcon SDK** helpers (they call **`fetchFalconSession`**). They are unrelated to Better Auth’s own React **`useSession`** hook on the raw Better Auth client; when you need organization APIs, use **`useFalconAuth().client`**, **`useOrganizations`**, or the org components below.
+
+### `useOrganizations`
+
+Returns the current user’s organizations (from **`client.useListOrganizations()`**), pending state, optional error/refetch from Better Auth, and helpers **`create`** (wraps **`client.organization.create`**) and **`setActive`**, plus the raw **`client`**. Requires **`FalconAuthProvider`** only—unlike **`useActiveOrganization`**, which needs **`ActiveOrganizationProvider`**. Full patterns: [Organizations](organizations.md).
 
 ## Optional UI components
 
@@ -105,6 +109,7 @@ export function LoginPage() {
 Session and user come from Falcon Auth; organization **create / list / setActive** flows use Better Auth’s organization plugin on the same **`client`**.
 
 - Use **`ActiveOrganizationProvider`** and **`useActiveOrganization`** for a shared “active org” pattern (see [Organizations](organizations.md)).
+- Use **`useOrganizations`** when you need list + **create** / **setActive** without wrapping **`ActiveOrganizationProvider`**.
 - Use **`OrganizationSwitcher`** for a minimal org switcher, or build your own with **`client.useListOrganizations()`** and **`switchOrg`** from the provider context.
 - For Falcon Connect **`fetch`** calls, combine **`buildFalconConnectHeaders`** (main SDK entry) with your **`X-Organization-Id`**.
 
