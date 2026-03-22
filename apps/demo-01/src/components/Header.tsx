@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { DemoOrgSwitcher } from "#/components/demo-org-switcher";
 import FalconHeaderUser from "#/components/falcon-header-user";
 import { demoEnv } from "#/lib/demo-env";
 import ThemeToggle from "./ThemeToggle";
@@ -46,6 +47,7 @@ export default function Header() {
               />
             </svg>
           </a>
+          <DemoOrgSwitcher />
           <FalconHeaderUser />
 
           <ThemeToggle />

@@ -41,11 +41,11 @@ const label = falconConnectAppLabel(map, connection.sourceAppId);
 
 Returns a **`FalconConnectConnectionDisplay`** object:
 
-| Field | Example |
-| ----- | ------- |
-| **`sourceLabel`** / **`targetLabel`** | Resolved via the app map |
-| **`line`** | `"Orders App → CRM"` |
-| **`status`** | Pass-through from the connection |
+| Field                                 | Example                          |
+| ------------------------------------- | -------------------------------- |
+| **`sourceLabel`** / **`targetLabel`** | Resolved via the app map         |
+| **`line`**                            | `"Orders App → CRM"`             |
+| **`status`**                          | Pass-through from the connection |
 
 ```ts
 const row = displayFalconConnection(connection, map);

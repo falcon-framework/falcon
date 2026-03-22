@@ -1,9 +1,6 @@
-import type { FalconAuthConfig, FalconSession, FalconUser } from "./types";
+import type { FalconAuthConfig, FalconSessionResponse } from "./types";
 
-export interface FalconSessionResponse {
-  user: FalconUser;
-  session: FalconSession;
-}
+export type { FalconSessionResponse };
 
 function authHeaders(config: FalconAuthConfig, contentType?: string): HeadersInit {
   return {

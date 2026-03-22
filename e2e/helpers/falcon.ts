@@ -16,6 +16,9 @@ export interface Identity {
   password: string;
   orgName: string;
   orgSlug: string;
+  /** Second workspace on the same app (e.g. demo-01 org switcher tests). */
+  secondOrgName: string;
+  secondOrgSlug: string;
   targetOrgName: string;
   targetOrgSlug: string;
 }
@@ -26,8 +29,11 @@ export function createIdentity(testInfo: TestInfo): Identity {
     name: `Demo User ${suffix}`,
     email: `demo-${suffix}@example.com`,
     password: `Password!${suffix}`,
-    orgName: `Workspace ${suffix}`,
-    orgSlug: `workspace-${suffix}`.replace(/[^a-z0-9-]/g, "-"),
+    orgName: `North ${suffix}`,
+    orgSlug: `north-${suffix}`.replace(/[^a-z0-9-]/g, "-"),
+    /** Must not be a substring of `orgName` (Playwright role name matching is substring-based). */
+    secondOrgName: `South ${suffix}`,
+    secondOrgSlug: `south-${suffix}`.replace(/[^a-z0-9-]/g, "-"),
     targetOrgName: `Partner Workspace ${suffix}`,
     targetOrgSlug: `partner-workspace-${suffix}`.replace(/[^a-z0-9-]/g, "-"),
   };
@@ -79,6 +85,21 @@ export async function signInThroughHostedAuth(
 
 export async function createWorkspace(page: Page, identity: Identity): Promise<void> {
   await maybeCreateWorkspace(page, identity.orgName, identity.orgSlug, /\/dashboard$/);
+}
+
+/** Create another workspace on demo-01 while already signed in (navigates to `/org/create`). */
+export async function createAdditionalWorkspace(
+  page: Page,
+  name: string,
+  slug: string,
+  expectedUrl: RegExp = /\/dashboard$/,
+): Promise<void> {
+  await page.goto(`${DEMO_01_URL}/org/create`);
+  await expect(page.getByRole("heading", { name: "Create a workspace" })).toBeVisible();
+  await page.getByRole("textbox", { name: "Workspace name" }).fill(name);
+  await page.getByRole("textbox", { name: "Slug" }).fill(slug);
+  await page.getByRole("button", { name: "Create workspace" }).click();
+  await expect(page).toHaveURL(expectedUrl);
 }
 
 export async function signOutFromUserMenu(page: Page): Promise<void> {

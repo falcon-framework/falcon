@@ -58,14 +58,15 @@ This guide explains Falcon for people who **use**, **integrate**, or **operate**
 
 ### SDK and integration
 
-| Document                                                       | Description                                |
-| -------------------------------------------------------------- | ------------------------------------------ |
-| [SDK overview](sdk/README.md)                                  | Section index, entry points, install       |
-| [React: provider, hooks, components](sdk/react-integration.md) | `FalconAuthProvider`, hooks, optional UI   |
-| [Centralized sign-in URLs](sdk/hosted-sign-in-urls.md)        | `buildSignInUrl` / `redirectToSignIn`, etc. |
-| [Auth callback and session](sdk/auth-callback-and-session.md) | `completeAuthCallback`, session helpers    |
-| [Server session verification](sdk/server-verification.md)      | `verifySession` for backends               |
-| [Connect display helpers](sdk/connect-helpers.md)              | Labeling helpers for Connect API responses |
+| Document                                                       | Description                                 |
+| -------------------------------------------------------------- | ------------------------------------------- |
+| [SDK overview](sdk/README.md)                                  | Section index, entry points, install        |
+| [React: provider, hooks, components](sdk/react-integration.md) | `FalconAuthProvider`, hooks, optional UI    |
+| [Centralized sign-in URLs](sdk/hosted-sign-in-urls.md)         | `buildSignInUrl` / `redirectToSignIn`, etc. |
+| [Auth callback and session](sdk/auth-callback-and-session.md)  | `completeAuthCallback`, session helpers     |
+| [Server session verification](sdk/server-verification.md)      | `verifySession` for backends                |
+| [Connect display helpers](sdk/connect-helpers.md)              | Labeling helpers for Connect API responses  |
+| [SDK: organizations](sdk/organizations.md)                     | Active org, switcher UI, Connect headers    |
 
 ### Reference
 

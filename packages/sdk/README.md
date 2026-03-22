@@ -16,22 +16,22 @@ pnpm add @falcon-framework/sdk better-auth react react-dom
 
 ### Peer dependencies
 
-| Package        | Range    | When you need it |
-| -------------- | -------- | ---------------- |
-| `better-auth`  | `^1.5.0` | Always for `createFalconAuth` / `@falcon-framework/sdk/react`. Match the version your Falcon Auth server uses. |
-| `react`        | `>=18`   | Main entry (`createFalconAuth`) and `@falcon-framework/sdk/react`. |
-| `react-dom`    | `>=18`   | Same as above. |
+| Package       | Range    | When you need it                                                                                               |
+| ------------- | -------- | -------------------------------------------------------------------------------------------------------------- |
+| `better-auth` | `^1.5.0` | Always for `createFalconAuth` / `@falcon-framework/sdk/react`. Match the version your Falcon Auth server uses. |
+| `react`       | `>=18`   | Main entry (`createFalconAuth`) and `@falcon-framework/sdk/react`.                                             |
+| `react-dom`   | `>=18`   | Same as above.                                                                                                 |
 
 `react` and `react-dom` are **optional** in `package.json` so apps that only import `@falcon-framework/sdk/server` or `@falcon-framework/sdk/connect` are not forced to install React.
 
 ### Entry points
 
-| Import path | Purpose |
-| ----------- | ------- |
-| `@falcon-framework/sdk` | Auth client (`createFalconAuth`), session helpers, redirects, OAuth callback helper (`completeAuthCallback`), cookie name. |
-| `@falcon-framework/sdk/react` | `FalconAuthProvider`, hooks (`useFalconAuth`, `useUser`, `useSession`), `SignIn` / `SignUp` / `UserButton`. |
-| `@falcon-framework/sdk/server` | `verifySession` for protecting backend routes. |
-| `@falcon-framework/sdk/connect` | Connect app map / connection display helpers. |
+| Import path                     | Purpose                                                                                                                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `@falcon-framework/sdk`         | Auth client (`createFalconAuth`), session helpers, redirects, OAuth callback helper (`completeAuthCallback`), cookie name, **`buildFalconConnectHeaders`**, **`organizationClient`** re-export.        |
+| `@falcon-framework/sdk/react`   | `FalconAuthProvider`, hooks (`useFalconAuth`, `useUser`, `useSession`), **`ActiveOrganizationProvider`**, **`useActiveOrganization`**, **`OrganizationSwitcher`**, `SignIn` / `SignUp` / `UserButton`. |
+| `@falcon-framework/sdk/server`  | `verifySession` for protecting backend routes.                                                                                                                                                         |
+| `@falcon-framework/sdk/connect` | Connect app map / connection display helpers.                                                                                                                                                          |
 
 ## Falcon Auth (browser)
 
@@ -87,7 +87,12 @@ Then redirect the user to your post-login page (full-page navigation is recommen
 
 ## React (`@falcon-framework/sdk/react`)
 
-Wrap your app with `FalconAuthProvider`, use `useFalconAuth` / `useUser` / `useSession`, or drop in `SignIn`, `SignUp`, and `UserButton`. The React entry re-exports `createFalconAuth` and core types for convenience.
+Wrap your app with `FalconAuthProvider`, use `useFalconAuth` / `useUser` / `useSession`, optionally **`ActiveOrganizationProvider`** / **`useActiveOrganization`** and **`OrganizationSwitcher`** for Better Auth organizations, or drop in `SignIn`, `SignUp`, and `UserButton`. The React entry re-exports `createFalconAuth` and core types for convenience.
+
+## Organizations and Connect
+
+- **`buildFalconConnectHeaders({ publishableKey, organizationId, init? })`** — sets **`X-Falcon-App-Id`** and **`X-Organization-Id`** for Falcon Connect API calls from the browser or server.
+- Session payloads may include **`activeOrganizationId`** on **`session`** and optional **`activeOrganization`** / **`organizations`** when using the organization plugin; see **`docs/user-guide/sdk/organizations.md`** in the Falcon repo.
 
 ## Server (`@falcon-framework/sdk/server`)
 

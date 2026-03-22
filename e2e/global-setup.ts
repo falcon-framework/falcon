@@ -5,7 +5,7 @@ const READY_URLS = [
   "http://localhost:3011/sign-in",
 ];
 
-async function waitForUrl(url: string, timeoutMs = 120_000): Promise<void> {
+async function waitForUrl(url: string, timeoutMs = 10_000): Promise<void> {
   const deadline = Date.now() + timeoutMs;
   let lastError = "unknown error";
 

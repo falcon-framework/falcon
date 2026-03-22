@@ -1,3 +1,5 @@
+import type { FalconOrganizationSummary } from "../core/types";
+
 export interface VerifySessionConfig {
   /** The URL of the Falcon auth server */
   serverUrl: string;
@@ -24,7 +26,11 @@ export interface VerifiedSession {
     updatedAt: Date;
     ipAddress?: string | null;
     userAgent?: string | null;
+    activeOrganizationId?: string | null;
   };
+  /** When the auth server includes organization plugin fields on get-session. */
+  activeOrganization?: FalconOrganizationSummary | null;
+  organizations?: FalconOrganizationSummary[];
 }
 
 /**

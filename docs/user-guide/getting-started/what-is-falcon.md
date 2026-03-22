@@ -26,7 +26,7 @@ Client applications embed the **Falcon SDK** (for React and server helpers) and 
 
 | Term                                    | Meaning                                                                                                                                                                                  |
 | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Auth server**                         | HTTP service exposing Better Auth–compatible routes (for example `/api/auth/*`) and Falcon’s hosted sign-in UI (`/auth/authorize`, `/auth/sign-up`).                                   |
+| **Auth server**                         | HTTP service exposing Better Auth–compatible routes (for example `/api/auth/*`) and Falcon’s hosted sign-in UI (`/auth/authorize`, `/auth/sign-up`).                                     |
 | **Connect service**                     | HTTP service exposing the Falcon Connect API under a `/v1` prefix.                                                                                                                       |
 | **Console**                             | First-party web UI for account, orgs, connected auth apps, and (when configured) connections.                                                                                            |
 | **Publishable key** (`pk_…`)            | Public identifier for a **Falcon Auth client app**. Sent on requests (for example `X-Falcon-App-Id`) so the auth server can apply the right CORS, trusted origins, and user–app linking. |

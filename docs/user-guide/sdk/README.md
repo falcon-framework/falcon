@@ -8,29 +8,30 @@ The package **`@falcon-framework/sdk`** integrates browser apps and backends wit
 npm install @falcon-framework/sdk better-auth react react-dom
 ```
 
-| Peer dependency | When you need it |
-| --------------- | ---------------- |
-| `better-auth` `^1.5.0` | Required for `createFalconAuth` and `@falcon-framework/sdk/react` (wraps Better Auth’s React client). Match the version your Falcon Auth server uses. |
+| Peer dependency              | When you need it                                                                                                                                                |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `better-auth` `^1.5.0`       | Required for `createFalconAuth` and `@falcon-framework/sdk/react` (wraps Better Auth’s React client). Match the version your Falcon Auth server uses.           |
 | `react` / `react-dom` `>=18` | Main entry and `@falcon-framework/sdk/react`. **Optional** in `package.json` if you only use `@falcon-framework/sdk/server` or `@falcon-framework/sdk/connect`. |
 
 ## Topics
 
-| Document | Description |
-| -------- | ----------- |
-| [React integration](react-integration.md) | `FalconAuthProvider`, hooks, `SignIn` / `SignUp` / `UserButton` |
-| [Centralized sign-in URLs](hosted-sign-in-urls.md) | `buildSignInUrl` / `buildSignUpUrl`, `redirectToSignIn` / `redirectToSignUp` (auth server `/auth/*` routes) |
-| [Auth callback and session](auth-callback-and-session.md) | `completeAuthCallback`, `exchangeCodeForSession`, `fetchFalconSession`, sign-out, cookies |
-| [Server session verification](server-verification.md) | `verifySession` for APIs and middleware |
-| [Connect display helpers](connect-helpers.md) | Pure helpers under `@falcon-framework/sdk/connect` |
+| Document                                                  | Description                                                                                                 |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [React integration](react-integration.md)                 | `FalconAuthProvider`, hooks, `SignIn` / `SignUp` / `UserButton`                                             |
+| [Organizations](organizations.md)                         | Active org provider, `OrganizationSwitcher`, Connect headers, session fields                                |
+| [Centralized sign-in URLs](hosted-sign-in-urls.md)        | `buildSignInUrl` / `buildSignUpUrl`, `redirectToSignIn` / `redirectToSignUp` (auth server `/auth/*` routes) |
+| [Auth callback and session](auth-callback-and-session.md) | `completeAuthCallback`, `exchangeCodeForSession`, `fetchFalconSession`, sign-out, cookies                   |
+| [Server session verification](server-verification.md)     | `verifySession` for APIs and middleware                                                                     |
+| [Connect display helpers](connect-helpers.md)             | Pure helpers under `@falcon-framework/sdk/connect`                                                          |
 
 ## Package entry points
 
-| Import path | Purpose |
-| ----------- | ------- |
-| `@falcon-framework/sdk` | `createFalconAuth`, session helpers, redirect URL builders, `exchangeCodeForSession`, `completeAuthCallback`, `sessionCookieName` |
-| `@falcon-framework/sdk/react` | `FalconAuthProvider`, `useFalconAuth` / `useUser` / `useSession`, `SignIn`, `SignUp`, `UserButton`; re-exports `createFalconAuth` and core types |
-| `@falcon-framework/sdk/server` | `verifySession` |
-| `@falcon-framework/sdk/connect` | Connect app map and connection labeling helpers (no HTTP) |
+| Import path                     | Purpose                                                                                                                                                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@falcon-framework/sdk`         | `createFalconAuth`, session helpers, redirect URL builders, `exchangeCodeForSession`, `completeAuthCallback`, `sessionCookieName`, `buildFalconConnectHeaders`, `organizationClient` re-export                                  |
+| `@falcon-framework/sdk/react`   | `FalconAuthProvider`, `useFalconAuth` / `useUser` / `useSession`, `ActiveOrganizationProvider`, `useActiveOrganization`, `OrganizationSwitcher`, `SignIn`, `SignUp`, `UserButton`; re-exports `createFalconAuth` and core types |
+| `@falcon-framework/sdk/server`  | `verifySession`                                                                                                                                                                                                                 |
+| `@falcon-framework/sdk/connect` | Connect app map and connection labeling helpers (no HTTP)                                                                                                                                                                       |
 
 ## UI stack (React)
 

@@ -50,7 +50,8 @@ function CreateOrgPage() {
         localStorage.setItem("falcon-demo01:activeOrgId", id);
         await client.organization.setActive({ organizationId: id });
       }
-      await navigate({ to: "/dashboard" });
+      // Full navigation so the auth client refetches the organization list (SPA navigation alone can leave it stale).
+      window.location.assign(`${window.location.origin}/dashboard`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unexpected error");
     } finally {

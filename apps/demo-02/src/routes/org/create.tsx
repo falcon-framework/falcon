@@ -57,7 +57,7 @@ function CreateOrgPage() {
         window.location.href = `${window.location.origin}${pending}`;
         return;
       }
-      await navigate({ to: "/" });
+      window.location.assign(`${window.location.origin}/`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unexpected error");
     } finally {
