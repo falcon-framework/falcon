@@ -1,0 +1,19 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@falcon-framework/auth-server": "0.0.0",
+    "@falcon-framework/connect-service": "0.0.0",
+    "@falcon-framework/console-app": "0.0.0",
+    "@falcon-framework/api": "0.0.0",
+    "@falcon-framework/auth": "0.0.0",
+    "@falcon-framework/config": "0.0.0",
+    "@falcon-framework/connection": "0.0.0",
+    "@falcon-framework/db": "0.0.0",
+    "@falcon-framework/env": "0.0.0",
+    "@falcon-framework/infra": "0.0.0",
+    "@falcon-framework/sdk": "0.3.0",
+    "@falcon-framework/ui": "0.0.0"
+  },
+  "changesets": []
+}
