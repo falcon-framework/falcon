@@ -1,29 +1,25 @@
-# Publishes @falcon-framework/sdk prereleases from non-draft, same-repo PRs targeting main.
-# See README.md (SDK publishing → Preview builds) for behavior, tags, and secrets.
-name: Preview SDK
+# Publishes snapshot-style prereleases from the dev branch: x.y.z-alpha.<sha>.<attempt>
+name: SDK dev (alpha)
 
 on:
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches:
+      - dev
 
 concurrency:
-  group: preview-sdk-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  group: sdk-dev-alpha-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: read
   packages: write
 
 jobs:
-  publish-preview:
-    name: Publish @falcon-framework/sdk preview
+  publish-alpha:
+    name: Publish @falcon-framework/sdk (alpha)
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -48,13 +44,13 @@ jobs:
       - name: Publint
         run: bun run sdk:publint
 
-      - name: Set preview version
-        id: preview
+      - name: Set alpha version
+        id: alpha
         run: |
-          VERSION="$(node scripts/set-sdk-preview-version.mjs)"
+          VERSION="$(node scripts/set-sdk-dev-alpha-version.mjs)"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
         env:
-          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          GITHUB_SHA: ${{ github.sha }}
 
       - name: Configure npm for publishing
         run: |
@@ -65,13 +61,7 @@ jobs:
 
       - name: Publish to npm
         working-directory: packages/sdk
-        run: npm publish --tag beta --no-provenance --access public --ignore-scripts
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: npm dist-tag pr-${{ github.event.pull_request.number }}
-        run: |
-          npm dist-tag add "@falcon-framework/sdk@${{ steps.preview.outputs.version }}" "pr-${{ github.event.pull_request.number }}" --registry=https://registry.npmjs.org/
+        run: npm publish --tag alpha --no-provenance --access public --ignore-scripts
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
