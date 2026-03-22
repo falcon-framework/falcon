@@ -1,0 +1,72 @@
+# Publishes snapshot-style prereleases from the dev branch: x.y.z-alpha.<sha>.<attempt>
+name: SDK dev (alpha)
+
+on:
+  push:
+    branches:
+      - dev
+
+concurrency:
+  group: sdk-dev-alpha-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish-alpha:
+    name: Publish @falcon-framework/sdk (alpha)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.9
+
+      - run: bun install --frozen-lockfile
+
+      - name: Build (Bun)
+        run: bun run sdk:build
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build (Node, tsdown-supported runtime)
+        working-directory: packages/sdk
+        run: node ./node_modules/tsdown/dist/run.mjs
+
+      - name: Typecheck
+        run: bun run sdk:check-types
+
+      - name: Publint
+        run: bun run sdk:publint
+
+      - name: Set alpha version
+        id: alpha
+        run: |
+          VERSION="$(node scripts/set-sdk-dev-alpha-version.mjs)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+
+      - name: Configure npm for publishing
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to npm
+        working-directory: packages/sdk
+        run: npm publish --tag alpha --no-provenance --access public --ignore-scripts
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to GitHub Packages
+        run: bash scripts/publish-sdk-github.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_PUBLISH_IGNORE_SCRIPTS: "1"

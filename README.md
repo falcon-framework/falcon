@@ -140,6 +140,43 @@ bun run sdk:check-types
 
 Releases use [Changesets](https://github.com/changesets/changesets) (`bun run changeset`, etc.). The [Release workflow](.github/workflows/release.yml) publishes **`@falcon-framework/sdk` to [GitHub Packages](https://github.com/orgs/falcon-framework/packages) first**, then to [npm](https://www.npmjs.com/package/@falcon-framework/sdk). The GitHub step uses `scripts/publish-sdk-github.sh` with an isolated `.npmrc` so the GitHub token does not override npm credentials; GitHub publish uses `--no-provenance` because npm provenance is tied to the npm registry.
 
+### Prerelease branches (`release/beta` and `dev`)
+
+Long-lived branches publish **`@falcon-framework/sdk`** to npm and GitHub Packages on **push** (no PR workflow). Stable releases from `main` still use Changesets and [`.github/workflows/release.yml`](.github/workflows/release.yml).
+
+#### `release/beta` (Changesets prerelease)
+
+The [SDK release (beta) workflow](.github/workflows/sdk-release-beta.yml) runs on every push to **`release/beta`**.
+
+1. Contributors add **pending** `.changeset/*.md` files on `release/beta` (same `bun run changeset` flow as for `main`).
+2. The branch must include **prerelease mode** for the `beta` tag: run `bunx changeset pre enter beta` once on `release/beta` and commit [`.changeset/pre.json`](.changeset/pre.json) (and any files Changesets creates). Without this, `changeset version` will not produce `x.y.z-beta.N` releases.
+3. On push, CI runs `changeset version`, builds the SDK, publishes to GitHub Packages then npm via `bun run release-packages`, then **commits and pushes** the updated `packages/sdk` version, changelog, and consumed changesets back to `release/beta`.
+
+If there are **no** pending changesets, the workflow exits without publishing (no infinite loop when the bot pushes after a release).
+
+Install the latest beta line from npm:
+
+```bash
+npm install @falcon-framework/sdk@beta
+```
+
+**Setup:** create `release/beta` from `main`, enter prerelease mode as above, then push. **`NPM_TOKEN`** is required (same as release). If branch protection blocks direct pushes, allow **GitHub Actions** to push to `release/beta` or use a PAT. [`.changeset/config.json`](.changeset/config.json) `baseBranch` is `main`; changelog links on this branch may still reference `main` as the base (known limitation).
+
+#### `dev` (alpha snapshots)
+
+The [SDK dev (alpha) workflow](.github/workflows/sdk-dev-alpha.yml) runs on every push to **`dev`**. It does **not** use Changesets. CI sets a unique version `x.y.z-alpha.<shortSha>.<runAttempt>` (see [`scripts/set-sdk-dev-alpha-version.mjs`](scripts/set-sdk-dev-alpha-version.mjs)), then publishes to npm and GitHub Packages.
+
+```bash
+npm install @falcon-framework/sdk@alpha
+```
+
+Alpha publishes use `--no-provenance` on npm (same rationale as in the release pipeline’s GitHub Packages step).
+
+**Repository setup**
+
+- **`NPM_TOKEN`**: required for npm (same as release).
+- **`GITHUB_TOKEN`**: provided by Actions; workflows use `packages: write` where needed for GitHub Packages.
+
 ### Installing from GitHub Packages
 
 To consume the package from GitHub’s npm registry instead of (or in addition to) npmjs, add a project or user `.npmrc`:

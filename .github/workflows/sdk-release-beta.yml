@@ -1,0 +1,95 @@
+# Publishes @falcon-framework/sdk from release/beta using Changesets prerelease (beta.N).
+# Requires .changeset/pre.json from `changeset pre enter beta` on this branch — see README.
+name: SDK release (beta)
+
+on:
+  push:
+    branches:
+      - release/beta
+
+concurrency:
+  group: sdk-release-beta-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  release-beta:
+    name: Version, publish, and commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.9
+
+      - run: bun install --frozen-lockfile
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - name: Version packages (Changesets prerelease)
+        run: bun run version-packages
+
+      - name: Detect pending changesets
+        id: gate
+        run: |
+          if git diff --quiet HEAD; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "No pending changesets (or no version bump); skipping publish."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build SDK (Bun)
+        if: steps.gate.outputs.skip != 'true'
+        run: bun run sdk:build
+
+      - name: Build SDK (Node, tsdown-supported runtime)
+        if: steps.gate.outputs.skip != 'true'
+        working-directory: packages/sdk
+        run: node ./node_modules/tsdown/dist/run.mjs
+
+      - name: Typecheck SDK
+        if: steps.gate.outputs.skip != 'true'
+        run: bun run sdk:check-types
+
+      - name: Publint SDK
+        if: steps.gate.outputs.skip != 'true'
+        run: bun run sdk:publint
+
+      - name: Configure npm for publishing
+        if: steps.gate.outputs.skip != 'true'
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to GitHub Packages and npm
+        if: steps.gate.outputs.skip != 'true'
+        run: bun run release-packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_PUBLISH_IGNORE_SCRIPTS: "1"
+
+      - name: Commit and push versioned files
+        if: steps.gate.outputs.skip != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No staged changes after publish; failing to avoid silent drift."
+            exit 1
+          fi
+          git commit -m "chore(sdk): version packages (beta)"
+          git push origin "HEAD:${{ github.ref_name }}"
