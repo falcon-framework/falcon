@@ -1,8 +1,8 @@
 import type { Db } from "@falcon-framework/db";
 import { closeDb, makeDb } from "@falcon-framework/db";
 import { member } from "@falcon-framework/db/schema/auth";
-import { Context } from "effect";
 import { and, eq } from "drizzle-orm";
+import { Context } from "effect";
 import { createRemoteJWKSet, jwtVerify } from "jose";
 import { germanMessages } from "./i18n.js";
 
@@ -81,7 +81,8 @@ export async function resolvePrincipal(
           }
         }
       }
-    } catch {
+    } catch (e) {
+      console.error("[Connection Principal]: Error getting session:", e);
       // Fall through to JWT
     }
   }

@@ -1,11 +1,11 @@
-import { closeDb, makeDb } from "@falcon-framework/db";
 import { HttpApiBuilder, HttpServer } from "@effect/platform";
+import { closeDb, makeDb } from "@falcon-framework/db";
 import { Context, Layer } from "effect";
 import { FalconConnectionApi } from "./Definition.js";
 import { ApiHandlers } from "./Handlers.js";
 import { germanMessages } from "./i18n.js";
-import { PrincipalTag, resolvePrincipalWithRetry } from "./principal.js";
 import type { Principal } from "./principal.js";
+import { PrincipalTag, resolvePrincipalWithRetry } from "./principal.js";
 import { makeServicesLive } from "./services/index.js";
 
 // Placeholder principal provided at layer build time.
