@@ -1,5 +1,11 @@
 # @falcon-framework/sdk
 
+## 0.5.0
+
+### Minor Changes
+
+- [#12](https://github.com/falcon-framework/falcon/pull/12) [`40beef8`](https://github.com/falcon-framework/falcon/commit/40beef86a58f58e5fac0b747166303ecbe271d03) Thanks [@benjamin-kraatz](https://github.com/benjamin-kraatz)! - Add **`useOrganizations`** React hook: lists the signed-in user’s organizations (normalized `id` / `name` / `slug`), exposes Better Auth **`create`** and **`setActive`**, and passes through **`refetch`** / **`error`** from **`useListOrganizations`**. Document creating organizations via **`client.organization.create`** in the package README and SDK user guides (`organizations.md`, `react-integration.md`).
+
 ## 0.4.0
 
 ### Minor Changes
