@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 # Publish @falcon-framework/sdk to GitHub Packages. Run before npm (changeset publish).
+#
+# NPM_PUBLISH_IGNORE_SCRIPTS=1 — pass --ignore-scripts to npm publish so prepublishOnly (build) is
+# skipped when the tarball was already built in CI (e.g. preview workflow after sdk:build).
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
@@ -23,6 +26,11 @@ if EXISTING="$(npm view "@falcon-framework/sdk@${VERSION}" version --registry=ht
 else
   # Use npm (not bun publish): Bun does not reliably apply NPM_CONFIG_USERCONFIG / token auth for
   # GitHub Packages in CI — npm respects the temp userconfig with //npm.pkg.github.com/:_authToken.
-  (cd "$ROOT/packages/sdk" && npm publish --registry=https://npm.pkg.github.com --no-provenance --access public)
+  # Optional: NPM_PUBLISH_IGNORE_SCRIPTS=1 skips prepublishOnly when the tarball was already built (e.g. preview workflow).
+  EXTRA=()
+  if [ "${NPM_PUBLISH_IGNORE_SCRIPTS:-}" = "1" ]; then
+    EXTRA+=(--ignore-scripts)
+  fi
+  (cd "$ROOT/packages/sdk" && npm publish --registry=https://npm.pkg.github.com --no-provenance --access public "${EXTRA[@]}")
 fi
 unset NPM_CONFIG_USERCONFIG
