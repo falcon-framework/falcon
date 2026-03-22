@@ -1,10 +1,10 @@
-import type { AppItem } from "@/lib/connect-client";
+import type { FalconConnectApp } from "@falcon-framework/sdk/connect";
 import { Badge } from "@falcon-framework/ui/components/badge";
 import { cn } from "@falcon-framework/ui/lib/utils";
 import { ChevronRight, LayoutGrid } from "lucide-react";
 
 type Props = {
-  app?: AppItem | null | undefined;
+  app?: FalconConnectApp | null | undefined;
   idFallback?: string;
 };
 

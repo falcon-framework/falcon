@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "motion/react";
 import { Plug, AlertCircle, CheckCircle2, PauseCircle } from "lucide-react";
 
-import type { AppItem, ConnectionItem } from "@/lib/connect-client";
+import type { FalconConnectApp, FalconConnectConnection } from "@falcon-framework/sdk/connect";
 import { de } from "@/i18n/de";
 import { useConnectClient } from "@/hooks/use-connect-client";
 import { useActiveOrg } from "@/providers/active-org";
@@ -38,7 +38,7 @@ function ConnectionsPage() {
     enabled: !!client,
   });
 
-  const appById = new Map((appsQuery.data ?? []).map((a: AppItem) => [a.id, a]));
+  const appById = new Map((appsQuery.data ?? []).map((a: FalconConnectApp) => [a.id, a]));
 
   const connections = connectionsQuery.data ?? [];
   const active = connections.filter((c) => c.status === "active");
@@ -105,9 +105,9 @@ function ConnectionList({
   isLoading,
   appById,
 }: {
-  connections: ConnectionItem[];
+  connections: FalconConnectConnection[];
   isLoading: boolean;
-  appById: Map<string, AppItem>;
+  appById: Map<string, FalconConnectApp>;
 }) {
   const appName = (id: string) => appById.get(id)?.name ?? id;
 

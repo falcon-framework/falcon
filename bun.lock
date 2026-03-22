@@ -333,7 +333,10 @@
     },
     "packages/sdk": {
       "name": "@falcon-framework/sdk",
-      "version": "0.3.0",
+      "version": "0.5.0",
+      "dependencies": {
+        "zod": "catalog:",
+      },
       "devDependencies": {
         "@testing-library/react": "^16.3.0",
         "@types/react": "^19.2.10",

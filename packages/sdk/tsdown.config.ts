@@ -13,6 +13,6 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   deps: {
-    neverBundle: ["react", "react-dom", "better-auth", /^better-auth\//],
+    neverBundle: ["react", "react-dom", "better-auth", "zod", /^better-auth\//],
   },
 });

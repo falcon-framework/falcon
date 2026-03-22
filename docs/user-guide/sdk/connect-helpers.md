@@ -1,6 +1,8 @@
 # Connect display helpers
 
-The entry **`@falcon-framework/sdk/connect`** exposes **pure** helpers: they **do not** call HTTP. Your app (or a thin client wrapper) fetches **`GET /v1/apps`** and **`GET /v1/connections`** from Falcon Connect, then passes arrays into these functions to build labels and sorted display rows.
+The entry **`@falcon-framework/sdk/connect`** also ships **`createFalconConnectClient`** for typed, Zod-validated HTTP calls — see [Falcon Connect HTTP client](falcon-connect-client.md).
+
+The helpers on **this page** are **pure**: they **do not** call HTTP. Pass arrays from your client (for example **`client.apps.list()`** and **`client.connections.list()`**) into these functions to build labels and display rows.
 
 ## Imports
 

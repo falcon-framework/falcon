@@ -5,12 +5,10 @@ This package lets third-party apps integrate with the FALCON platform: **FALCON 
 ## Installation
 
 ```sh
-npm install @falcon-framework/sdk better-auth react react-dom
-# or
 bun add @falcon-framework/sdk better-auth react react-dom
-# or
-pnpm add @falcon-framework/sdk better-auth react react-dom
 ```
+
+Other package managers work too; this repo standardizes on **Bun** for scripts and local development.
 
 `better-auth` is required whenever you use `createFalconAuth`: the client wraps Better Auth’s React client (`better-auth/react`).
 
@@ -31,7 +29,7 @@ pnpm add @falcon-framework/sdk better-auth react react-dom
 | `@falcon-framework/sdk`         | Auth client (`createFalconAuth`), session helpers, redirects, OAuth callback helper (`completeAuthCallback`), cookie name, **`buildFalconConnectHeaders`**, **`organizationClient`** re-export.                                |
 | `@falcon-framework/sdk/react`   | `FalconAuthProvider`, hooks (`useFalconAuth`, `useUser`, `useSession`, **`useOrganizations`**), **`ActiveOrganizationProvider`**, **`useActiveOrganization`**, **`OrganizationSwitcher`**, `SignIn` / `SignUp` / `UserButton`. |
 | `@falcon-framework/sdk/server`  | `verifySession` for protecting backend routes.                                                                                                                                                                                 |
-| `@falcon-framework/sdk/connect` | Connect app map / connection display helpers.                                                                                                                                                                                  |
+| `@falcon-framework/sdk/connect` | **`createFalconConnectClient`** (Zod-validated Connect API v1), errors, exported schemas, and **display** helpers (`resolveFalconConnectionsDisplay`, …).                                                                       |
 
 ## Falcon Auth (browser)
 
