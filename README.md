@@ -140,6 +140,39 @@ bun run sdk:check-types
 
 Releases use [Changesets](https://github.com/changesets/changesets) (`bun run changeset`, etc.). The [Release workflow](.github/workflows/release.yml) publishes **`@falcon-framework/sdk` to [GitHub Packages](https://github.com/orgs/falcon-framework/packages) first**, then to [npm](https://www.npmjs.com/package/@falcon-framework/sdk). The GitHub step uses `scripts/publish-sdk-github.sh` with an isolated `.npmrc` so the GitHub token does not override npm credentials; GitHub publish uses `--no-provenance` because npm provenance is tied to the npm registry.
 
+### Preview builds (pull requests)
+
+The [Preview SDK workflow](.github/workflows/preview-sdk.yml) publishes **`@falcon-framework/sdk` prereleases** from pull requests so reviewers and downstream apps can install the exact SDK built from a branch **without** waiting for a Changesets release on `main`.
+
+**When it runs**
+
+- The PR targets `main` and is **not** a draft (`opened`, every push `synchronize`, `reopened`, or `ready_for_review` when moving out of draft).
+- The branch lives **in this repository** (same-repo PRs only). Fork PRs **do not** publish: they would not receive `NPM_TOKEN` safely, so the publish job is skipped.
+
+**What gets published**
+
+- **npm** (public registry): prerelease versions of the form `x.y.z-beta.<shortSha>.<runAttempt>`, where `x.y.z` is taken from [`packages/sdk/package.json`](packages/sdk/package.json) on the PR head (major.minor.patch only), `shortSha` is the first seven characters of the PR head commit, and `runAttempt` is the GitHub Actions run attempt (so a workflow retry can publish again without a new commit).
+- **GitHub Packages**: the same version and tarball as npm, using [`scripts/publish-sdk-github.sh`](scripts/publish-sdk-github.sh).
+
+**Dist-tags on npm**
+
+- `@beta` points at the **latest** successful preview publish from any qualifying PR (the tag moves as previews land).
+- `pr-<number>` points at the latest preview build for **that** PR (for example `pr-42` tracks PR #42).
+
+Install examples:
+
+```bash
+npm install @falcon-framework/sdk@beta
+npm install @falcon-framework/sdk@pr-42
+```
+
+Preview publishes use `--no-provenance` on npm (same rationale as the GitHub Packages step in release: provenance is tied to the primary npm registry flow). They do **not** replace the normal Changesets release process or the `latest` tag.
+
+**Repository setup**
+
+- **`NPM_TOKEN`** secret (same as release): required for publishing to npm and for `npm dist-tag`.
+- **`GITHUB_TOKEN`**: provided by Actions; the workflow sets `packages: write` so the package can be published to GitHub Packages.
+
 ### Installing from GitHub Packages
 
 To consume the package from GitHub’s npm registry instead of (or in addition to) npmjs, add a project or user `.npmrc`:
