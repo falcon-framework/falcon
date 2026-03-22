@@ -8,6 +8,8 @@ This package lets third-party apps integrate with the FALCON platform: **FALCON 
 bun add @falcon-framework/sdk better-auth react react-dom
 ```
 
+When you use **`@falcon-framework/sdk/connect`**, also install **`zod`** (peer, `^4.1.0`).
+
 Other package managers work too; this repo standardizes on **Bun** for scripts and local development.
 
 `better-auth` is required whenever you use `createFalconAuth`: the client wraps Better Auth’s React client (`better-auth/react`).
@@ -19,8 +21,9 @@ Other package managers work too; this repo standardizes on **Bun** for scripts a
 | `better-auth` | `^1.5.0` | Always for `createFalconAuth` / `@falcon-framework/sdk/react`. Match the version your Falcon Auth server uses. |
 | `react`       | `>=18`   | Main entry (`createFalconAuth`) and `@falcon-framework/sdk/react`.                                             |
 | `react-dom`   | `>=18`   | Same as above.                                                                                                 |
+| `zod`         | `^4.1.0` | When you import **`@falcon-framework/sdk/connect`** (HTTP client and Zod schemas).                             |
 
-`react` and `react-dom` are **optional** in `package.json` so apps that only import `@falcon-framework/sdk/server` or `@falcon-framework/sdk/connect` are not forced to install React.
+`react` and `react-dom` are **optional** peers so apps that only import `@falcon-framework/sdk/server` are not forced to install React. **`zod`** is an **optional** peer so apps that only use auth helpers are not forced to install it; **`@falcon-framework/sdk/connect` requires it at runtime.**
 
 ### Entry points
 
