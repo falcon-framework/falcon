@@ -2,6 +2,8 @@
 
 The package **`@falcon-framework/sdk`** integrates browser apps and backends with **Falcon Auth** (sessions, OAuth-style redirects, optional React UI) and optional **Falcon Connect** display helpers.
 
+> Package-local onboarding guides now live directly in [`packages/sdk/docs`](../../../packages/sdk/docs/README.md). Use the repo user-guide pages here as secondary references and platform context; use the package docs for package-consumer getting-started flows.
+
 ## Install
 
 ```sh
