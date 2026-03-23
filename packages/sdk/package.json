@@ -1,6 +1,6 @@
 {
   "name": "@falcon-framework/sdk",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "private": false,
   "description": "FALCON SDK — use Falcon Auth as your identity provider. Drop-in React components for sign-in, sign-up, and user management. Like Clerk, but self-hosted.",
   "keywords": [
