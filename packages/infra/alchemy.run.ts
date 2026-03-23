@@ -9,6 +9,7 @@ config({ path: "../../apps/auth-server/.env" });
 config({ path: "../../apps/connect-service/.env" });
 
 const app = await alchemy("falcon");
+const connectAccessTokenTtlSeconds = process.env.CONNECT_ACCESS_TOKEN_TTL_SECONDS ?? "300";
 
 export const consoleApp = await TanStackStart("console-app", {
   cwd: "../../apps/console-app",
@@ -19,7 +20,7 @@ export const consoleApp = await TanStackStart("console-app", {
     CORS_ORIGIN: alchemy.env.CORS_ORIGIN!,
     BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
     BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,
-    CONNECT_ACCESS_TOKEN_TTL_SECONDS: alchemy.env.CONNECT_ACCESS_TOKEN_TTL_SECONDS ?? "300",
+    CONNECT_ACCESS_TOKEN_TTL_SECONDS: connectAccessTokenTtlSeconds,
     CONNECT_JWT_PRIVATE_KEY: alchemy.secret.env.CONNECT_JWT_PRIVATE_KEY!,
     CONNECT_JWT_PUBLIC_KEY: alchemy.env.CONNECT_JWT_PUBLIC_KEY!,
   },
@@ -34,7 +35,7 @@ export const authServer = await Worker("auth-server", {
     CORS_ORIGIN: alchemy.env.CORS_ORIGIN!,
     BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
     BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,
-    CONNECT_ACCESS_TOKEN_TTL_SECONDS: alchemy.env.CONNECT_ACCESS_TOKEN_TTL_SECONDS ?? "300",
+    CONNECT_ACCESS_TOKEN_TTL_SECONDS: connectAccessTokenTtlSeconds,
     CONNECT_JWT_PRIVATE_KEY: alchemy.secret.env.CONNECT_JWT_PRIVATE_KEY!,
     CONNECT_JWT_PUBLIC_KEY: alchemy.env.CONNECT_JWT_PUBLIC_KEY!,
   },
@@ -52,7 +53,7 @@ export const connectService = await Worker("connect-service", {
     CORS_ORIGIN: alchemy.env.CORS_ORIGIN!,
     BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
     BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,
-    CONNECT_ACCESS_TOKEN_TTL_SECONDS: alchemy.env.CONNECT_ACCESS_TOKEN_TTL_SECONDS ?? "300",
+    CONNECT_ACCESS_TOKEN_TTL_SECONDS: connectAccessTokenTtlSeconds,
     CONNECT_JWT_PRIVATE_KEY: alchemy.secret.env.CONNECT_JWT_PRIVATE_KEY!,
     CONNECT_JWT_PUBLIC_KEY: alchemy.env.CONNECT_JWT_PUBLIC_KEY!,
   },

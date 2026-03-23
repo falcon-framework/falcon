@@ -8,10 +8,7 @@ The **`@falcon-framework/sdk/server`** entry gives your **backend** two related 
 ## API
 
 ```ts
-import {
-  mintFalconConnectAccessToken,
-  verifySession,
-} from "@falcon-framework/sdk/server";
+import { mintFalconConnectAccessToken, verifySession } from "@falcon-framework/sdk/server";
 
 const config = {
   serverUrl: "https://auth.example.com",
@@ -121,10 +118,7 @@ Adjust cookie serialization if your deployment uses a different shape—the goal
 ## Example: raw Falcon session token -> Connect access token
 
 ```ts
-import {
-  mintFalconConnectAccessToken,
-  verifySession,
-} from "@falcon-framework/sdk/server";
+import { mintFalconConnectAccessToken, verifySession } from "@falcon-framework/sdk/server";
 
 const sessionToken = request.headers.get("x-falcon-session-token");
 

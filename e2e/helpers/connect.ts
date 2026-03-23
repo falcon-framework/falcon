@@ -18,7 +18,10 @@ export async function startConnectInstallFromDemo01(page: Page): Promise<void> {
 }
 
 /** Completes target-side sign-in/org if needed, then approves the pending install request. */
-export async function approveConnectOnDemo02Incoming(page: Page, identity: Identity): Promise<void> {
+export async function approveConnectOnDemo02Incoming(
+  page: Page,
+  identity: Identity,
+): Promise<void> {
   await expect(page.getByRole("button", { name: "Continue to Falcon Auth" })).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Email" })).toHaveCount(0);
   await expect(page.getByRole("textbox", { name: "Password" })).toHaveCount(0);
@@ -30,7 +33,10 @@ export async function approveConnectOnDemo02Incoming(page: Page, identity: Ident
 }
 
 /** Asserts demo-02 connections page shows the line under incoming and an active status. */
-export async function expectTargetConnectionsPageShowsActiveLine(page: Page, line: string): Promise<void> {
+export async function expectTargetConnectionsPageShowsActiveLine(
+  page: Page,
+  line: string,
+): Promise<void> {
   await page.goto(`${DEMO_02_URL}/connections`);
   await expect(page.locator("main")).not.toContainText("Unauthorized");
   await expect(

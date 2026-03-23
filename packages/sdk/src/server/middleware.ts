@@ -1,4 +1,8 @@
-import { resolveCookieHeader, type FalconServerAuthInput, type IncomingServerRequest } from "./auth-request";
+import {
+  resolveCookieHeader,
+  type FalconServerAuthInput,
+  type IncomingServerRequest,
+} from "./auth-request";
 import type { FalconOrganizationSummary } from "../core/types";
 
 export interface VerifySessionConfig {

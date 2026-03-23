@@ -634,7 +634,10 @@ app.post("/auth/connect/token", async (c) => {
 
   const headers = new Headers(c.req.raw.headers);
   if (body.sessionToken) {
-    headers.set("cookie", `${cookiePrefixForPublishableKey(appId)}.session_token=${body.sessionToken}`);
+    headers.set(
+      "cookie",
+      `${cookiePrefixForPublishableKey(appId)}.session_token=${body.sessionToken}`,
+    );
   }
 
   const session = await auth({ appId, extraTrustedOrigins }).api.getSession({ headers });

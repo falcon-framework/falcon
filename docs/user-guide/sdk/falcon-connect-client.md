@@ -60,12 +60,12 @@ Optional **`getHeaders`** merges extra headers on every request. Optional **`fet
 
 All methods return **Promises** of **validated** data (or throw — see [Errors](#errors)).
 
-| Namespace | Methods |
-|-----------|---------|
-| **`apps`** | **`list()`**, **`capabilities(appId)`** |
-| **`installationRequests`** | **`list()`**, **`create(body)`**, **`approve(requestId)`** |
-| **`connections`** | **`list()`**, **`get(connectionId)`**, **`revoke`**, **`pause`**, **`resume`**, **`sync`** |
-| **`scopes`** | **`check({ connectionId, appId, scope })`** |
+| Namespace                  | Methods                                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------ |
+| **`apps`**                 | **`list()`**, **`capabilities(appId)`**                                                    |
+| **`installationRequests`** | **`list()`**, **`create(body)`**, **`approve(requestId)`**                                 |
+| **`connections`**          | **`list()`**, **`get(connectionId)`**, **`revoke`**, **`pause`**, **`resume`**, **`sync`** |
+| **`scopes`**               | **`check({ connectionId, appId, scope })`**                                                |
 
 `create` validates the body with Zod before sending. Invalid input throws **`z.ZodError`** (same as **`createInstallationRequestBodySchema.parse`**).
 
@@ -106,7 +106,9 @@ import {
   resolveFalconConnectionsDisplay,
 } from "@falcon-framework/sdk/connect";
 
-const client = createFalconConnectClient({ /* … */ });
+const client = createFalconConnectClient({
+  /* … */
+});
 
 const rows = await resolveFalconConnectionsDisplay(
   () => client.apps.list(),
@@ -116,12 +118,12 @@ const rows = await resolveFalconConnectionsDisplay(
 
 ## Errors
 
-| Class | Meaning |
-|-------|---------|
-| **`FalconConnectHttpError`** | Non-2xx response. **`status`**, **`message`**, **`body`**. Message is taken from **`message`**, **`error`**, or the status line when JSON is missing. |
-| **`FalconConnectValidationError`** | 2xx response but JSON **does not match** the expected Zod schema (server drift or unexpected payload). Inspect **`issues`** / **`zodError`**. |
-| **`FalconConnectParseError`** | 2xx but body is empty or not JSON. |
-| **`FalconConnectNetworkError`** | **`fetch`** failed (offline, CORS, etc.). **`cause`** preserved. |
+| Class                              | Meaning                                                                                                                                               |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`FalconConnectHttpError`**       | Non-2xx response. **`status`**, **`message`**, **`body`**. Message is taken from **`message`**, **`error`**, or the status line when JSON is missing. |
+| **`FalconConnectValidationError`** | 2xx response but JSON **does not match** the expected Zod schema (server drift or unexpected payload). Inspect **`issues`** / **`zodError`**.         |
+| **`FalconConnectParseError`**      | 2xx but body is empty or not JSON.                                                                                                                    |
+| **`FalconConnectNetworkError`**    | **`fetch`** failed (offline, CORS, etc.). **`cause`** preserved.                                                                                      |
 
 **Guidance:** treat **401** as “sign in or pick an org”; **403** as permission; **422** as invalid state for the operation. Retry only **idempotent GETs** on transient failures.
 

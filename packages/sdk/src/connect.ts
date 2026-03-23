@@ -1,7 +1,4 @@
-export type {
-  CreateFalconConnectClientOptions,
-  FalconConnectClient,
-} from "./connect/client";
+export type { CreateFalconConnectClientOptions, FalconConnectClient } from "./connect/client";
 export { createFalconConnectClient } from "./connect/client";
 export {
   FalconConnectHttpError,
@@ -36,7 +33,10 @@ export {
   falconConnectInstallationRequestsListSchema,
   scopeCheckResultSchema,
 } from "./connect/schemas";
-export type { FalconConnectAppDirectoryEntry, FalconConnectConnectionSummaryInput } from "./connect/types";
+export type {
+  FalconConnectAppDirectoryEntry,
+  FalconConnectConnectionSummaryInput,
+} from "./connect/types";
 export {
   buildFalconConnectAppMap,
   displayFalconConnection,

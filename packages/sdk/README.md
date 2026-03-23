@@ -32,7 +32,7 @@ Other package managers work too; this repo standardizes on **Bun** for scripts a
 | `@falcon-framework/sdk`         | Auth client (`createFalconAuth`), session helpers, redirects, OAuth callback helper (`completeAuthCallback`), cookie name, **`buildFalconConnectHeaders`**, **`organizationClient`** re-export.                                |
 | `@falcon-framework/sdk/react`   | `FalconAuthProvider`, hooks (`useFalconAuth`, `useUser`, `useSession`, **`useOrganizations`**), **`ActiveOrganizationProvider`**, **`useActiveOrganization`**, **`OrganizationSwitcher`**, `SignIn` / `SignUp` / `UserButton`. |
 | `@falcon-framework/sdk/server`  | `verifySession` for protecting backend routes and `mintFalconConnectAccessToken` for BFF / backend Connect calls.                                                                                                              |
-| `@falcon-framework/sdk/connect` | **`createFalconConnectClient`** (Zod-validated Connect API v1), errors, exported schemas, and **display** helpers (`resolveFalconConnectionsDisplay`, …).                                                                       |
+| `@falcon-framework/sdk/connect` | **`createFalconConnectClient`** (Zod-validated Connect API v1), errors, exported schemas, and **display** helpers (`resolveFalconConnectionsDisplay`, …).                                                                      |
 
 ## Falcon Auth (browser)
 
@@ -112,10 +112,7 @@ if (!result.error && result.data?.id) {
 Use `verifySession` in API routes or middleware to require a valid Falcon session (e.g. from cookies forwarded by your backend). When your backend needs to call Falcon Connect without relying on browser cookies at the Connect hop, use `mintFalconConnectAccessToken`.
 
 ```ts
-import {
-  mintFalconConnectAccessToken,
-  verifySession,
-} from "@falcon-framework/sdk/server";
+import { mintFalconConnectAccessToken, verifySession } from "@falcon-framework/sdk/server";
 import { createFalconConnectClient } from "@falcon-framework/sdk/connect";
 
 const session = await verifySession(authConfig, request);
