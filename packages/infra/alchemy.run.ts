@@ -3,13 +3,15 @@ import { TanStackStart } from "alchemy/cloudflare";
 import { Worker } from "alchemy/cloudflare";
 import { config } from "dotenv";
 
+// Load the root .env file as well for managing cross-service env vars
+config({ path: "../../.env" });
 config({ path: "./.env" });
 config({ path: "../../apps/console-app/.env" });
 config({ path: "../../apps/auth-server/.env" });
 config({ path: "../../apps/connect-service/.env" });
 
 const app = await alchemy("falcon");
-const connectAccessTokenTtlSeconds = process.env.CONNECT_ACCESS_TOKEN_TTL_SECONDS ?? "300";
+const connectAccessTokenTtlSeconds = alchemy.secret.env.CONNECT_ACCESS_TOKEN_TTL_SECONDS ?? "300";
 
 export const consoleApp = await TanStackStart("console-app", {
   cwd: "../../apps/console-app",
