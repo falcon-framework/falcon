@@ -1,5 +1,11 @@
 # @falcon-framework/sdk
 
+## 0.7.0
+
+### Minor Changes
+
+- [#18](https://github.com/falcon-framework/falcon/pull/18) [`6611720`](https://github.com/falcon-framework/falcon/commit/66117203cbb4139df1c4a842330af43eea2b6eb9) Thanks [@benjamin-kraatz](https://github.com/benjamin-kraatz)! - Add server-side Falcon Connect token exchange helpers and document the non-cookie backend auth flow for Connect.
+
 ## 0.6.1
 
 ### Patch Changes
