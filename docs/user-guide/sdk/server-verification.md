@@ -1,11 +1,17 @@
-# Server session verification
+# Server session verification and Connect token exchange
 
-The **`verifySession`** helper (from **`@falcon-framework/sdk/server`**) lets your **backend** confirm that an incoming HTTP request belongs to a signed-in Falcon user by reusing the **same cookies** the browser would send to the auth server.
+The **`@falcon-framework/sdk/server`** entry gives your **backend** two related helpers:
+
+- **`verifySession`** — confirm that an incoming request or raw Falcon session token belongs to a signed-in Falcon user.
+- **`mintFalconConnectAccessToken`** — exchange that Falcon session into a short-lived Connect Bearer token for backend / BFF Connect calls.
 
 ## API
 
 ```ts
-import { verifySession } from "@falcon-framework/sdk/server";
+import {
+  mintFalconConnectAccessToken,
+  verifySession,
+} from "@falcon-framework/sdk/server";
 
 const config = {
   serverUrl: "https://auth.example.com",
@@ -13,6 +19,10 @@ const config = {
 };
 
 const session = await verifySession(config, incomingRequest);
+const access = await mintFalconConnectAccessToken(config, {
+  organizationId: "org_123",
+  incomingRequest,
+});
 ```
 
 **Parameters:**
@@ -20,6 +30,8 @@ const session = await verifySession(config, incomingRequest);
 - **`config.serverUrl`** — Falcon Auth base URL (no special path; the helper calls **`GET /api/auth/get-session`**).
 - **`config.publishableKey`** — your app’s publishable key (forwarded as **`X-Falcon-App-Id`**).
 - **`incomingRequest`** — a **`Request`**, or any object with **`headers`** (`Headers` or Node-style **`cookie`**).
+- **`sessionToken`** — optional raw Falcon session token when your backend receives it explicitly instead of receiving Falcon cookies.
+- **`organizationId`** — required when minting a Connect token.
 
 **Returns:**
 
@@ -30,9 +42,10 @@ When the Falcon Auth server runs the **organization** plugin, the JSON may also 
 
 ## How it works
 
-1. Reads the **`Cookie`** header from the incoming request.
+1. Reads the **`Cookie`** header from the incoming request, or rebuilds the Falcon cookie from a provided raw session token.
 2. Forwards it to **`GET {serverUrl}/api/auth/get-session`** with **`X-Falcon-App-Id`**.
 3. Parses the JSON body and validates presence of **user** and **session**.
+4. For Connect token exchange, posts **`organizationId`** to **`POST {serverUrl}/auth/connect/token`** and returns the short-lived access token.
 
 No session secret is required in your API process: validation is delegated to the auth server.
 
@@ -41,6 +54,7 @@ No session secret is required in your API process: validation is delegated to th
 - **BFF / API routes** that must not trust client-reported “logged in” flags alone.
 - **Middleware** gating routes before hitting your databases.
 - **Bridge services** that need a stable user id before calling internal APIs.
+- **Cross-origin backend bridges** that receive a Falcon session token but cannot forward Falcon cookies directly to Connect.
 
 ## Examples
 
@@ -104,10 +118,31 @@ export async function GET() {
 
 Adjust cookie serialization if your deployment uses a different shape—the goal is to forward the **same** **`Cookie`** header the browser would send to the auth host.
 
+## Example: raw Falcon session token -> Connect access token
+
+```ts
+import {
+  mintFalconConnectAccessToken,
+  verifySession,
+} from "@falcon-framework/sdk/server";
+
+const sessionToken = request.headers.get("x-falcon-session-token");
+
+const session = await verifySession(authConfig, { sessionToken: sessionToken ?? undefined });
+if (!session) {
+  return Response.json({ error: "Unauthorized" }, { status: 401 });
+}
+
+const access = await mintFalconConnectAccessToken(authConfig, {
+  organizationId: session.session.activeOrganizationId!,
+  sessionToken: sessionToken ?? undefined,
+});
+```
+
 ## Limitations
 
-- Verifies **Falcon Auth session** only. Falcon Connect organization membership is separate (**`X-Organization-Id`**, Connect API checks).
-- For **machine clients** without browser cookies, prefer **JWT** verification against JWKS or another server-to-server contract.
+- `verifySession` verifies **Falcon Auth session** only. Falcon Connect organization membership is separate (**`X-Organization-Id`**, Connect API checks).
+- `mintFalconConnectAccessToken` mints a **user-bound**, **single-org**, **short-lived** token for Connect. It is not a long-lived offline delegation mechanism.
 
 ## Related topics
 

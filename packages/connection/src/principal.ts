@@ -1,3 +1,4 @@
+import { sessionAllowedForApp } from "@falcon-framework/auth";
 import type { Db } from "@falcon-framework/db";
 import { closeDb, makeDb } from "@falcon-framework/db";
 import { member } from "@falcon-framework/db/schema/auth";
@@ -12,6 +13,12 @@ export interface Principal {
   role: string;
   authMethod: "session" | "jwt";
 }
+
+type ConnectJwtPayload = {
+  app_id?: unknown;
+  org_id?: unknown;
+  sub?: string;
+};
 
 export class PrincipalTag extends Context.Tag("@falcon-framework/connection/Principal")<
   PrincipalTag,
@@ -94,10 +101,29 @@ export async function resolvePrincipal(
     try {
       const jwksUrl = new URL(`${betterAuthUrl}/.well-known/jwks.json`);
       const JWKS = createRemoteJWKSet(jwksUrl);
-      const { payload } = await jwtVerify(token, JWKS);
+      const { payload } = await jwtVerify<ConnectJwtPayload>(token, JWKS, {
+        issuer: betterAuthUrl.replace(/\/+$/, ""),
+        audience: "falcon-connect",
+        algorithms: ["RS256"],
+      });
 
-      const userId = payload.sub;
-      if (userId) {
+      const userId = typeof payload.sub === "string" ? payload.sub : undefined;
+      const tokenOrgId = typeof payload.org_id === "string" ? payload.org_id : undefined;
+      const tokenAppId = typeof payload.app_id === "string" ? payload.app_id : undefined;
+
+      if (
+        userId &&
+        tokenOrgId &&
+        tokenOrgId === organizationId &&
+        (!appId || !tokenAppId || tokenAppId === appId)
+      ) {
+        if (tokenAppId) {
+          const allowed = await sessionAllowedForApp(db, userId, tokenAppId);
+          if (!allowed) {
+            return null;
+          }
+        }
+
         const membership = await resolveOrgMembership(db, userId, organizationId);
         if (membership) {
           return {

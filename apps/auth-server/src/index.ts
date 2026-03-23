@@ -7,6 +7,7 @@ import {
   sessionAllowedForApp,
 } from "@falcon-framework/auth";
 import { closeDb, makeDb } from "@falcon-framework/db";
+import { member } from "@falcon-framework/db/schema/auth";
 import { appUser, authorizationCode, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
@@ -18,6 +19,15 @@ import { and, eq, gt, isNull } from "drizzle-orm";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import {
+  SignJWT,
+  calculateJwkThumbprint,
+  exportJWK,
+  importPKCS8,
+  importSPKI,
+  type JWK,
+} from "jose";
+import { z } from "zod";
 
 /** Comma-separated `CORS_ORIGIN` values (e.g. console + demo apps on different localhost ports). */
 function parseCorsOrigins(value: string): string[] {
@@ -118,6 +128,95 @@ function sessionCookieHeader(cookieName: string, sessionToken: string): string {
   }
 
   return parts.join("; ");
+}
+
+const CONNECT_TOKEN_ALG = "RS256";
+const CONNECT_TOKEN_AUDIENCE = "falcon-connect";
+const connectTokenRequestSchema = z.object({
+  organizationId: z.string().trim().min(1),
+  sessionToken: z.string().trim().min(1).optional(),
+});
+
+let connectPrivateKeyPromise: Promise<CryptoKey> | undefined;
+let connectPublicJwkPromise: Promise<JWK & { kid: string }> | undefined;
+
+function connectTokenTtlSeconds(): number {
+  const raw = Number.parseInt(env.CONNECT_ACCESS_TOKEN_TTL_SECONDS ?? "300", 10);
+  return Number.isFinite(raw) && raw > 0 ? raw : 300;
+}
+
+function normalizedAuthIssuer(): string {
+  return env.BETTER_AUTH_URL.replace(/\/+$/, "");
+}
+
+async function getConnectPrivateKey() {
+  connectPrivateKeyPromise ??= importPKCS8(env.CONNECT_JWT_PRIVATE_KEY, CONNECT_TOKEN_ALG);
+  return connectPrivateKeyPromise;
+}
+
+async function getConnectPublicJwk() {
+  connectPublicJwkPromise ??= (async () => {
+    const publicKey = await importSPKI(env.CONNECT_JWT_PUBLIC_KEY, CONNECT_TOKEN_ALG, {
+      extractable: true,
+    });
+    const jwk = await exportJWK(publicKey);
+    const kid = await calculateJwkThumbprint(jwk);
+    return {
+      ...jwk,
+      alg: CONNECT_TOKEN_ALG,
+      kid,
+      use: "sig",
+    };
+  })();
+  return connectPublicJwkPromise;
+}
+
+async function signConnectAccessToken(input: {
+  userId: string;
+  organizationId: string;
+  appId: string;
+}) {
+  const key = await getConnectPrivateKey();
+  const publicJwk = await getConnectPublicJwk();
+  const now = Math.floor(Date.now() / 1000);
+  const expiresAtEpoch = now + connectTokenTtlSeconds();
+  const accessToken = await new SignJWT({
+    org_id: input.organizationId,
+    app_id: input.appId,
+  })
+    .setProtectedHeader({
+      alg: CONNECT_TOKEN_ALG,
+      kid: publicJwk.kid,
+      typ: "JWT",
+    })
+    .setSubject(input.userId)
+    .setAudience(CONNECT_TOKEN_AUDIENCE)
+    .setIssuer(normalizedAuthIssuer())
+    .setIssuedAt(now)
+    .setExpirationTime(expiresAtEpoch)
+    .sign(key);
+
+  return {
+    accessToken,
+    expiresAt: new Date(expiresAtEpoch * 1000).toISOString(),
+  };
+}
+
+async function resolveMemberRole(
+  userId: string,
+  organizationId: string,
+): Promise<{ organizationId: string; role: string } | null> {
+  const db = makeDb();
+  try {
+    const rows = await db
+      .select({ organizationId: member.organizationId, role: member.role })
+      .from(member)
+      .where(and(eq(member.userId, userId), eq(member.organizationId, organizationId)))
+      .limit(1);
+    return rows[0] ?? null;
+  } finally {
+    await closeDb(db);
+  }
 }
 
 /** Shared CSS for auth pages — minimal, consistent with the Falcon teal palette. */
@@ -513,6 +612,58 @@ app.post("/auth/token", async (c) => {
   c.header("Set-Cookie", sessionCookieHeader(cookieName, row.sessionToken));
 
   return c.json({ sessionToken: row.sessionToken });
+});
+
+app.get("/.well-known/jwks.json", async (c) => {
+  const jwk = await getConnectPublicJwk();
+  return c.json({ keys: [jwk] });
+});
+
+app.post("/auth/connect/token", async (c) => {
+  const { appId, extraTrustedOrigins } = await resolveAuthRequestOptions(c);
+  if (!appId) {
+    return c.json({ error: "Missing X-Falcon-App-Id" }, 400);
+  }
+
+  let body: z.infer<typeof connectTokenRequestSchema>;
+  try {
+    body = connectTokenRequestSchema.parse(await c.req.json());
+  } catch {
+    return c.json({ error: "Invalid JSON body" }, 400);
+  }
+
+  const headers = new Headers(c.req.raw.headers);
+  if (body.sessionToken) {
+    headers.set("cookie", `${cookiePrefixForPublishableKey(appId)}.session_token=${body.sessionToken}`);
+  }
+
+  const session = await auth({ appId, extraTrustedOrigins }).api.getSession({ headers });
+  if (!session?.user?.id) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  const db = makeDb();
+  try {
+    const allowed = await sessionAllowedForApp(db, session.user.id, appId);
+    if (!allowed) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+  } finally {
+    await closeDb(db);
+  }
+
+  const membership = await resolveMemberRole(session.user.id, body.organizationId);
+  if (!membership) {
+    return c.json({ error: "Forbidden" }, 403);
+  }
+
+  return c.json(
+    await signConnectAccessToken({
+      userId: session.user.id,
+      organizationId: membership.organizationId,
+      appId,
+    }),
+  );
 });
 
 // ---------------------------------------------------------------------------

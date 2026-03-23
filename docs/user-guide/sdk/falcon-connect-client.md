@@ -32,14 +32,25 @@ const connect = createFalconConnectClient({
 
 ### Server or JWT-only callers
 
-Set **`getAccessToken`** to return a Bearer token verified by Connect (see [Calling the Connect API](../falcon-connect/authentication.md)). You can omit **`publishableKey`** when not using the cookie + get-session path.
+Set **`getAccessToken`** to return a Bearer token verified by Connect (see [Calling the Connect API](../falcon-connect/authentication.md)). For Falcon-backed BFF or backend calls, prefer minting a short-lived token with **`mintFalconConnectAccessToken`** from **`@falcon-framework/sdk/server`**. You can omit **`publishableKey`** when not using the cookie + get-session path directly.
 
 ```ts
+import { mintFalconConnectAccessToken } from "@falcon-framework/sdk/server";
+import { createFalconConnectClient } from "@falcon-framework/sdk/connect";
+
+const access = await mintFalconConnectAccessToken(
+  { serverUrl: process.env.FALCON_AUTH_URL!, publishableKey: process.env.FALCON_PUBLISHABLE_KEY! },
+  {
+    organizationId: orgId,
+    sessionToken: falconSessionToken,
+  },
+);
+
 const connect = createFalconConnectClient({
   baseUrl: process.env.CONNECT_URL!,
   organizationId: orgId,
   credentials: "omit",
-  getAccessToken: () => process.env.FALCON_ACCESS_TOKEN,
+  getAccessToken: () => access?.accessToken,
 });
 ```
 
@@ -66,6 +77,14 @@ All methods return **Promises** of **validated** data (or throw — see [Errors]
 2. Optional: **`apps.capabilities(targetAppId)`** to show allowed scope keys.
 3. **`installationRequests.create({ sourceAppId, targetAppId, requestedScopes, settingsDraft? })`**.
 4. Redirect the browser to your target app’s approval UI (return URL, request id) — see [Installation requests and approval](../falcon-connect/installation-and-approval.md).
+
+### Finder-style backend bridge
+
+If your product UI is on one origin and your own API runs on another, your API may receive a Falcon **session token** from the browser even though it does not receive Falcon cookies directly. In that case:
+
+1. Exchange that Falcon session token for a short-lived Connect access token with **`mintFalconConnectAccessToken`** or `POST /auth/connect/token`.
+2. Build the Connect client with **`credentials: "omit"`** and **`getAccessToken`**.
+3. Do **not** invent your own cookie names or fake `session=...` headers when calling Connect.
 
 ### Target app (inbox + approve)
 

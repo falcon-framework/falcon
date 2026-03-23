@@ -21,7 +21,7 @@ npm install @falcon-framework/sdk better-auth react react-dom
 | [Organizations](organizations.md)                         | Creating orgs (`client.organization.create`, **`useOrganizations`**), active org provider, `OrganizationSwitcher`, Connect headers, session fields |
 | [Centralized sign-in URLs](hosted-sign-in-urls.md)        | `buildSignInUrl` / `buildSignUpUrl`, `redirectToSignIn` / `redirectToSignUp` (auth server `/auth/*` routes)                                        |
 | [Auth callback and session](auth-callback-and-session.md) | `completeAuthCallback`, `exchangeCodeForSession`, `fetchFalconSession`, sign-out, cookies                                                          |
-| [Server session verification](server-verification.md)     | `verifySession` for APIs and middleware                                                                                                            |
+| [Server session verification](server-verification.md)     | `verifySession`, raw session-token handling, and `mintFalconConnectAccessToken` for APIs / BFFs                                                   |
 | [Connect display helpers](connect-helpers.md)             | Pure helpers under `@falcon-framework/sdk/connect`                                                                                                 |
 
 ## Package entry points
@@ -30,8 +30,8 @@ npm install @falcon-framework/sdk better-auth react react-dom
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `@falcon-framework/sdk`         | `createFalconAuth`, session helpers, redirect URL builders, `exchangeCodeForSession`, `completeAuthCallback`, `sessionCookieName`, `buildFalconConnectHeaders`, `organizationClient` re-export                                                      |
 | `@falcon-framework/sdk/react`   | `FalconAuthProvider`, `useFalconAuth` / `useUser` / `useSession`, `useOrganizations`, `ActiveOrganizationProvider`, `useActiveOrganization`, `OrganizationSwitcher`, `SignIn`, `SignUp`, `UserButton`; re-exports `createFalconAuth` and core types |
-| `@falcon-framework/sdk/server`  | `verifySession`                                                                                                                                                                                                                                     |
-| `@falcon-framework/sdk/connect` | Connect app map and connection labeling helpers (no HTTP)                                                                                                                                                                                           |
+| `@falcon-framework/sdk/server`  | `verifySession`, `mintFalconConnectAccessToken`                                                                                                                                                                                                    |
+| `@falcon-framework/sdk/connect` | Connect HTTP client, schemas, errors, and display helpers                                                                                                                                                                                           |
 
 ## UI stack (React)
 

@@ -1,3 +1,4 @@
 {
-  "extends": "@falcon-framework/config/tsconfig.base.json"
+  "extends": "@falcon-framework/config/tsconfig.base.json",
+  "exclude": ["scripts/**/*.ts"]
 }
