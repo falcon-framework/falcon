@@ -61,12 +61,14 @@ export async function resolvePrincipal(
   const organizationId = headers.get("x-organization-id")?.trim();
   if (!organizationId) return null;
 
+  const authBaseUrl = betterAuthUrl.replace(/\/+$/, "");
+
   // 1. Try Better Auth session via cookie
   const cookie = headers.get("cookie");
   const appId = headers.get("x-falcon-app-id")?.trim();
   if (cookie) {
     try {
-      const response = await fetch(`${betterAuthUrl}/api/auth/get-session`, {
+      const response = await fetch(`${authBaseUrl}/api/auth/get-session`, {
         headers: {
           cookie,
           ...(appId ? { "X-Falcon-App-Id": appId } : {}),
@@ -99,10 +101,10 @@ export async function resolvePrincipal(
   if (authHeader?.startsWith("Bearer ")) {
     const token = authHeader.slice(7);
     try {
-      const jwksUrl = new URL(`${betterAuthUrl}/.well-known/jwks.json`);
+      const jwksUrl = new URL(`${authBaseUrl}/.well-known/jwks.json`);
       const JWKS = createRemoteJWKSet(jwksUrl);
       const { payload } = await jwtVerify<ConnectJwtPayload>(token, JWKS, {
-        issuer: betterAuthUrl.replace(/\/+$/, ""),
+        issuer: authBaseUrl,
         audience: "falcon-connect",
         algorithms: ["RS256"],
       });
@@ -115,7 +117,7 @@ export async function resolvePrincipal(
         userId &&
         tokenOrgId &&
         tokenOrgId === organizationId &&
-        (!appId || !tokenAppId || tokenAppId === appId)
+        (!appId || tokenAppId === appId)
       ) {
         if (tokenAppId) {
           const allowed = await sessionAllowedForApp(db, userId, tokenAppId);

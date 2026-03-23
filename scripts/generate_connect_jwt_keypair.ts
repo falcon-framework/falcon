@@ -27,7 +27,7 @@ const spki = await crypto.subtle.exportKey("spki", keyPair.publicKey);
 const privatePem = toBase64Pem(pkcs8, "PRIVATE KEY");
 const publicPem = toBase64Pem(spki, "PUBLIC KEY");
 
-console.log("# Paste these into /Users/benn/Documents/Projects/dzwei/falcon/.env");
+console.log("# Paste these into your repo root `.env` (see root `.env.example`).");
 console.log(`CONNECT_JWT_PRIVATE_KEY=${toEnvValue(privatePem)}`);
 console.log(`CONNECT_JWT_PUBLIC_KEY=${toEnvValue(publicPem)}`);
 console.log("CONNECT_ACCESS_TOKEN_TTL_SECONDS=300");

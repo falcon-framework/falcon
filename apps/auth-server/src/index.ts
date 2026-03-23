@@ -6,7 +6,7 @@ import {
   resolveAuthApp,
   sessionAllowedForApp,
 } from "@falcon-framework/auth";
-import { closeDb, makeDb } from "@falcon-framework/db";
+import { closeDb, makeDb, type Db } from "@falcon-framework/db";
 import { member } from "@falcon-framework/db/schema/auth";
 import { appUser, authorizationCode, falconAuthApp } from "@falcon-framework/db/schema/auth-app";
 import { env } from "@falcon-framework/env/server";
@@ -203,20 +203,16 @@ async function signConnectAccessToken(input: {
 }
 
 async function resolveMemberRole(
+  db: Db,
   userId: string,
   organizationId: string,
 ): Promise<{ organizationId: string; role: string } | null> {
-  const db = makeDb();
-  try {
-    const rows = await db
-      .select({ organizationId: member.organizationId, role: member.role })
-      .from(member)
-      .where(and(eq(member.userId, userId), eq(member.organizationId, organizationId)))
-      .limit(1);
-    return rows[0] ?? null;
-  } finally {
-    await closeDb(db);
-  }
+  const rows = await db
+    .select({ organizationId: member.organizationId, role: member.role })
+    .from(member)
+    .where(and(eq(member.userId, userId), eq(member.organizationId, organizationId)))
+    .limit(1);
+  return rows[0] ?? null;
 }
 
 /** Shared CSS for auth pages — minimal, consistent with the Falcon teal palette. */
@@ -625,12 +621,25 @@ app.post("/auth/connect/token", async (c) => {
     return c.json({ error: "Missing X-Falcon-App-Id" }, 400);
   }
 
-  let body: z.infer<typeof connectTokenRequestSchema>;
+  let jsonBody: unknown;
   try {
-    body = connectTokenRequestSchema.parse(await c.req.json());
+    jsonBody = await c.req.json();
   } catch {
     return c.json({ error: "Invalid JSON body" }, 400);
   }
+
+  const parsedBody = connectTokenRequestSchema.safeParse(jsonBody);
+  if (!parsedBody.success) {
+    return c.json(
+      {
+        error: "Invalid request body",
+        issues: parsedBody.error.issues,
+      },
+      422,
+    );
+  }
+
+  const body = parsedBody.data;
 
   const headers = new Headers(c.req.raw.headers);
   if (body.sessionToken) {
@@ -651,22 +660,22 @@ app.post("/auth/connect/token", async (c) => {
     if (!allowed) {
       return c.json({ error: "Unauthorized" }, 401);
     }
+
+    const membership = await resolveMemberRole(db, session.user.id, body.organizationId);
+    if (!membership) {
+      return c.json({ error: "Forbidden" }, 403);
+    }
+
+    return c.json(
+      await signConnectAccessToken({
+        userId: session.user.id,
+        organizationId: membership.organizationId,
+        appId,
+      }),
+    );
   } finally {
     await closeDb(db);
   }
-
-  const membership = await resolveMemberRole(session.user.id, body.organizationId);
-  if (!membership) {
-    return c.json({ error: "Forbidden" }, 403);
-  }
-
-  return c.json(
-    await signConnectAccessToken({
-      userId: session.user.id,
-      organizationId: membership.organizationId,
-      appId,
-    }),
-  );
 });
 
 // ---------------------------------------------------------------------------

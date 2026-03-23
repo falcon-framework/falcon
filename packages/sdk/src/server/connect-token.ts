@@ -30,7 +30,7 @@ export async function mintFalconConnectAccessToken(
   }
 
   const fetchFn = options.fetch ?? globalThis.fetch.bind(globalThis);
-  const response = await fetchFn(`${config.serverUrl.replace(/\/$/, "")}/auth/connect/token`, {
+  const response = await fetchFn(`${config.serverUrl.replace(/\/+$/, "")}/auth/connect/token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
