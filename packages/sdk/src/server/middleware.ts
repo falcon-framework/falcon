@@ -1,3 +1,8 @@
+import {
+  resolveCookieHeader,
+  type FalconServerAuthInput,
+  type IncomingServerRequest,
+} from "./auth-request";
 import type { FalconOrganizationSummary } from "../core/types";
 
 export interface VerifySessionConfig {
@@ -73,21 +78,10 @@ export interface VerifiedSession {
  */
 export async function verifySession(
   config: VerifySessionConfig,
-  request: Request | { headers: Headers | Record<string, string | string[] | undefined> },
+  request: IncomingServerRequest | FalconServerAuthInput,
 ): Promise<VerifiedSession | null> {
   try {
-    // Extract cookie header from the incoming request
-    let cookieHeader: string | undefined;
-
-    if (request instanceof Request) {
-      cookieHeader = request.headers.get("cookie") ?? undefined;
-    } else if (request.headers instanceof Headers) {
-      cookieHeader = request.headers.get("cookie") ?? undefined;
-    } else {
-      const raw = request.headers["cookie"];
-      cookieHeader = Array.isArray(raw) ? raw.join("; ") : (raw ?? undefined);
-    }
-
+    const cookieHeader = resolveCookieHeader(config.publishableKey, request);
     if (!cookieHeader) {
       return null;
     }

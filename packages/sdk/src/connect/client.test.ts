@@ -16,9 +16,9 @@ function jsonResponse(data: unknown, init?: ResponseInit) {
 
 describe("createFalconConnectClient", () => {
   it("throws when baseUrl or organizationId is empty", () => {
-    expect(() =>
-      createFalconConnectClient({ baseUrl: "   ", organizationId: "org" }),
-    ).toThrow(/baseUrl/);
+    expect(() => createFalconConnectClient({ baseUrl: "   ", organizationId: "org" })).toThrow(
+      /baseUrl/,
+    );
     expect(() =>
       createFalconConnectClient({ baseUrl: "https://c.example", organizationId: "  " }),
     ).toThrow(/organizationId/);
@@ -86,9 +86,7 @@ describe("createFalconConnectClient", () => {
   });
 
   it("throws FalconConnectHttpError on non-OK with message field", async () => {
-    const fetchFn = vi
-      .fn()
-      .mockResolvedValue(jsonResponse({ message: "nope" }, { status: 403 }));
+    const fetchFn = vi.fn().mockResolvedValue(jsonResponse({ message: "nope" }, { status: 403 }));
     const client = createFalconConnectClient({
       baseUrl: "https://connect.example",
       organizationId: "org-1",
@@ -103,7 +101,9 @@ describe("createFalconConnectClient", () => {
   });
 
   it("throws FalconConnectHttpError on 401 with error field", async () => {
-    const fetchFn = vi.fn().mockResolvedValue(jsonResponse({ error: "Unauthorized" }, { status: 401 }));
+    const fetchFn = vi
+      .fn()
+      .mockResolvedValue(jsonResponse({ error: "Unauthorized" }, { status: 401 }));
     const client = createFalconConnectClient({
       baseUrl: "https://connect.example",
       organizationId: "org-1",
@@ -129,9 +129,11 @@ describe("createFalconConnectClient", () => {
   });
 
   it("throws FalconConnectParseError when body is invalid JSON", async () => {
-    const fetchFn = vi.fn().mockResolvedValue(
-      new Response("not-json", { status: 200, headers: { "Content-Type": "text/plain" } }),
-    );
+    const fetchFn = vi
+      .fn()
+      .mockResolvedValue(
+        new Response("not-json", { status: 200, headers: { "Content-Type": "text/plain" } }),
+      );
     const client = createFalconConnectClient({
       baseUrl: "https://connect.example",
       organizationId: "org-1",

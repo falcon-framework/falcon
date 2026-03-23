@@ -1,3 +1,4 @@
+import { sessionAllowedForApp } from "@falcon-framework/auth";
 import type { Db } from "@falcon-framework/db";
 import { closeDb, makeDb } from "@falcon-framework/db";
 import { member } from "@falcon-framework/db/schema/auth";
@@ -12,6 +13,12 @@ export interface Principal {
   role: string;
   authMethod: "session" | "jwt";
 }
+
+type ConnectJwtPayload = {
+  app_id?: unknown;
+  org_id?: unknown;
+  sub?: string;
+};
 
 export class PrincipalTag extends Context.Tag("@falcon-framework/connection/Principal")<
   PrincipalTag,
@@ -54,12 +61,14 @@ export async function resolvePrincipal(
   const organizationId = headers.get("x-organization-id")?.trim();
   if (!organizationId) return null;
 
+  const authBaseUrl = betterAuthUrl.replace(/\/+$/, "");
+
   // 1. Try Better Auth session via cookie
   const cookie = headers.get("cookie");
   const appId = headers.get("x-falcon-app-id")?.trim();
   if (cookie) {
     try {
-      const response = await fetch(`${betterAuthUrl}/api/auth/get-session`, {
+      const response = await fetch(`${authBaseUrl}/api/auth/get-session`, {
         headers: {
           cookie,
           ...(appId ? { "X-Falcon-App-Id": appId } : {}),
@@ -92,12 +101,31 @@ export async function resolvePrincipal(
   if (authHeader?.startsWith("Bearer ")) {
     const token = authHeader.slice(7);
     try {
-      const jwksUrl = new URL(`${betterAuthUrl}/.well-known/jwks.json`);
+      const jwksUrl = new URL(`${authBaseUrl}/.well-known/jwks.json`);
       const JWKS = createRemoteJWKSet(jwksUrl);
-      const { payload } = await jwtVerify(token, JWKS);
+      const { payload } = await jwtVerify<ConnectJwtPayload>(token, JWKS, {
+        issuer: authBaseUrl,
+        audience: "falcon-connect",
+        algorithms: ["RS256"],
+      });
 
-      const userId = payload.sub;
-      if (userId) {
+      const userId = typeof payload.sub === "string" ? payload.sub : undefined;
+      const tokenOrgId = typeof payload.org_id === "string" ? payload.org_id : undefined;
+      const tokenAppId = typeof payload.app_id === "string" ? payload.app_id : undefined;
+
+      if (
+        userId &&
+        tokenOrgId &&
+        tokenOrgId === organizationId &&
+        (!appId || tokenAppId === appId)
+      ) {
+        if (tokenAppId) {
+          const allowed = await sessionAllowedForApp(db, userId, tokenAppId);
+          if (!allowed) {
+            return null;
+          }
+        }
+
         const membership = await resolveOrgMembership(db, userId, organizationId);
         if (membership) {
           return {

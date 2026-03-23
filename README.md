@@ -48,6 +48,10 @@ bun install
 
    (Drizzle CLI reads this path; see `packages/db/drizzle.config.ts`.)
 
+   For local infra-driven development, prefer copying [`/.env.example`](./.env.example)
+   to `/.env`. That root file is the single source of truth for shared Auth / Connect
+   bindings, including the Connect JWT signing keys.
+
 3. Apply the schema:
 
    ```bash
@@ -69,6 +73,20 @@ nx run @falcon-framework/infra:dev
 ```
 
 Copy `apps/demo-01/.env.example` to `apps/demo-01/.env.local` (and the same for `demo-02` if you use it) so `VITE_*` URLs match those services.
+
+To generate a fresh Connect JWT RSA keypair for `/.env`, run:
+
+```bash
+bun run ./scripts/generate_connect_jwt_keypair.ts
+```
+
+The script prints ready-to-paste values for:
+
+- `CONNECT_JWT_PRIVATE_KEY`
+- `CONNECT_JWT_PUBLIC_KEY`
+- `CONNECT_ACCESS_TOKEN_TTL_SECONDS`
+
+Paste that output into the root `/.env`, which is the shared source of truth used by the Auth and Connect workers in local development.
 
 **Demos only** (after Auth + Connect are up, or alongside them):
 

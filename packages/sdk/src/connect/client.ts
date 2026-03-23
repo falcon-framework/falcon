@@ -65,7 +65,9 @@ export interface FalconConnectClient {
   };
   readonly installationRequests: {
     readonly list: () => Promise<FalconConnectInstallationRequest[]>;
-    readonly create: (body: FalconConnectCreateInstallationRequestBody) => Promise<FalconConnectInstallationRequest>;
+    readonly create: (
+      body: FalconConnectCreateInstallationRequestBody,
+    ) => Promise<FalconConnectInstallationRequest>;
     readonly approve: (requestId: string) => Promise<FalconConnectConnection>;
   };
   readonly connections: {
@@ -81,7 +83,9 @@ export interface FalconConnectClient {
   };
 }
 
-export function createFalconConnectClient(options: CreateFalconConnectClientOptions): FalconConnectClient {
+export function createFalconConnectClient(
+  options: CreateFalconConnectClientOptions,
+): FalconConnectClient {
   const ctx = normalizeClientOptions(options);
 
   return {
@@ -97,13 +101,23 @@ export function createFalconConnectClient(options: CreateFalconConnectClientOpti
     },
     installationRequests: {
       list: () =>
-        connectFetchJson(ctx, "/installation-requests", {}, falconConnectInstallationRequestsListSchema),
+        connectFetchJson(
+          ctx,
+          "/installation-requests",
+          {},
+          falconConnectInstallationRequestsListSchema,
+        ),
       create: async (body: FalconConnectCreateInstallationRequestBody) => {
         const payload = createInstallationRequestBodySchema.parse(body);
-        return connectFetchJson(ctx, "/installation-requests", {
-          method: "POST",
-          body: JSON.stringify(payload),
-        }, falconConnectInstallationRequestSchema);
+        return connectFetchJson(
+          ctx,
+          "/installation-requests",
+          {
+            method: "POST",
+            body: JSON.stringify(payload),
+          },
+          falconConnectInstallationRequestSchema,
+        );
       },
       approve: (requestId: string) =>
         connectFetchJson(
@@ -154,10 +168,15 @@ export function createFalconConnectClient(options: CreateFalconConnectClientOpti
     scopes: {
       check: async (input: FalconConnectCheckScopeBody) => {
         const body = checkScopeBodySchema.parse(input);
-        return connectFetchJson(ctx, "/scope-check", {
-          method: "POST",
-          body: JSON.stringify(body),
-        }, scopeCheckResultSchema);
+        return connectFetchJson(
+          ctx,
+          "/scope-check",
+          {
+            method: "POST",
+            body: JSON.stringify(body),
+          },
+          scopeCheckResultSchema,
+        );
       },
     },
   };

@@ -34,7 +34,9 @@ export const falconConnectInstallationRequestSchema = z.object({
   initiatedByUserId: z.string(),
   createdAt: z.string(),
 });
-export type FalconConnectInstallationRequest = z.infer<typeof falconConnectInstallationRequestSchema>;
+export type FalconConnectInstallationRequest = z.infer<
+  typeof falconConnectInstallationRequestSchema
+>;
 
 export const falconConnectConnectionSchema = z.object({
   id: z.string(),

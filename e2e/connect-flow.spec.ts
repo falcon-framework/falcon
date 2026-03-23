@@ -42,7 +42,9 @@ test("Falcon Connect creates and approves a cross-app installation", async ({ pa
   });
 });
 
-test("Falcon Connect connection row survives reload on source done page", async ({ page }, testInfo) => {
+test("Falcon Connect connection row survives reload on source done page", async ({
+  page,
+}, testInfo) => {
   const identity = createIdentity(testInfo);
   const expectedLine = connectionLine("Demo 01 Source", "Demo 02 Target");
 

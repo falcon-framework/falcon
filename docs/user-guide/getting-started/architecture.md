@@ -25,6 +25,8 @@ flowchart LR
 
 - Serves **Better Auth** routes (for example `/api/auth/sign-in/email`, `/api/auth/get-session`, organization APIs used by the console).
 - Serves **hosted** HTML flows at `/auth/authorize` and `/auth/sign-up` for centralized sign-in (see [Centralized sign-in](../falcon-auth/centralized-sign-in.md)).
+- Issues short-lived **Connect access tokens** at **`POST /auth/connect/token`** for backend / BFF callers that need to act as an authenticated Falcon user without relying on browser cookies at the Connect hop.
+- Exposes **`/.well-known/jwks.json`** so Connect can verify those access tokens.
 - Applies **dynamic CORS**: the console origin is always allowed; other origins may be allowed when a valid **`X-Falcon-App-Id`** (publishable key) matches a registered app whose **`allowed_origins`** includes the request `Origin`.
 - Exposes **user app directory** routes (for example listing apps the user has used) for the console.
 
@@ -33,7 +35,7 @@ flowchart LR
 - Serves the **Falcon Connect HTTP API** (for example `/v1/apps`, `/v1/installation-requests`, `/v1/connections`).
 - **Does not** implement its own username/password login. Instead it establishes **who** is calling by:
   - Forwarding **cookies** to the auth server’s `get-session`, or
-  - Validating a **Bearer JWT** against the auth server’s JWKS.
+  - Validating a short-lived **Bearer JWT** against the auth server’s JWKS.
 - Requires an **`X-Organization-Id`** header on requests so every operation is scoped to one organization and membership can be checked.
 
 ### Console
@@ -45,7 +47,7 @@ flowchart LR
 ### Your applications
 
 - Browser apps load the SDK, configure `serverUrl` and `publishableKey`, and either redirect to **hosted** sign-in or use optional **embedded** SDK forms.
-- Server apps can verify sessions with [`verifySession`](../sdk/server-verification.md).
+- Server apps can verify sessions with [`verifySession`](../sdk/server-verification.md) and mint short-lived Connect access tokens with **`mintFalconConnectAccessToken`**.
 
 ## Data storage
 
@@ -71,9 +73,16 @@ Details: [Centralized sign-in](../falcon-auth/centralized-sign-in.md).
 
 ### Connect: create installation request
 
-1. Authenticated user (session cookie or JWT) calls `POST /v1/installation-requests` with **`X-Organization-Id`** set.
+1. Authenticated user (session cookie or Auth-issued Connect JWT) calls `POST /v1/installation-requests` with **`X-Organization-Id`** set.
 2. Connect resolves the principal (user id + org id + **role** from membership).
 3. If the role may create requests, a row is created in **`installation_request`** with status `pending`.
+
+### Backend / BFF Connect exchange
+
+1. Your backend verifies or already holds a Falcon user session (cookie-backed request or raw Falcon session token).
+2. Your backend calls **`POST /auth/connect/token`** or the SDK server helper **`mintFalconConnectAccessToken`** with the target organization id.
+3. Falcon Auth returns a short-lived access token scoped to that user, organization, and app.
+4. Your backend calls Connect with **`Authorization: Bearer …`** and **`X-Organization-Id`**.
 
 ### Connect: approve and form a connection
 

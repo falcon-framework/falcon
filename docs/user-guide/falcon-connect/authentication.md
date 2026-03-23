@@ -19,7 +19,14 @@ If this header is missing or empty, the service responds with **401** rather tha
 The Connect runtime resolves a **principal**:
 
 1. **Session cookie** — If the `Cookie` header is present, Connect proxies to the auth server’s **`/api/auth/get-session`** using those cookies. If a user is returned, Connect loads **`member`** for `(userId, organizationId)`.
-2. **Bearer JWT** — If `Authorization: Bearer …` is present, Connect verifies the token using the auth server’s **JWKS** (`/.well-known/jwks.json`), reads **`sub`** as the user id, then loads membership the same way.
+2. **Bearer JWT** — If `Authorization: Bearer …` is present, Connect verifies the token using the auth server’s **JWKS** (`/.well-known/jwks.json`) and expects:
+   - **`sub`** = Falcon user id
+   - **`org_id`** = requested Better Auth organization id
+   - **`app_id`** = Falcon app / publishable key identity
+   - **`aud`** = `falcon-connect`
+   - standard **`iss`**, **`iat`**, **`exp`**
+
+The JWT path is the recommended pattern for **BFF**, **server**, and **backend** callers that cannot rely on browser cookies being present on the Connect request.
 
 If neither strategy yields a valid user bound to the requested organization, the request is **unauthorized**.
 
@@ -42,9 +49,44 @@ const res = await fetch(`${connectBase}/v1/connections`, {
 });
 ```
 
-## Example: server-to-server
+## Example: browser app with cookies
 
-Prefer **JWT** or a dedicated service account pattern if you introduce one; the stock stack documents JWT verification against Falcon Auth’s JWKS for Connect.
+```ts
+const connect = createFalconConnectClient({
+  baseUrl: connectBase,
+  organizationId: activeOrganizationId,
+  publishableKey: falconPublishableKey,
+  credentials: "include",
+});
+```
+
+## Example: backend / BFF with short-lived Connect token
+
+The auth server exposes **`POST /auth/connect/token`** for exchanging a Falcon session into a short-lived Connect access token. The SDK server entry wraps that flow with **`mintFalconConnectAccessToken`**.
+
+```ts
+import { mintFalconConnectAccessToken } from "@falcon-framework/sdk/server";
+import { createFalconConnectClient } from "@falcon-framework/sdk/connect";
+
+const access = await mintFalconConnectAccessToken(
+  { serverUrl: authBase, publishableKey },
+  {
+    organizationId,
+    sessionToken,
+  },
+);
+
+const connect = createFalconConnectClient({
+  baseUrl: connectBase,
+  organizationId,
+  credentials: "omit",
+  getAccessToken: () => access?.accessToken,
+});
+```
+
+## Example: server-to-server / backend guidance
+
+Prefer the Auth-issued short-lived Connect JWT for user-bound backend work. Introduce a separate service-account or offline delegation pattern only when the work is not tied to a live Falcon user session.
 
 ## Reliability note
 

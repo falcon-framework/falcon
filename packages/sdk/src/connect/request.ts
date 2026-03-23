@@ -93,8 +93,7 @@ export async function connectFetchJson<T>(
     if (body === undefined && rawText.trim()) {
       body = { message: rawText };
     }
-    const msg =
-      messageFromApiErrorBody(body) ?? res.statusText ?? `HTTP ${res.status}`;
+    const msg = messageFromApiErrorBody(body) ?? res.statusText ?? `HTTP ${res.status}`;
     throw new FalconConnectHttpError(res.status, msg, body);
   }
 

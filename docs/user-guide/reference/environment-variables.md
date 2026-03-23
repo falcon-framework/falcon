@@ -4,12 +4,15 @@ Exact names depend on your deployment (Cloudflare Workers bindings, Vite `import
 
 ## Auth server
 
-| Variable                 | Role                                                                                                  |
-| ------------------------ | ----------------------------------------------------------------------------------------------------- |
-| **`DATABASE_URL`**       | PostgreSQL connection for Better Auth and Falcon tables.                                              |
-| **`BETTER_AUTH_SECRET`** | Signing secret for Better Auth.                                                                       |
-| **`BETTER_AUTH_URL`**    | Public base URL of the auth server (used as Better Auth `baseURL` and to derive trusted auth origin). |
-| **`CORS_ORIGIN`**        | Allowed origin(s) for the console and related first-party apps; may be comma-separated.               |
+| Variable                               | Role                                                                                                  |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **`DATABASE_URL`**                     | PostgreSQL connection for Better Auth and Falcon tables.                                              |
+| **`BETTER_AUTH_SECRET`**               | Signing secret for Better Auth.                                                                       |
+| **`BETTER_AUTH_URL`**                  | Public base URL of the auth server (used as Better Auth `baseURL` and to derive trusted auth origin). |
+| **`CORS_ORIGIN`**                      | Allowed origin(s) for the console and related first-party apps; may be comma-separated.               |
+| **`CONNECT_JWT_PRIVATE_KEY`**          | PEM-encoded private key used to sign Falcon Connect access tokens.                                    |
+| **`CONNECT_JWT_PUBLIC_KEY`**           | PEM-encoded public key published at `/.well-known/jwks.json` for Connect token verification.          |
+| **`CONNECT_ACCESS_TOKEN_TTL_SECONDS`** | Optional TTL for Auth-issued Connect access tokens; defaults to `300`.                                |
 
 ## Connect service
 

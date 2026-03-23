@@ -32,14 +32,25 @@ const connect = createFalconConnectClient({
 
 ### Server or JWT-only callers
 
-Set **`getAccessToken`** to return a Bearer token verified by Connect (see [Calling the Connect API](../falcon-connect/authentication.md)). You can omit **`publishableKey`** when not using the cookie + get-session path.
+Set **`getAccessToken`** to return a Bearer token verified by Connect (see [Calling the Connect API](../falcon-connect/authentication.md)). For Falcon-backed BFF or backend calls, prefer minting a short-lived token with **`mintFalconConnectAccessToken`** from **`@falcon-framework/sdk/server`**. You can omit **`publishableKey`** when not using the cookie + get-session path directly.
 
 ```ts
+import { mintFalconConnectAccessToken } from "@falcon-framework/sdk/server";
+import { createFalconConnectClient } from "@falcon-framework/sdk/connect";
+
+const access = await mintFalconConnectAccessToken(
+  { serverUrl: process.env.FALCON_AUTH_URL!, publishableKey: process.env.FALCON_PUBLISHABLE_KEY! },
+  {
+    organizationId: orgId,
+    sessionToken: falconSessionToken,
+  },
+);
+
 const connect = createFalconConnectClient({
   baseUrl: process.env.CONNECT_URL!,
   organizationId: orgId,
   credentials: "omit",
-  getAccessToken: () => process.env.FALCON_ACCESS_TOKEN,
+  getAccessToken: () => access?.accessToken,
 });
 ```
 
@@ -49,12 +60,12 @@ Optional **`getHeaders`** merges extra headers on every request. Optional **`fet
 
 All methods return **Promises** of **validated** data (or throw — see [Errors](#errors)).
 
-| Namespace | Methods |
-|-----------|---------|
-| **`apps`** | **`list()`**, **`capabilities(appId)`** |
-| **`installationRequests`** | **`list()`**, **`create(body)`**, **`approve(requestId)`** |
-| **`connections`** | **`list()`**, **`get(connectionId)`**, **`revoke`**, **`pause`**, **`resume`**, **`sync`** |
-| **`scopes`** | **`check({ connectionId, appId, scope })`** |
+| Namespace                  | Methods                                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------ |
+| **`apps`**                 | **`list()`**, **`capabilities(appId)`**                                                    |
+| **`installationRequests`** | **`list()`**, **`create(body)`**, **`approve(requestId)`**                                 |
+| **`connections`**          | **`list()`**, **`get(connectionId)`**, **`revoke`**, **`pause`**, **`resume`**, **`sync`** |
+| **`scopes`**               | **`check({ connectionId, appId, scope })`**                                                |
 
 `create` validates the body with Zod before sending. Invalid input throws **`z.ZodError`** (same as **`createInstallationRequestBodySchema.parse`**).
 
@@ -66,6 +77,14 @@ All methods return **Promises** of **validated** data (or throw — see [Errors]
 2. Optional: **`apps.capabilities(targetAppId)`** to show allowed scope keys.
 3. **`installationRequests.create({ sourceAppId, targetAppId, requestedScopes, settingsDraft? })`**.
 4. Redirect the browser to your target app’s approval UI (return URL, request id) — see [Installation requests and approval](../falcon-connect/installation-and-approval.md).
+
+### Finder-style backend bridge
+
+If your product UI is on one origin and your own API runs on another, your API may receive a Falcon **session token** from the browser even though it does not receive Falcon cookies directly. In that case:
+
+1. Exchange that Falcon session token for a short-lived Connect access token with **`mintFalconConnectAccessToken`** or `POST /auth/connect/token`.
+2. Build the Connect client with **`credentials: "omit"`** and **`getAccessToken`**.
+3. Do **not** invent your own cookie names or fake `session=...` headers when calling Connect.
 
 ### Target app (inbox + approve)
 
@@ -87,7 +106,9 @@ import {
   resolveFalconConnectionsDisplay,
 } from "@falcon-framework/sdk/connect";
 
-const client = createFalconConnectClient({ /* … */ });
+const client = createFalconConnectClient({
+  /* … */
+});
 
 const rows = await resolveFalconConnectionsDisplay(
   () => client.apps.list(),
@@ -97,12 +118,12 @@ const rows = await resolveFalconConnectionsDisplay(
 
 ## Errors
 
-| Class | Meaning |
-|-------|---------|
-| **`FalconConnectHttpError`** | Non-2xx response. **`status`**, **`message`**, **`body`**. Message is taken from **`message`**, **`error`**, or the status line when JSON is missing. |
-| **`FalconConnectValidationError`** | 2xx response but JSON **does not match** the expected Zod schema (server drift or unexpected payload). Inspect **`issues`** / **`zodError`**. |
-| **`FalconConnectParseError`** | 2xx but body is empty or not JSON. |
-| **`FalconConnectNetworkError`** | **`fetch`** failed (offline, CORS, etc.). **`cause`** preserved. |
+| Class                              | Meaning                                                                                                                                               |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`FalconConnectHttpError`**       | Non-2xx response. **`status`**, **`message`**, **`body`**. Message is taken from **`message`**, **`error`**, or the status line when JSON is missing. |
+| **`FalconConnectValidationError`** | 2xx response but JSON **does not match** the expected Zod schema (server drift or unexpected payload). Inspect **`issues`** / **`zodError`**.         |
+| **`FalconConnectParseError`**      | 2xx but body is empty or not JSON.                                                                                                                    |
+| **`FalconConnectNetworkError`**    | **`fetch`** failed (offline, CORS, etc.). **`cause`** preserved.                                                                                      |
 
 **Guidance:** treat **401** as “sign in or pick an org”; **403** as permission; **422** as invalid state for the operation. Retry only **idempotent GETs** on transient failures.
 

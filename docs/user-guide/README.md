@@ -65,7 +65,7 @@ This guide explains Falcon for people who **use**, **integrate**, or **operate**
 | [Centralized sign-in URLs](sdk/hosted-sign-in-urls.md)         | `buildSignInUrl` / `redirectToSignIn`, etc. |
 | [Auth callback and session](sdk/auth-callback-and-session.md)  | `completeAuthCallback`, session helpers     |
 | [Server session verification](sdk/server-verification.md)      | `verifySession` for backends                |
-| [Falcon Connect HTTP client](sdk/falcon-connect-client.md)       | `createFalconConnectClient`, Zod validation |
+| [Falcon Connect HTTP client](sdk/falcon-connect-client.md)     | `createFalconConnectClient`, Zod validation |
 | [Connect display helpers](sdk/connect-helpers.md)              | Labeling helpers for Connect API responses  |
 | [SDK: organizations](sdk/organizations.md)                     | Active org, switcher UI, Connect headers    |
 
